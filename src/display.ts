@@ -49,6 +49,10 @@ export default class Display {
       await floatFactory.create(docs, false)
     } else {
       this.nvim.call('coc#util#preview_info', [content], true)
+      // preview window won't open without redraw...
+      this.nvim.command('redraw')
+      // disposable autocmd is nice
+      this.nvim.command('augroup TT | autocmd CursorMoved * pclose | autocmd! TT | augroup END')
     }
   }
 
