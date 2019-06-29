@@ -88,7 +88,7 @@ async function exportHistory(db: DB): Promise<void> {
   nvim.command('tabnew')
   for (let item of arr) {
     let text = item.content[0].padEnd(20) + item.content[1]
-    nvim.call('append', ['line("$")', text], true)
+    nvim.call('append', [0, text], true)
   }
   nvim.command('syntax match CocTranslatorQuery /\\v^.*\\v%20v/', true)
   nvim.command('syntax match CocTranslatorOmit /\\v\\.\\.\\./', true)
