@@ -1,0 +1,86 @@
+{
+  "name": "coc-translator",
+  "version": "1.0.0",
+  "description": "translation extension for coc.nvim",
+  "main": "lib/index.js",
+  "publisher": "voldikss",
+  "keywords": [
+    "coc.nvim",
+    "translator"
+  ],
+  "engines": {
+    "coc": "^0.0.70"
+  },
+  "scripts": {
+    "clean": "rimraf lib",
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npx npm-run-all clean build"
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "translator.appId": {
+          "type": "string",
+          "default": "",
+          "description": "AppId of translation API"
+        },
+        "translator.appKey": {
+          "type": "string",
+          "default": "",
+          "description": "AppKey of translation API"
+        },
+        "translator.toLang": {
+          "type": "string",
+          "default": "zh",
+          "description": "Target language"
+        },
+        "translator.engine": {
+          "type": "string",
+          "default": "google"
+        },
+        "translator.maxsize": {
+          "type": "number",
+          "default": 5000
+        }
+      }
+    },
+    "commands": [
+      {
+        "title": "translator",
+        "command": "translator.popup"
+      },
+      {
+        "title": "Echo translation",
+        "command": "translator.echo"
+      },
+      {
+        "title": "dd",
+        "command": "translator.replace"
+      },
+      {
+        "title": "open history file",
+        "command": "translator.exportHistory"
+      }
+    ]
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@chemzqm/tsconfig": "^0.0.3",
+    "@chemzqm/tslint-config": "^1.0.18",
+    "@types/node": "^10.14.10",
+    "@types/uuid": "^3.4.4",
+    "coc.nvim": "^0.0.71",
+    "request-light": "^0.2.4",
+    "rimraf": "^2.6.3",
+    "ts-loader": "^6.0.3",
+    "uuid": "^3.3.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {}
+}
