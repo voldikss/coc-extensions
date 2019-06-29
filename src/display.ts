@@ -38,6 +38,7 @@ export default class Display {
     if ('paraphrase' in this.result) content.push("🌀 " + this.result['paraphrase'])
     if ('phonetic' in this.result) content.push("🔉 " + this.result['phonetic'])
     if ('explain' in this.result) content.push(...this.result['explain'].map((i: string) => "📝 " + i))
+    content.push("")
 
     const [height, width] = await this.getPopupSize()
 
