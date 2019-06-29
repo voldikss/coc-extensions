@@ -16,19 +16,19 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const config = workspace.getConfiguration('translator')
   const db = new DB(storagePath, config.get<number>('maxsize', 5000))
 
-  subscriptions.push(workspace.registerKeymap(['n'], 'coc-translator-p', async () => {
+  subscriptions.push(workspace.registerKeymap(['n'], 'translator-p', async () => {
     await manager('popup', db)
   }, {sync: false}))
 
-  subscriptions.push(workspace.registerKeymap(['n'], 'coc-translator-e', async () => {
+  subscriptions.push(workspace.registerKeymap(['n'], 'translator-e', async () => {
     await manager('echo', db)
   }, {sync: false}))
 
-  subscriptions.push(workspace.registerKeymap(['n'], 'coc-translator-r', async () => {
+  subscriptions.push(workspace.registerKeymap(['n'], 'translator-r', async () => {
     await manager('replace', db)
   }, {sync: false}))
 
-  subscriptions.push(workspace.registerKeymap(['n'], 'coc-translator-h', async () => {
+  subscriptions.push(workspace.registerKeymap(['n'], 'translator-h', async () => {
     await exportHistory(db)
   }, {sync: false}))
 
