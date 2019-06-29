@@ -2,6 +2,7 @@ import {workspace, FloatFactory, Neovim} from 'coc.nvim'
 import {showMessage} from './util';
 import {Translation} from './types';
 
+
 export default class Display {
   constructor(private nvim: Neovim, private result: Translation) {}
   private async getPopupSize(): Promise<number[]> {
@@ -22,7 +23,6 @@ export default class Display {
         }
       }
     }
-
     return [height, width]
   }
 

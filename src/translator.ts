@@ -17,8 +17,14 @@ class Translator {
   }
 }
 
+
 class BaiduTranslator extends Translator {
-  constructor(query: string, toLang: string, appId: string, appKey: string) {
+  constructor(
+    query: string,
+    toLang: string,
+    appId: string,
+    appKey: string
+  ) {
     super(query, toLang, appId, appKey)
   }
 
@@ -46,8 +52,14 @@ class BaiduTranslator extends Translator {
   }
 }
 
+
 class CibaTranslator extends Translator {
-  constructor(query: string, toLang: string, appId: string, appKey: string) {
+  constructor(
+    query: string,
+    toLang: string,
+    appId: string,
+    appKey: string
+  ) {
     super(query, toLang, appId, appKey)
   }
 
@@ -81,8 +93,14 @@ class CibaTranslator extends Translator {
   }
 }
 
+
 class GoogleTranslator extends Translator {
-  constructor(query: string, toLang: string, appId: string, appKey: string) {
+  constructor(
+    query: string,
+    toLang: string,
+    appId: string,
+    appKey: string
+  ) {
     super(query, toLang, appId, appKey)
   }
 
@@ -114,6 +132,7 @@ class GoogleTranslator extends Translator {
 
     const url = `https://${host}/translate_a/single?client=gtx&sl=auto&tl=${this.toLang}` +
       `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${this.query}`
+
     const obj = await request('GET', url)
 
     if (!obj) {
@@ -130,8 +149,14 @@ class GoogleTranslator extends Translator {
   }
 }
 
+
 class YoudaoTranslator extends Translator {
-  constructor(query: string, toLang: string, appId: string, appKey: string) {
+  constructor(
+    query: string,
+    toLang: string,
+    appId: string,
+    appKey: string
+  ) {
     super(query, toLang, appId, appKey)
   }
 
@@ -145,6 +170,7 @@ class YoudaoTranslator extends Translator {
 
     const url = `https://openapi.youdao.com/api?q=${this.query}&appKey=${this.appId}` +
       `&salt=${salt}&from=auto&to=${this.toLang}&curtime=${curtime}&sign=${sign}&signType=v3`
+
     const obj = await request('GET', url)
 
     if (!obj) {
@@ -166,6 +192,7 @@ class YoudaoTranslator extends Translator {
   }
 }
 
+
 export default async function translate(query: string): Promise<Translation> {
   const ENGINES = {
     'baidu': BaiduTranslator,
@@ -182,5 +209,6 @@ export default async function translate(query: string): Promise<Translation> {
 
   let cls = ENGINES[engine]
   let translator = new cls(query, toLang, appId, appKey)
+
   return translator.translate()
 }

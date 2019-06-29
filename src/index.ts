@@ -6,6 +6,7 @@ import Display from './display'
 import DB from './db'
 import translate from './translator';
 
+
 export async function activate(context: ExtensionContext): Promise<void> {
   const {subscriptions, storagePath} = context
   const {nvim} = workspace

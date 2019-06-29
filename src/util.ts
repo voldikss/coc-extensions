@@ -4,6 +4,7 @@ import crypto from 'crypto'
 import fs from 'fs'
 import util from 'util'
 
+
 export async function request(type: string, url: string, data: object = null): Promise<object> {
   const httpConfig = workspace.getConfiguration('http')
   configure(httpConfig.get<string>('proxy', undefined), httpConfig.get<boolean>('proxyStrictSSL', undefined))
@@ -39,7 +40,7 @@ export async function statAsync(filepath: string): Promise<fs.Stats | null> {
   let stat = null
   try {
     stat = await util.promisify(fs.stat)(filepath)
-  } catch (e) {} // tslint:disable-line
+  } catch (e) {}
   return stat
 }
 
