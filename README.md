@@ -79,8 +79,17 @@ For more advance usage, checkout `:h coc-list`
 
 MIT
 
+## Screenshots
+
+![](https://user-images.githubusercontent.com/20282795/60385980-6c21d400-9ac2-11e9-8970-4da15b85e1ee.png)
+![](https://user-images.githubusercontent.com/20282795/60385979-6b893d80-9ac2-11e9-821f-c656dd38c9fa.png)
+![](https://user-images.githubusercontent.com/20282795/60385982-6f1cc480-9ac2-11e9-8519-448c6d9c77e4.png)
+![](https://user-images.githubusercontent.com/20282795/60385983-704df180-9ac2-11e9-9912-96f302f66474.png)
+
 [1]: https://github.com/voldikss/vim-translate-me/wiki/Baidu-api
 [2]: https://api.fanyi.baidu.com/api/trans/product/apidoc
 [3]: https://github.com/voldikss/vim-translate-me/wiki/Ciba-api
 [4]: https://github.com/voldikss/vim-translate-me/wiki/Youdao-api
 [5]: https://ai.youdao.com/docs/doc-trans-api.s#p07
+
+
