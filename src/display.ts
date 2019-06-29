@@ -48,7 +48,13 @@ export default class Display {
       const docs = [{content: content.join('\n'), filetype: "translator"}]
       await floatFactory.create(docs, false)
     } else {
-      this.nvim.call('coc#util#preview_info', [content], true)
+      this.nvim.command('autocmd FileType ct | ' +
+        'syn match CTQuery #🔍.*# | hi def link CTQuery Keyword | ' +
+        'syn match CTParaphrase #🌀.*# | hi def link CTParaphrase Define | ' +
+        'syn match CTPhonetic #🔉.*# | hi def link Special | ' +
+        'syn match CTExplain #📝.*# | hi def link CTExplain String')
+
+      this.nvim.call('coc#util#preview_info', [content, 'ct'], true)
       // preview window won't open without redraw...
       this.nvim.command('redraw')
       // disposable autocmd is nice
