@@ -48,8 +48,7 @@ export default class Display {
       const docs = [{content: content.join('\n'), filetype: "translator"}]
       await floatFactory.create(docs, false)
     } else {
-      const lines = [this.result['paraphrase']]
-      this.nvim.call('coc#util#preview_info', [lines], true)
+      this.nvim.call('coc#util#preview_info', [content], true)
     }
   }
 
