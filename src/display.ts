@@ -17,6 +17,7 @@ class Display {
 
     for (let i in this.result) {
       if (i == 'query' || i == 'paraphrase' || i == 'phonetic') {
+        if (!this.result[i]) continue
         let line_width = await this.nvim.call('strdisplaywidth', this.result[i]) + 6
         if (line_width > width) width = line_width
         height++
@@ -41,8 +42,8 @@ class Display {
     // process content
     const content: string[] = []
     if ('query' in this.result) content.push("🔍 " + this.result['query'])
-    if ('paraphrase' in this.result) content.push("🌀 " + this.result['paraphrase'])
     if ('phonetic' in this.result) content.push("🔉 " + this.result['phonetic'])
+    if ('paraphrase' in this.result) content.push("🌀 " + this.result['paraphrase'])
     if ('explain' in this.result) content.push(...this.result['explain'].map((i: string) => "📝 " + i))
     content.push("")
 
