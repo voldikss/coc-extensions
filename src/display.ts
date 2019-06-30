@@ -39,7 +39,7 @@ class Display {
       message = `${this.result['query']} => ${this.result['paraphrase']}`
     else
       message = `${this.result['query']} => ${this.result['explain'].join(' ')}`
-    showMessage(message, 'more')
+    showMessage(message)
   }
 
   public async popup() {

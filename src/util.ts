@@ -83,6 +83,6 @@ export function md5(str: string): string {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
-export function showMessage(message: string, type: MsgTypes) {
+export function showMessage(message: string, type: MsgTypes='more') {
   workspace.showMessage(`[coc-translator] ${message}`, type)
 }
