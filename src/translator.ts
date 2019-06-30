@@ -84,7 +84,7 @@ class CibaTranslator extends Translator {
     const result: Translation = {query: '', paraphrase: ''}
     result['query'] = this.query
     result['paraphrase'] = this.query
-    if ('phonetic' in obj['content']) result['phonetic'] = obj['content']['ph_en']
+    if ('ph_en' in obj['content']) result['phonetic'] = `[${obj['content']['ph_en']}]`
     if ('word_mean' in obj['content']) {
       result['explain'] = obj['content']['word_mean']
       result['paraphrase'] = result['explain'][0]
