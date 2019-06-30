@@ -1,7 +1,21 @@
 import {workspace, WorkspaceConfiguration} from 'coc.nvim'
 import {YOUDAO_ERROR_CODE, BAIDU_ERROR_CODE} from './errcode'
 import {md5, sha256, request, showMessage} from './util'
-import {Translation} from './types';
+import {TransType} from './types';
+
+
+class Translation implements TransType {
+  public query: string
+  public paraphrase: string
+  public phonetic: string
+  public explain: string[]
+  constructor() {
+    this.query = ''
+    this.phonetic = ''
+    this.paraphrase = ''
+    this.explain = []
+  }
+}
 
 
 class Translator {
@@ -28,7 +42,7 @@ class BaiduTranslator extends Translator {
     super(query, toLang, appId, appKey)
   }
 
-  public async translate(): Promise<Translation> {
+  public async translate(): Promise<TransType> {
     const salt = new Date().getTime()
     const str = this.appId + this.query + salt + this.appKey
     const sign = md5(str)
@@ -45,7 +59,7 @@ class BaiduTranslator extends Translator {
       return
     }
 
-    const result: Translation = {query: '', paraphrase: ''}
+    const result: TransType = new Translation()
     result['query'] = this.query
     result['paraphrase'] = obj['trans_result'][0]['dst']
     return result
@@ -63,7 +77,7 @@ class CibaTranslator extends Translator {
     super(query, toLang, appId, appKey)
   }
 
-  public async translate(): Promise<Translation> {
+  public async translate(): Promise<TransType> {
     const url = `https://fy.iciba.com/ajax.php?a=fy&w=${this.query}&f=auto&t=${this.toLang}`
 
     // XXX: why the following code get {"responseText":"","status":200} result
@@ -81,14 +95,11 @@ class CibaTranslator extends Translator {
       return
     }
 
-    const result: Translation = {query: '', paraphrase: ''}
+    const result: TransType = new Translation()
     result['query'] = this.query
-    result['paraphrase'] = this.query
     if ('ph_en' in obj['content']) result['phonetic'] = `[${obj['content']['ph_en']}]`
-    if ('word_mean' in obj['content']) {
-      result['explain'] = obj['content']['word_mean']
-      result['paraphrase'] = result['explain'][0]
-    }
+    if ('word_mean' in obj['content']) result['explain'] = obj['content']['word_mean']
+
     return result
   }
 }
@@ -126,7 +137,7 @@ class GoogleTranslator extends Translator {
     return explains
   }
 
-  public async translate(): Promise<Translation> {
+  public async translate(): Promise<TransType> {
     let host = 'translate.googleapis.com'
     if (this.toLang === 'zh') host = 'translate.google.cn'
 
@@ -140,7 +151,7 @@ class GoogleTranslator extends Translator {
       return
     }
 
-    const result: Translation = {query: '', paraphrase: ''}
+    const result: TransType = new Translation()
     result['query'] = this.query
     result['paraphrase'] = this.getParaphrase(obj)
     result['explain'] = this.getExplain(obj)
@@ -160,7 +171,7 @@ class YoudaoTranslator extends Translator {
     super(query, toLang, appId, appKey)
   }
 
-  public async translate(): Promise<Translation> {
+  public async translate(): Promise<TransType> {
     const salt = new Date().getTime()
     const curtime = Math.round(new Date().getTime() / 1000)
     const str = this.appId + this.query + salt + curtime + this.appKey
@@ -181,19 +192,19 @@ class YoudaoTranslator extends Translator {
       return
     }
 
-    const result: Translation = {query: '', paraphrase: ''}
+    const result: TransType = new Translation()
     result['query'] = this.query
     result['paraphrase'] = obj['translation'][0]
     if ('basic' in obj && obj['basic']) {
-      if ('explains' in obj['basic']) result['explain'] = obj['basic']['explains']
       if ('phonetic' in obj['basic']) result['phonetic'] = obj['basic']['phonetic']
+      if ('explains' in obj['basic']) result['explain'] = obj['basic']['explains']
     }
     return result
   }
 }
 
 
-export default async function translate(query: string): Promise<Translation> {
+export default async function translate(query: string): Promise<TransType> {
   const ENGINES = {
     'baidu': BaiduTranslator,
     'ciba': CibaTranslator,

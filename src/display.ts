@@ -1,12 +1,12 @@
 import {workspace, FloatFactory, Neovim} from 'coc.nvim'
 import {showMessage} from './util'
-import {Translation, DisplayMode} from './types'
+import {TransType, DisplayMode} from './types'
 
 
 class Display {
   private nvim: Neovim
-  private result: Translation
-  constructor(nvim: Neovim, result: Translation) {
+  private result: TransType
+  constructor(nvim: Neovim, result: TransType) {
     this.nvim = nvim
     this.result = result
   }
@@ -34,17 +34,21 @@ class Display {
   }
 
   public async echo() {
-    const message = `${this.result['query']} => ${this.result['paraphrase']}`
+    let message: string
+    if (this.result['paraphrase'])
+      message = `${this.result['query']} => ${this.result['paraphrase']}`
+    else
+      message = `${this.result['query']} => ${this.result['explain'].join(' ')}`
     showMessage(message, 'more')
   }
 
   public async popup() {
     // process content
     const content: string[] = []
-    if ('query' in this.result) content.push("🔍 " + this.result['query'])
-    if ('phonetic' in this.result) content.push("🔉 " + this.result['phonetic'])
-    if ('paraphrase' in this.result) content.push("🌀 " + this.result['paraphrase'])
-    if ('explain' in this.result) content.push(...this.result['explain'].map((i: string) => "📝 " + i))
+    if (this.result['query']) content.push("🔍 " + this.result['query'])
+    if (this.result['phonetic']) content.push("🔉 " + this.result['phonetic'])
+    if (this.result['paraphrase']) content.push("🌀 " + this.result['paraphrase'])
+    if (this.result['explain']) content.push(...this.result['explain'].map((i: string) => "📝 " + i))
     content.push("")
 
     const [height, width] = await this.getPopupSize()
@@ -80,7 +84,7 @@ class Display {
 }
 
 
-export default async function display(nvim: Neovim, result: Translation, mode: DisplayMode): Promise<void> {
+export default async function display(nvim: Neovim, result: TransType, mode: DisplayMode): Promise<void> {
   const displayer = new Display(nvim, result)
 
   switch (mode) {

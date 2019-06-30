@@ -1,11 +1,11 @@
 
 export declare type DisplayMode = 'popup' | 'echo' | 'replace'
 
-export interface Translation {
+export interface TransType {
   query: string
+  phonetic: string
   paraphrase: string
-  phonetic?: string
-  explain?: string[]
+  explain: string[]
 }
 
 

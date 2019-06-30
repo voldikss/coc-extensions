@@ -1,6 +1,6 @@
 import {ExtensionContext, commands, workspace, listManager} from 'coc.nvim'
 import {statAsync, mkdirAsync} from './util'
-import {Translation, DisplayMode} from './types'
+import {TransType, DisplayMode} from './types'
 import TranslationList from './lists/translation'
 import DB from './db'
 import translate from './translator'
@@ -55,7 +55,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 async function manager(mode: DisplayMode, db: DB): Promise<void> {
   const {nvim} = workspace
   const currWord = (await nvim.eval("expand('<cword>')")).toString()
-  const result: Translation = await translate(currWord)
+  const result: TransType = await translate(currWord)
   if (!result) return
   await display(nvim, result, mode)
 
