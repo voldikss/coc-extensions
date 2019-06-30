@@ -1,10 +1,10 @@
 import {ExtensionContext, commands, workspace, listManager} from 'coc.nvim'
 import {statAsync, mkdirAsync} from './util'
-import {Translation} from './types';
+import {Translation} from './types'
 import TranslationList from './lists/translation'
 import Display from './display'
 import DB from './db'
-import translate from './translator';
+import translate from './translator'
 
 
 export async function activate(context: ExtensionContext): Promise<void> {

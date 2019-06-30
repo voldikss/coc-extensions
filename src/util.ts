@@ -1,5 +1,5 @@
 import {configure, xhr, XHROptions} from 'request-light'
-import {workspace} from 'coc.nvim';
+import {workspace, MsgTypes} from 'coc.nvim';
 import crypto from 'crypto'
 import fs from 'fs'
 import util from 'util'
@@ -31,7 +31,7 @@ export async function request(type: string, url: string, data: object = null): P
     return obj
   }
   catch (e) {
-    showMessage(e['responseText'])
+    showMessage(e['responseText'], 'error')
     return
   }
 }
@@ -83,6 +83,6 @@ export function md5(str: string): string {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
-export function showMessage(message: string) {
-  workspace.showMessage(`[coc-translator] ${message}`)
+export function showMessage(message: string, type: MsgTypes) {
+  workspace.showMessage(`[coc-translator] ${message}`, type)
 }

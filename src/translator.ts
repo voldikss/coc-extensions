@@ -38,10 +38,10 @@ class BaiduTranslator extends Translator {
     const obj = await request('GET', url)
 
     if (!obj) {
-      showMessage("HTTP request failed")
+      showMessage("HTTP request failed", 'error')
       return
     } else if ('error_code' in obj) {
-      showMessage(BAIDU_ERROR_CODE[obj['error_code']])
+      showMessage(BAIDU_ERROR_CODE[obj['error_code']], 'error')
       return
     }
 
@@ -77,7 +77,7 @@ class CibaTranslator extends Translator {
     const obj = await request('GET', url)
 
     if (!obj || !('status' in obj) || obj['status'] !== 0) {
-      showMessage("HTTP request failed")
+      showMessage("HTTP request failed", 'error')
       return
     }
 
@@ -136,7 +136,7 @@ class GoogleTranslator extends Translator {
     const obj = await request('GET', url)
 
     if (!obj) {
-      showMessage("HTTP request failed")
+      showMessage("HTTP request failed", 'error')
       return
     }
 
@@ -174,10 +174,10 @@ class YoudaoTranslator extends Translator {
     const obj = await request('GET', url)
 
     if (!obj) {
-      showMessage("HTTP request failed")
+      showMessage("HTTP request failed", 'error')
       return
     } else if ('errorCode' in obj && obj['errorCode'] !== "0") {
-      showMessage(YOUDAO_ERROR_CODE[obj['errorCode']])
+      showMessage(YOUDAO_ERROR_CODE[obj['errorCode']], 'error')
       return
     }
 

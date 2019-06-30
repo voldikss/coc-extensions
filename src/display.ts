@@ -28,7 +28,7 @@ export default class Display {
 
   public async echo() {
     const message = `${this.result['query']} => ${this.result['paraphrase']}`
-    showMessage(message)
+    showMessage(message, 'more')
   }
 
   public async popup() {
