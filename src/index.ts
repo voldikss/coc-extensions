@@ -1,10 +1,11 @@
 import {ExtensionContext, commands, workspace, listManager} from 'coc.nvim'
 import {statAsync, mkdirAsync} from './util'
-import {Translation} from './types'
+import {Translation, DisplayMode} from './types'
 import TranslationList from './lists/translation'
 import Display from './display'
 import DB from './db'
 import translate from './translator'
+import display from './display'
 
 
 export async function activate(context: ExtensionContext): Promise<void> {
@@ -52,26 +53,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(listManager.registerList(new TranslationList(nvim, db)))
 }
 
-async function manager(mode: string, db: DB): Promise<void> {
+async function manager(mode: DisplayMode, db: DB): Promise<void> {
   const {nvim} = workspace
   const currWord = (await nvim.eval("expand('<cword>')")).toString()
   const result: Translation = await translate(currWord)
   if (!result) return
-  const display = new Display(nvim, result)
-
-  switch (mode) {
-    case 'popup':
-      await display.popup()
-      break
-    case 'echo':
-      await display.echo()
-      break
-    case 'replace':
-      display.replace()
-      break
-    default:
-      break
-  }
+  await display(nvim, result, mode)
 
   // save history
   const bufnr = workspace.bufnr

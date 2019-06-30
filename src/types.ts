@@ -1,4 +1,6 @@
 
+export declare type DisplayMode = 'popup' | 'echo' | 'replace'
+
 export interface Translation {
   query: string
   paraphrase: string

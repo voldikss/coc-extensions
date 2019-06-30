@@ -1,10 +1,16 @@
 import {workspace, FloatFactory, Neovim} from 'coc.nvim'
-import {showMessage} from './util';
-import {Translation} from './types';
+import {showMessage} from './util'
+import {Translation, DisplayMode} from './types'
 
 
-export default class Display {
-  constructor(private nvim: Neovim, private result: Translation) {}
+class Display {
+  private nvim: Neovim
+  private result: Translation
+  constructor(nvim: Neovim, result: Translation) {
+    this.nvim = nvim
+    this.result = result
+  }
+
   private async getPopupSize(): Promise<number[]> {
     let height = 0
     let width = 0
@@ -69,5 +75,22 @@ export default class Display {
     this.nvim.command(`let @a='${this.result["paraphrase"]}'`)
     this.nvim.command('normal! viw"ap')
     this.nvim.command('let @a=reg_tmp')
+  }
+}
+
+
+export default async function display(nvim: Neovim, result: Translation, mode: DisplayMode): Promise<void> {
+  const displayer = new Display(nvim, result)
+
+  switch (mode) {
+    case 'popup':
+      displayer.popup()
+      break
+    case 'echo':
+      displayer.echo()
+      break
+    case 'replace':
+      displayer.replace()
+      break
   }
 }
