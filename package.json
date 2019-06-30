@@ -41,7 +41,13 @@
         },
         "translator.engine": {
           "type": "string",
-          "default": "google"
+          "default": "google",
+          "enum": [
+            "google",
+            "baidu",
+            "ciba",
+            "youdao"
+          ]
         },
         "translator.maxsize": {
           "type": "number",
