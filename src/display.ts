@@ -3,54 +3,38 @@ import {showMessage} from './util'
 import {TransType, DisplayMode} from './types'
 
 class Display {
-  private nvim: Neovim
-  private result: TransType
-  constructor(nvim: Neovim, result: TransType) {
+
+  constructor(private nvim: Neovim) {
     this.nvim = nvim
-    this.result = result
   }
 
-  private async getPopupSize(): Promise<number[]> {
-    let height = 0
-    let width = 0
+  private buildContent(trans: TransType): string[] {
+    const content: string[] = []
+    if (trans['query']) content.push("🔍 " + trans['query'])
+    if (trans['phonetic']) content.push("🔉 " + trans['phonetic'])
+    if (trans['paraphrase']) content.push("🌀 " + trans['paraphrase'])
+    if (trans['explain']) content.push(...trans['explain'].map((i: string) => "📝 " + i))
+    return content
+  }
 
-    for (let i in this.result) {
-      if (i == 'query' || i == 'paraphrase' || i == 'phonetic') {
-        if (!this.result[i]) continue
-        let line_width = await this.nvim.call('strdisplaywidth', this.result[i]) + 6
-        if (line_width > width) width = line_width
-        height++
-      } else {
-        let explains = this.result[i]
-        for (let j of Object.keys(explains)) {
-          let line_width = await this.nvim.call('strdisplaywidth', explains[j]) + 6
-          if (line_width > width) width = line_width
-          height++
-        }
-      }
+  public async winSize(content: string[]): Promise<number[]> {
+    const height = content.length
+    let width = 0
+    for (let i of Object.keys(content)) {
+      let line_width = await this.nvim.call('strdisplaywidth', content[i]) + 2
+      if (line_width > width) width = line_width
     }
     return [height, width]
   }
 
-  public async echo(): Promise<void> {
-    let message: string
-    if (this.result['paraphrase'])
-      message = `${this.result['query']} => ${this.result['paraphrase']}`
-    else
-      message = `${this.result['query']} => ${this.result['explain'].join(' ')}`
+  public async echo(trans: TransType): Promise<void> {
+    let message = `${trans['query']} ==> ${trans['paraphrase']} ${trans['explain'].join(' ')}`
     showMessage(message)
   }
 
-  public async popup(): Promise<void> {
-    // process content
-    const content: string[] = []
-    if (this.result['query']) content.push("🔍 " + this.result['query'])
-    if (this.result['phonetic']) content.push("🔉 " + this.result['phonetic'])
-    if (this.result['paraphrase']) content.push("🌀 " + this.result['paraphrase'])
-    if (this.result['explain']) content.push(...this.result['explain'].map((i: string) => "📝 " + i))
-    content.push("")
-
-    const [height, width] = await this.getPopupSize()
+  public async popup(trans: TransType): Promise<void> {
+    const content: string[] = this.buildContent(trans)
+    let [height, width] = await this.winSize(content)
 
     // todo: syntax highlight
 
@@ -75,29 +59,28 @@ class Display {
     }
   }
 
-  public async replace(): Promise<void> {
+  public async replace(trans: TransType): Promise<void> {
     this.nvim.pauseNotification()
     this.nvim.command('let reg_tmp=@a', true)
-    this.nvim.command('let @a="VOLDIKSS"', true)
-    this.nvim.command(`let @a='${this.result["paraphrase"]}'`, true)
+    this.nvim.command(`let @a='${trans["paraphrase"]}'`, true)
     this.nvim.command('normal! viw"ap', true)
     this.nvim.command('let @a=reg_tmp', true)
     await this.nvim.resumeNotification()
   }
 }
 
-export default async function display(nvim: Neovim, result: TransType, mode: DisplayMode): Promise<void> {
-  const displayer = new Display(nvim, result)
+export default async function display(nvim: Neovim, trans: TransType, mode: DisplayMode): Promise<void> {
+  const displayer = new Display(nvim)
 
   switch (mode) {
     case 'popup':
-      await displayer.popup()
+      await displayer.popup(trans)
       break
     case 'echo':
-      await displayer.echo()
+      await displayer.echo(trans)
       break
     case 'replace':
-      await displayer.replace()
+      await displayer.replace(trans)
       break
   }
 }

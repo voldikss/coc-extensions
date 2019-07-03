@@ -106,10 +106,8 @@ class GoogleTranslator extends Translator {
   private getParaphrase(obj: object): string {
     let paraphrase = ""
     for (let x of Object.keys(obj[0])) {
-      if (obj[0].hasOwnProperty(x)) {
-        let trans = obj[0][x]
-        if (trans[0]) paraphrase += trans[0]
-      }
+      let trans = obj[0][x]
+      if (trans[0]) paraphrase += trans[0]
     }
     return paraphrase
   }

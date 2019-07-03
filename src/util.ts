@@ -17,9 +17,8 @@ export async function request(type: string, url: string, data: object = null, he
   let post_data: string = null
   if (type === 'POST')
     post_data = JSON.stringify(data)
-  else {
+  else if (data)
     url = url + '?' + urlencode(data)
-  }
 
   const options: XHROptions = {
     type,
@@ -98,6 +97,6 @@ export function md5(str: string): string {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
-export function showMessage(message: string, type: MsgTypes = 'more'):void {
+export function showMessage(message: string, type: MsgTypes = 'more'): void {
   workspace.showMessage(`[coc-translator] ${message}`, type)
 }
