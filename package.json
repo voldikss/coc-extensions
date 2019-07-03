@@ -39,14 +39,14 @@
           "default": "zh",
           "description": "Target language"
         },
-        "translator.engine": {
-          "type": "string",
-          "default": "google",
+        "translator.engines": {
+          "type": "string[]",
+          "default": ["ciba", "google"],
           "enum": [
-            "google",
-            "baidu",
-            "ciba",
-            "youdao"
+            ["google"],
+            ["baidu"],
+            ["ciba"],
+            ["youdao"]
           ]
         },
         "translator.maxsize": {

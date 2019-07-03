@@ -178,7 +178,7 @@ class YoudaoTranslator extends Translator {
   }
 }
 
-export default async function translate(query: string): Promise<TransType> {
+export default async function translate(query: string): Promise<TransType[]> {
   const ENGINES = {
     baidu: BaiduTranslator,
     ciba: CibaTranslator,
@@ -187,13 +187,18 @@ export default async function translate(query: string): Promise<TransType> {
   }
 
   const config: WorkspaceConfiguration = workspace.getConfiguration('translator')
-  const engine = config.get<string>('engine', 'google')
+  const engines = config.get<string[]>('engines', ['ciba', 'google'])
   const toLang = config.get<string>('toLang', 'zh')
   const appId = config.get<string>('appId', '')
   const appKey = config.get<string>('appKey', '')
 
-  let cls = ENGINES[engine]
-  let translator = new cls(engine, appId, appKey)
-
-  return translator.translate(query, toLang)
+  const trans: TransType[] = []
+  for (const i of Object.keys(engines)) {
+    let e = engines[i]
+    let cls = ENGINES[e]
+    let translator = new cls(e, appId, appKey)
+    let translation = translator.translate(query, toLang)
+    trans.push(translation)
+  }
+  return trans
 }

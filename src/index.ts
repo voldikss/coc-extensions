@@ -54,7 +54,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 async function manager(mode: DisplayMode, db: DB): Promise<void> {
   const {nvim} = workspace
   const currWord = (await nvim.eval("expand('<cword>')")).toString()
-  const result: TransType = await translate(currWord)
+  const result: TransType[] = await translate(currWord)
   if (!result) return
   await display(nvim, result, mode)
 

@@ -33,8 +33,10 @@ class Display {
     showMessage(message)
   }
 
-  public async popup(trans: TransType): Promise<void> {
-    const content: string[] = this.buildContent(trans)
+  public async popup(trans: TransType[]): Promise<void> {
+    const content: string[] = []
+    for (const t of Object.keys(trans))
+      content.push(...this.buildContent(trans[t]))
     let [height, width] = await this.winSize(content)
 
     // todo: syntax highlight
@@ -70,7 +72,7 @@ class Display {
   }
 }
 
-export default async function display(nvim: Neovim, trans: TransType, mode: DisplayMode): Promise<void> {
+export default async function display(nvim: Neovim, trans: TransType[], mode: DisplayMode): Promise<void> {
   const displayer = new Display(nvim)
 
   switch (mode) {
@@ -78,10 +80,10 @@ export default async function display(nvim: Neovim, trans: TransType, mode: Disp
       await displayer.popup(trans)
       break
     case 'echo':
-      await displayer.echo(trans)
+      await displayer.echo(trans[0])
       break
     case 'replace':
-      await displayer.replace(trans)
+      await displayer.replace(trans[0])
       break
   }
 }
