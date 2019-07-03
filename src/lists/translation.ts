@@ -1,6 +1,6 @@
 import {Neovim, BasicList, ListContext, workspace, ListItem} from 'coc.nvim'
 import {Position, Range, TextEdit} from 'vscode-languageserver-protocol'
-import {HistoryItem} from '../types';
+import {HistoryItem} from '../types'
 import DB from '../db'
 
 export default class TranslationList extends BasicList {
@@ -92,15 +92,15 @@ export default class TranslationList extends BasicList {
   }
 
   public doHighlight(): void {
-    let {nvim} = this;
-    nvim.pauseNotification();
-    nvim.command('syntax match CocTranslatorQuery /\\v^.*\\v%20v/', true);
-    nvim.command('syntax match CocTranslatorOmit /\\v\\.\\.\\./', true);
-    nvim.command('syntax match CocTranslatorResult /\\v%21v.*$/', true);
-    nvim.command('highlight default link CocTranslatorQuery Keyword', true);
-    nvim.command('highlight default link CocTranslatorResult String', true);
+    let {nvim} = this
+    nvim.pauseNotification()
+    nvim.command('syntax match CocTranslatorQuery /\\v^.*\\v%20v/', true)
+    nvim.command('syntax match CocTranslatorOmit /\\v\\.\\.\\./', true)
+    nvim.command('syntax match CocTranslatorResult /\\v%21v.*$/', true)
+    nvim.command('highlight default link CocTranslatorQuery Keyword', true)
+    nvim.command('highlight default link CocTranslatorResult String', true)
     nvim.resumeNotification().catch(_e => {
       // noop
-    });
+    })
   }
 }

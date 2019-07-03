@@ -1,9 +1,8 @@
 import {configure, xhr, XHROptions} from 'request-light'
-import {workspace, MsgTypes} from 'coc.nvim';
+import {workspace, MsgTypes} from 'coc.nvim'
 import crypto from 'crypto'
 import fs from 'fs'
 import util from 'util'
-
 
 export async function request(type: string, url: string, data: object = null, headers: object = null): Promise<object> {
   const httpConfig = workspace.getConfiguration('http')
@@ -23,10 +22,10 @@ export async function request(type: string, url: string, data: object = null, he
   }
 
   const options: XHROptions = {
-    type: type,
-    url: url,
+    type,
+    url,
     data: post_data || null,
-    headers: headers,
+    headers,
     timeout: 5000,
     followRedirects: 5,
     responseType: 'json'
@@ -44,7 +43,7 @@ export async function request(type: string, url: string, data: object = null, he
   }
 }
 
-function urlencode(data: object) {
+function urlencode(data: object): string {
   return Object.keys(data).map(key =>
     [key, data[key]].map(encodeURIComponent).join("="))
     .join("&")
@@ -54,7 +53,9 @@ export async function statAsync(filepath: string): Promise<fs.Stats | null> {
   let stat = null
   try {
     stat = await util.promisify(fs.stat)(filepath)
-  } catch (e) {}
+  } catch (e) {
+    // noop
+  }
   return stat
 }
 
@@ -97,6 +98,6 @@ export function md5(str: string): string {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
-export function showMessage(message: string, type: MsgTypes = 'more') {
+export function showMessage(message: string, type: MsgTypes = 'more'):void {
   workspace.showMessage(`[coc-translator] ${message}`, type)
 }

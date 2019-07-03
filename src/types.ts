@@ -8,10 +8,8 @@ export interface TransType {
   explain: string[]
 }
 
-
 export interface HistoryItem {
   id: string
   content: string[]
   path: string
 }
-

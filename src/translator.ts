@@ -1,8 +1,7 @@
 import {workspace, WorkspaceConfiguration} from 'coc.nvim'
 import {YOUDAO_ERROR_CODE, BAIDU_ERROR_CODE} from './errcode'
 import {md5, sha256, request, showMessage} from './util'
-import {TransType} from './types';
-
+import {TransType} from './types'
 
 class Translation implements TransType {
   public query: string
@@ -17,7 +16,6 @@ class Translation implements TransType {
   }
 }
 
-
 class Translator {
   public toLang: string
   public appId: string
@@ -30,7 +28,6 @@ class Translator {
     this.query = query
   }
 }
-
 
 class BaiduTranslator extends Translator {
   constructor(
@@ -66,7 +63,6 @@ class BaiduTranslator extends Translator {
   }
 }
 
-
 class CibaTranslator extends Translator {
   constructor(
     query: string,
@@ -99,7 +95,6 @@ class CibaTranslator extends Translator {
   }
 }
 
-
 class GoogleTranslator extends Translator {
   constructor(
     query: string,
@@ -110,9 +105,11 @@ class GoogleTranslator extends Translator {
 
   private getParaphrase(obj: object): string {
     let paraphrase = ""
-    for (let x in obj[0]) {
-      let trans = obj[0][x]
-      if (trans[0]) paraphrase += trans[0]
+    for (let x of Object.keys(obj[0])) {
+      if (obj[0].hasOwnProperty(x)) {
+        let trans = obj[0][x]
+        if (trans[0]) paraphrase += trans[0]
+      }
     }
     return paraphrase
   }
@@ -120,7 +117,7 @@ class GoogleTranslator extends Translator {
   private getExplain(obj: object): string[] {
     const explains = []
     if (obj[1]) {
-      for (let x in obj[1]) {
+      for (let x of Object.keys(obj[1])) {
         let expl = obj[1][x]
         let str = `[${expl[0][0]}] `
         str += expl[2].map((i: string[]) => i[0]).join(', ')
@@ -152,7 +149,6 @@ class GoogleTranslator extends Translator {
     return result
   }
 }
-
 
 class YoudaoTranslator extends Translator {
   constructor(
@@ -197,13 +193,12 @@ class YoudaoTranslator extends Translator {
   }
 }
 
-
 export default async function translate(query: string): Promise<TransType> {
   const ENGINES = {
-    'baidu': BaiduTranslator,
-    'ciba': CibaTranslator,
-    'google': GoogleTranslator,
-    'youdao': YoudaoTranslator
+    baidu: BaiduTranslator,
+    ciba: CibaTranslator,
+    google: GoogleTranslator,
+    youdao: YoudaoTranslator
   }
 
   const config: WorkspaceConfiguration = workspace.getConfiguration('translator')

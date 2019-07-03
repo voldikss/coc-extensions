@@ -85,7 +85,7 @@
     "request-light": "^0.2.4",
     "rimraf": "^2.6.3",
     "ts-loader": "^6.0.4",
-    "tslint": "^5.12.1",
+    "tslint": "^5.18.0",
     "typescript": "^3.5.2",
     "uuid": "^3.3.2",
     "webpack": "^4.35.0",

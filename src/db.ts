@@ -1,8 +1,7 @@
 import {statAsync, writeFile, readFile} from './util'
-import {HistoryItem} from './types';
+import {HistoryItem} from './types'
 import path from 'path'
 import uuid = require('uuid/v1')
-
 
 export default class DB {
   private file: string

@@ -6,7 +6,6 @@ import DB from './db'
 import translate from './translator'
 import display from './display'
 
-
 export async function activate(context: ExtensionContext): Promise<void> {
   const {subscriptions, storagePath} = context
   const {nvim} = workspace
@@ -72,7 +71,8 @@ async function manager(mode: DisplayMode, db: DB): Promise<void> {
 async function exportHistory(db: DB): Promise<void> {
   const arr = await db.load()
   const {nvim} = workspace
-  nvim.command('tabnew')
+  nvim.pauseNotification()
+  nvim.command('tabnew', true)
   for (let item of arr) {
     let text = item.content[0].padEnd(20) + item.content[1]
     nvim.call('append', [0, text], true)
@@ -82,4 +82,5 @@ async function exportHistory(db: DB): Promise<void> {
   nvim.command('syntax match CocTranslatorResult /\\v%21v.*$/', true)
   nvim.command('highlight default link CocTranslatorQuery Keyword', true)
   nvim.command('highlight default link CocTranslatorResult String', true)
+  await nvim.resumeNotification()
 }
