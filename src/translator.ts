@@ -73,22 +73,17 @@ class CibaTranslator extends Translator {
     toLang: string,
     appId: string,
     appKey: string
-  ) {
-    super(query, toLang, appId, appKey)
-  }
+  ) {super(query, toLang, appId, appKey)}
 
   public async translate(): Promise<TransType> {
-    const url = `https://fy.iciba.com/ajax.php?a=fy&w=${this.query}&f=auto&t=${this.toLang}`
+    const url = `https://fy.iciba.com/ajax.php`
 
-    // XXX: why the following code get {"responseText":"","status":200} result
-    // const data = {}
-    // data['a'] = 'fy'
-    // data['w'] = this.query
-    // data['f'] = 'auto'
-    // data['t'] = this.toLang
-    // const obj = await request('GET', 'https://fy.iciba.com/ajax.php', data)
-
-    const obj = await request('GET', url)
+    const data = {}
+    data['a'] = 'fy'
+    data['w'] = this.query
+    data['f'] = 'auto'
+    data['t'] = this.toLang
+    const obj = await request('GET', url, data)
 
     if (!obj || !('status' in obj) || obj['status'] !== 0) {
       showMessage("HTTP request failed", 'error')
@@ -111,9 +106,7 @@ class GoogleTranslator extends Translator {
     toLang: string,
     appId: string,
     appKey: string
-  ) {
-    super(query, toLang, appId, appKey)
-  }
+  ) {super(query, toLang, appId, appKey)}
 
   private getParaphrase(obj: object): string {
     let paraphrase = ""
@@ -169,6 +162,7 @@ class YoudaoTranslator extends Translator {
     appKey: string
   ) {
     super(query, toLang, appId, appKey)
+    if (this.toLang === 'zh') this.toLang = 'zh-CHS'
   }
 
   public async translate(): Promise<TransType> {

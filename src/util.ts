@@ -5,19 +5,27 @@ import fs from 'fs'
 import util from 'util'
 
 
-export async function request(type: string, url: string, data: object = null): Promise<object> {
+export async function request(type: string, url: string, data: object = null, headers: object = null): Promise<object> {
   const httpConfig = workspace.getConfiguration('http')
   configure(httpConfig.get<string>('proxy', undefined), httpConfig.get<boolean>('proxyStrictSSL', undefined))
 
-  const headers = {
-    'Accept-Encoding': 'gzip, deflate',
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'
+  if (!headers)
+    headers = {
+      'Accept-Encoding': 'gzip, deflate',
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'
+    }
+
+  let post_data: string = null
+  if (type === 'POST')
+    post_data = JSON.stringify(data)
+  else {
+    url = url + '?' + urlencode(data)
   }
 
   const options: XHROptions = {
     type: type,
     url: url,
-    data: JSON.stringify(data),
+    data: post_data || null,
     headers: headers,
     timeout: 5000,
     followRedirects: 5,
@@ -34,6 +42,12 @@ export async function request(type: string, url: string, data: object = null): P
     showMessage(e['responseText'], 'error')
     return
   }
+}
+
+function urlencode(data: object) {
+  return Object.keys(data).map(key =>
+    [key, data[key]].map(encodeURIComponent).join("="))
+    .join("&")
 }
 
 export async function statAsync(filepath: string): Promise<fs.Stats | null> {
@@ -83,6 +97,6 @@ export function md5(str: string): string {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
-export function showMessage(message: string, type: MsgTypes='more') {
+export function showMessage(message: string, type: MsgTypes = 'more') {
   workspace.showMessage(`[coc-translator] ${message}`, type)
 }
