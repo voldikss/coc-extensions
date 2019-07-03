@@ -4,6 +4,7 @@ import {md5, sha256, request, showMessage} from './util'
 import {TransType} from './types'
 
 class Translation implements TransType {
+  public engine: string
   public query: string
   public paraphrase: string
   public phonetic: string
@@ -17,35 +18,28 @@ class Translation implements TransType {
 }
 
 class Translator {
-  public toLang: string
+  public name: string
   public appId: string
   public appKey: string
-  public query: string
-  constructor(query: string, toLang: string, appId: string, appKey: string) {
-    this.toLang = toLang
+  constructor(name: string, appId: string, appKey: string) {
+    this.name = name
     this.appId = appId
     this.appKey = appKey
-    this.query = query
   }
 }
 
 class BaiduTranslator extends Translator {
-  constructor(
-    query: string,
-    toLang: string,
-    appId: string,
-    appKey: string
-  ) {
-    super(query, toLang, appId, appKey)
+  constructor(name: string, appId: string, appKey: string) {
+    super(name, appId, appKey)
   }
 
-  public async translate(): Promise<TransType> {
+  public async translate(query: string, toLang: string): Promise<TransType> {
     const salt = new Date().getTime()
-    const str = this.appId + this.query + salt + this.appKey
+    const str = this.appId + query + salt + this.appKey
     const sign = md5(str)
 
-    const url = `http://api.fanyi.baidu.com/api/trans/vip/translate?q=${this.query}` +
-      `&appid=${this.appId}&salt=${salt}&from=auto&to=${this.toLang}&sign=${sign}`
+    const url = `http://api.fanyi.baidu.com/api/trans/vip/translate?q=${query}` +
+      `&appid=${this.appId}&salt=${salt}&from=auto&to=${toLang}&sign=${sign}`
     const obj = await request('GET', url)
 
     if (!obj) {
@@ -57,28 +51,26 @@ class BaiduTranslator extends Translator {
     }
 
     const result: TransType = new Translation()
-    result['query'] = this.query
+    result['engine'] = this.name
+    result['query'] = query
     result['paraphrase'] = obj['trans_result'][0]['dst']
     return result
   }
 }
 
 class CibaTranslator extends Translator {
-  constructor(
-    query: string,
-    toLang: string,
-    appId: string,
-    appKey: string
-  ) {super(query, toLang, appId, appKey)}
+  constructor(name: string, appId: string, appKey: string) {
+    super(name, appId, appKey)
+  }
 
-  public async translate(): Promise<TransType> {
+  public async translate(query: string, toLang: string): Promise<TransType> {
     const url = `https://fy.iciba.com/ajax.php`
 
     const data = {}
     data['a'] = 'fy'
-    data['w'] = this.query
+    data['w'] = query
     data['f'] = 'auto'
-    data['t'] = this.toLang
+    data['t'] = toLang
     const obj = await request('GET', url, data)
 
     if (!obj || !('status' in obj) || obj['status'] !== 0) {
@@ -87,7 +79,8 @@ class CibaTranslator extends Translator {
     }
 
     const result: TransType = new Translation()
-    result['query'] = this.query
+    result['engine'] = this.name
+    result['query'] = query
     if ('ph_en' in obj['content']) result['phonetic'] = `[${obj['content']['ph_en']}]`
     if ('word_mean' in obj['content']) result['explain'] = obj['content']['word_mean']
 
@@ -96,12 +89,9 @@ class CibaTranslator extends Translator {
 }
 
 class GoogleTranslator extends Translator {
-  constructor(
-    query: string,
-    toLang: string,
-    appId: string,
-    appKey: string
-  ) {super(query, toLang, appId, appKey)}
+  constructor(name: string, appId: string, appKey: string) {
+    super(name, appId, appKey)
+  }
 
   private getParaphrase(obj: object): string {
     let paraphrase = ""
@@ -125,12 +115,12 @@ class GoogleTranslator extends Translator {
     return explains
   }
 
-  public async translate(): Promise<TransType> {
+  public async translate(query: string, toLang: string): Promise<TransType> {
     let host = 'translate.googleapis.com'
-    if (this.toLang === 'zh') host = 'translate.google.cn'
+    if (toLang === 'zh') host = 'translate.google.cn'
 
-    const url = `https://${host}/translate_a/single?client=gtx&sl=auto&tl=${this.toLang}` +
-      `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${this.query}`
+    const url = `https://${host}/translate_a/single?client=gtx&sl=auto&tl=${toLang}` +
+      `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${query}`
 
     const obj = await request('GET', url)
 
@@ -140,7 +130,8 @@ class GoogleTranslator extends Translator {
     }
 
     const result: TransType = new Translation()
-    result['query'] = this.query
+    result['engine'] = this.name
+    result['query'] = query
     result['paraphrase'] = this.getParaphrase(obj)
     result['explain'] = this.getExplain(obj)
 
@@ -149,26 +140,21 @@ class GoogleTranslator extends Translator {
 }
 
 class YoudaoTranslator extends Translator {
-  constructor(
-    query: string,
-    toLang: string,
-    appId: string,
-    appKey: string
-  ) {
-    super(query, toLang, appId, appKey)
-    if (this.toLang === 'zh') this.toLang = 'zh-CHS'
+  constructor(name: string, appId: string, appKey: string) {
+    super(name, appId, appKey)
   }
 
-  public async translate(): Promise<TransType> {
+  public async translate(query: string, toLang: string): Promise<TransType> {
+    if (toLang === 'zh') toLang = 'zh-CHS'
     const salt = new Date().getTime()
     const curtime = Math.round(new Date().getTime() / 1000)
-    const str = this.appId + this.query + salt + curtime + this.appKey
+    const str = this.appId + query + salt + curtime + this.appKey
     const sign = sha256(str)
 
-    if (this.toLang === 'zh') this.toLang = 'zh-CHS'
+    if (toLang === 'zh') toLang = 'zh-CHS'
 
-    const url = `https://openapi.youdao.com/api?q=${this.query}&appKey=${this.appId}` +
-      `&salt=${salt}&from=auto&to=${this.toLang}&curtime=${curtime}&sign=${sign}&signType=v3`
+    const url = `https://openapi.youdao.com/api?q=${query}&appKey=${this.appId}` +
+      `&salt=${salt}&from=auto&to=${toLang}&curtime=${curtime}&sign=${sign}&signType=v3`
 
     const obj = await request('GET', url)
 
@@ -181,7 +167,8 @@ class YoudaoTranslator extends Translator {
     }
 
     const result: TransType = new Translation()
-    result['query'] = this.query
+    result['engine'] = this.name
+    result['query'] = query
     result['paraphrase'] = obj['translation'][0]
     if ('basic' in obj && obj['basic']) {
       if ('phonetic' in obj['basic']) result['phonetic'] = obj['basic']['phonetic']
@@ -206,7 +193,7 @@ export default async function translate(query: string): Promise<TransType> {
   const appKey = config.get<string>('appKey', '')
 
   let cls = ENGINES[engine]
-  let translator = new cls(query, toLang, appId, appKey)
+  let translator = new cls(engine, appId, appKey)
 
-  return translator.translate()
+  return translator.translate(query, toLang)
 }

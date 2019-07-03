@@ -2,6 +2,7 @@
 export declare type DisplayMode = 'popup' | 'echo' | 'replace'
 
 export interface TransType {
+  engine: string
   query: string
   phonetic: string
   paraphrase: string

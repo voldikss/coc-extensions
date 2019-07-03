@@ -10,7 +10,8 @@ class Display {
 
   private buildContent(trans: TransType): string[] {
     const content: string[] = []
-    if (trans['query']) content.push("🔍 " + trans['query'])
+    content.push(`From ${trans['engine']}:`)
+    content.push("🔍 " + trans['query'])
     if (trans['phonetic']) content.push("🔉 " + trans['phonetic'])
     if (trans['paraphrase']) content.push("🌀 " + trans['paraphrase'])
     if (trans['explain']) content.push(...trans['explain'].map((i: string) => "📝 " + i))
