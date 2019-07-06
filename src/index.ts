@@ -57,15 +57,33 @@ async function manager(mode: DisplayMode, db: DB): Promise<void> {
   const result: TransType[] = await translate(currWord)
   if (!result) return
   await display(nvim, result, mode)
+  await saveHistory(db, result)
+}
 
-  // save history
+async function saveHistory(db: DB, result: TransType[]): Promise<void> {
+  const {nvim} = workspace
   const bufnr = workspace.bufnr
   const doc = workspace.getDocument(bufnr)
   const [, lnum, col] = await nvim.call('getpos', ".")
   const path = `${doc.uri}\t${lnum}\t${col}`
-  const paraphrase: string = result['paraphrase']
-  if (paraphrase && paraphrase.toLowerCase() !== currWord.toLowerCase())
-    await db.add([currWord, result['paraphrase']], path)
+
+  for (const i of Object.keys(result)) {
+    let t: TransType = result[i]
+    let query: string = t['query']
+    let paraphrase: string = t['paraphrase']
+    let explain: string[] = t['explain']
+    let item: string[] = []
+
+    if (explain)
+      item = [t['query'], explain[0]]
+    else if (paraphrase && query.toLowerCase() !== paraphrase.toLowerCase())
+      item = [t['query'], paraphrase]
+
+    if (item) {
+      await db.add(item, path)
+      return
+    }
+  }
 }
 
 async function exportHistory(db: DB): Promise<void> {
