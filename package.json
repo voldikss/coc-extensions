@@ -24,29 +24,18 @@
     "configuration": {
       "type": "object",
       "properties": {
-        "translator.appId": {
-          "type": "string",
-          "default": "",
-          "description": "AppId of translation API"
-        },
-        "translator.appKey": {
-          "type": "string",
-          "default": "",
-          "description": "AppKey of translation API"
-        },
         "translator.toLang": {
           "type": "string",
           "default": "zh",
           "description": "Target language"
         },
         "translator.engines": {
-          "type": "string[]",
-          "default": ["ciba", "google"],
+          "type": "array",
+          "default": ["bing", "ciba", "google"],
           "enum": [
-            ["google"],
-            ["baidu"],
+            ["bing"],
             ["ciba"],
-            ["youdao"]
+            ["google"]
           ]
         },
         "translator.maxsize": {

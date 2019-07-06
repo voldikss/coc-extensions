@@ -4,7 +4,7 @@ import crypto from 'crypto'
 import fs from 'fs'
 import util from 'util'
 
-export async function request(type: string, url: string, data: object = null, headers: object = null): Promise<object> {
+export async function request(type: string, url: string, data: object = null, headers: object = null, responseType = 'json'): Promise<any> {
   const httpConfig = workspace.getConfiguration('http')
   configure(httpConfig.get<string>('proxy', undefined), httpConfig.get<boolean>('proxyStrictSSL', undefined))
 
@@ -27,14 +27,16 @@ export async function request(type: string, url: string, data: object = null, he
     headers,
     timeout: 5000,
     followRedirects: 5,
-    responseType: 'json'
+    responseType
   }
 
   try {
     let response = await xhr(options)
     let {responseText} = response
-    let obj = JSON.parse(responseText)
-    return obj
+    if (responseType === 'json')
+      return JSON.parse(responseText)
+    else
+      return responseText
   }
   catch (e) {
     showMessage(e['responseText'], 'error')
@@ -87,10 +89,6 @@ export function group<T>(array: T[], size: number): T[][] {
     res.push(array.slice(i * size, (i + 1) * size))
   }
   return res
-}
-
-export function sha256(str: string): string {
-  return crypto.createHash('SHA256').update(str).digest('hex')
 }
 
 export function md5(str: string): string {

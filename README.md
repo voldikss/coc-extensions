@@ -20,21 +20,19 @@ Ported from [vim-translate-me](https://github/voldikss/vim-translate-me)
 ## Configuration
 
 - `translator.toLang`: Target language, default: `'zh'`
-- `translator.engine`: Translation engine, default: `'google'`
-- `translator.appId`: AppID of translation API
-- `translator.appKey`: AppKey of translation API
+- `translator.engines`: Translation engines, default: `['bing', 'ciba', 'google']`
 - `translator.maxsize`: Max count of history items, default: 5000
 
 more information, see [package.json](https://github.com/voldikss/coc-translator/blob/master/package.json)
 
 ## Engines
 
-| engine | needs id/key | supported languages | note                  |
-|--------|--------------|---------------------|-----------------------|
-| ciba   | no           | [language list][3]  | -                     |
-| google | no           | -                   | -                     |
-| youdao | yes          | [language list][4]  | [apply for id/key][5] |
-| baidu  | yes          | [language list][1]  | [apply for id/key][2] |
+| engine                 | needs id/key | supported languages |
+|------------------------|--------------|---------------------|
+| bing                   | no           | [language list][1]  |
+| ciba                   | no           | [language list][2]  |
+| google                 | no           | [language list][3]  |
+| youdao(not usable yet) | no           | [language list][4]  |
 
 ## Keymaps
 
@@ -70,11 +68,6 @@ run `:CocList translation` to open the translation list.
 
 For more advance usage, checkout `:h coc-list`
 
-## Todo
-
-- [ ] Syntax highlight
-- [ ] Visual select translation
-
 ## License
 
 MIT
@@ -86,10 +79,7 @@ MIT
 ![](https://user-images.githubusercontent.com/20282795/60385982-6f1cc480-9ac2-11e9-8519-448c6d9c77e4.png)
 ![](https://user-images.githubusercontent.com/20282795/60385983-704df180-9ac2-11e9-9912-96f302f66474.png)
 
-[1]: https://github.com/voldikss/vim-translate-me/wiki/Baidu-api
-[2]: https://api.fanyi.baidu.com/api/trans/product/apidoc
-[3]: https://github.com/voldikss/vim-translate-me/wiki/Ciba-api
+[1]: https://github.com/voldikss/vim-translate-me/wiki/bing-api
+[2]: https://github.com/voldikss/vim-translate-me/wiki/Ciba-api
+[3]: https://github.com/voldikss/vim-translate-me/wiki/Google-api
 [4]: https://github.com/voldikss/vim-translate-me/wiki/Youdao-api
-[5]: https://ai.youdao.com/docs/doc-trans-api.s#p07
-
-

@@ -1,6 +1,5 @@
 import {workspace, WorkspaceConfiguration} from 'coc.nvim'
-import {YOUDAO_ERROR_CODE, BAIDU_ERROR_CODE} from './errcode'
-import {md5, sha256, request, showMessage} from './util'
+import {md5, request, showMessage} from './util'
 import {TransType} from './types'
 
 class Translation implements TransType {
@@ -19,49 +18,54 @@ class Translation implements TransType {
 
 class Translator {
   public name: string
-  public appId: string
-  public appKey: string
-  constructor(name: string, appId: string, appKey: string) {
-    this.name = name
-    this.appId = appId
-    this.appKey = appKey
-  }
+  constructor(name: string) {this.name = name}
 }
 
-class BaiduTranslator extends Translator {
-  constructor(name: string, appId: string, appKey: string) {
-    super(name, appId, appKey)
-  }
+class BingTranslator extends Translator {
+  constructor(name: string) {super(name)}
 
   public async translate(query: string, toLang: string): Promise<TransType> {
-    const salt = new Date().getTime()
-    const str = this.appId + query + salt + this.appKey
-    const sign = md5(str)
+    let url = 'http://bing.com/dict/SerpHoverTrans'
+    if (toLang.match('zh').index >= 0)
+      url = 'http://cn.bing.com/dict/SerpHoverTrans'
+    url += '?q=' + query
 
-    const url = `http://api.fanyi.baidu.com/api/trans/vip/translate?q=${query}` +
-      `&appid=${this.appId}&salt=${salt}&from=auto&to=${toLang}&sign=${sign}`
-    const obj = await request('GET', url)
-
-    if (!obj) {
-      showMessage("HTTP request failed", 'error')
-      return
-    } else if ('error_code' in obj) {
-      showMessage(BAIDU_ERROR_CODE[obj['error_code']], 'error')
-      return
+    const headers = {
+      Host: 'cn.bing.com',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.5'
     }
 
+    const resp = await request('GET', url, null, headers, 'document')
     const result: TransType = new Translation()
     result['engine'] = this.name
     result['query'] = query
-    result['paraphrase'] = obj['trans_result'][0]['dst']
+    result['phonetic'] = this.get_phonetic(resp)
+    result['explain'] = this.get_explain(resp)
     return result
+  }
+
+  private get_phonetic(html: string): string {
+    const re = /<span class="ht_attr" lang=".*?">(.*?)<\/span>/g
+    const match = re.exec(html)
+    if (match) return match[1]
+    else return ''
+  }
+
+  private get_explain(html: string): string[] {
+    const re = /<span class="ht_pos">(.*?)<\/span><span class="ht_trs">(.*?)<\/span>/g
+    const explain = []
+    let expl = re.exec(html)
+    while (expl) {
+      explain.push(`${expl[1]} ${expl[2]} `)
+      expl = re.exec(html)
+    }
+    return explain
   }
 }
 
 class CibaTranslator extends Translator {
-  constructor(name: string, appId: string, appKey: string) {
-    super(name, appId, appKey)
-  }
+  constructor(name: string) {super(name)}
 
   public async translate(query: string, toLang: string): Promise<TransType> {
     const url = `https://fy.iciba.com/ajax.php`
@@ -73,7 +77,7 @@ class CibaTranslator extends Translator {
     data['t'] = toLang
     const obj = await request('GET', url, data)
 
-    if (!obj || !('status' in obj) || obj['status'] !== 0) {
+    if (!obj || !('status' in obj)) {
       showMessage("HTTP request failed", 'error')
       return
     }
@@ -82,6 +86,7 @@ class CibaTranslator extends Translator {
     result['engine'] = this.name
     result['query'] = query
     if ('ph_en' in obj['content']) result['phonetic'] = `[${obj['content']['ph_en']}]`
+    if ('out' in obj['content']) result['paraphrase'] = `${obj['content']['out']}`
     if ('word_mean' in obj['content']) result['explain'] = obj['content']['word_mean']
 
     return result
@@ -89,9 +94,7 @@ class CibaTranslator extends Translator {
 }
 
 class GoogleTranslator extends Translator {
-  constructor(name: string, appId: string, appKey: string) {
-    super(name, appId, appKey)
-  }
+  constructor(name: string) {super(name)}
 
   private getParaphrase(obj: object): string {
     let paraphrase = ""
@@ -117,7 +120,7 @@ class GoogleTranslator extends Translator {
 
   public async translate(query: string, toLang: string): Promise<TransType> {
     let host = 'translate.googleapis.com'
-    if (toLang === 'zh') host = 'translate.google.cn'
+    if (toLang.match('zh').index >= 0) host = 'translate.google.cn'
 
     const url = `https://${host}/translate_a/single?client=gtx&sl=auto&tl=${toLang}` +
       `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${query}`
@@ -139,48 +142,90 @@ class GoogleTranslator extends Translator {
   }
 }
 
+// TODO: use non-standard api
+// e.g. https://github.com/voldikss/vim-translate-me/blob/41db2e5fed033e2be9b5c7458d7ae102a129643d/autoload/script/query.py#L264
+// currently not work, always get "errorCode:50"
 class YoudaoTranslator extends Translator {
-  constructor(name: string, appId: string, appKey: string) {
-    super(name, appId, appKey)
-  }
+  constructor(name: string) {super(name)}
 
   public async translate(query: string, toLang: string): Promise<TransType> {
-    if (toLang === 'zh') toLang = 'zh-CHS'
+    const url = 'https://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
     const salt = new Date().getTime()
-    const curtime = Math.round(new Date().getTime() / 1000)
-    const str = this.appId + query + salt + curtime + this.appKey
-    const sign = sha256(str)
+    const sign = md5("fanyideskweb" + query + salt + 'ebSeFb%=XZ%T[KZ)c(sy!')
+    const data = {
+      i: query,
+      from: 'auto',
+      to: toLang,
+      smartresult: 'dict',
+      client: 'fanyideskweb',
+      salt,
+      sign,
+      doctype: 'json',
+      version: '2.1',
+      keyfrom: 'fanyi.web',
+      action: 'FY_BY_CL1CKBUTTON',
+      typoResult: 'true'
+    }
+    const headers = {
+      Cookie: 'OUTFOX_SEARCH_USER_ID=-2022895048@10.168.8.76;',
+      Referer: 'http://fanyi.youdao.com/',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; rv:51.0) Gecko/20100101 Firefox/51.0',
+    }
 
-    if (toLang === 'zh') toLang = 'zh-CHS'
-
-    const url = `https://openapi.youdao.com/api?q=${query}&appKey=${this.appId}` +
-      `&salt=${salt}&from=auto&to=${toLang}&curtime=${curtime}&sign=${sign}&signType=v3`
-
-    const obj = await request('GET', url)
+    const obj = await request('POST', url, data, headers)
+    // showMessage(JSON.stringify(obj))
 
     if (!obj) {
       showMessage("HTTP request failed", 'error')
       return
-    } else if ('errorCode' in obj && obj['errorCode'] !== "0") {
-      showMessage(YOUDAO_ERROR_CODE[obj['errorCode']], 'error')
+    } else if ('errorCode' in obj) {
+      showMessage('errorCode' + obj['errorCode'])
       return
     }
 
     const result: TransType = new Translation()
     result['engine'] = this.name
     result['query'] = query
-    result['paraphrase'] = obj['translation'][0]
-    if ('basic' in obj && obj['basic']) {
-      if ('phonetic' in obj['basic']) result['phonetic'] = obj['basic']['phonetic']
-      if ('explains' in obj['basic']) result['explain'] = obj['basic']['explains']
-    }
+    result['paraphrase'] = this.get_paraphrase(obj)
+    result['explain'] = this.get_explain(obj)
     return result
+  }
+
+  private get_paraphrase(obj: object): string {
+    if (!('translateResult' in obj)) return ''
+    let paraphrase = ''
+    const translateResult = obj['translateResult']
+    for (const n of Object.keys(translateResult)) {
+      const part = []
+      for (const m of Object.keys(translateResult[n])) {
+        const x = m['tat']
+        if (x)
+          part.push(x)
+      }
+      if (part)
+        paraphrase += part.join(', ')
+    }
+    return paraphrase
+  }
+
+  private get_explain(obj: object): string[] {
+    if (!('smartResult' in obj)) return
+    const smarts = obj['smartResult']['entries']
+    const explain = []
+    for (let entry of Object.keys(smarts)) {
+      if (entry) {
+        entry = entry.replace('\r', '')
+        entry = entry.replace('\n', '')
+        explain.push(entry)
+      }
+    }
+    return explain
   }
 }
 
 export default async function translate(query: string): Promise<TransType[]> {
   const ENGINES = {
-    baidu: BaiduTranslator,
+    bing: BingTranslator,
     ciba: CibaTranslator,
     google: GoogleTranslator,
     youdao: YoudaoTranslator
@@ -189,15 +234,13 @@ export default async function translate(query: string): Promise<TransType[]> {
   const config: WorkspaceConfiguration = workspace.getConfiguration('translator')
   const engines = config.get<string[]>('engines', ['ciba', 'google'])
   const toLang = config.get<string>('toLang', 'zh')
-  const appId = config.get<string>('appId', '')
-  const appKey = config.get<string>('appKey', '')
 
   const trans: TransType[] = []
   for (const i of Object.keys(engines)) {
     let e = engines[i]
     let cls = ENGINES[e]
-    let translator = new cls(e, appId, appKey)
-    let translation = translator.translate(query, toLang)
+    let translator = new cls(e)
+    let translation = await translator.translate(query, toLang)
     trans.push(translation)
   }
   return trans
