@@ -1,12 +1,12 @@
 {
   "name": "coc-translator",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "translation extension for coc.nvim",
   "main": "lib/index.js",
   "publisher": "voldikss",
   "keywords": [
     "coc.nvim",
-    "translator"
+    "translation"
   ],
   "engines": {
     "coc": "^0.0.70"
@@ -31,7 +31,7 @@
         },
         "translator.engines": {
           "type": "array",
-          "default": ["bing", "ciba", "google"],
+          "default": ["bing", "ciba"],
           "enum": [
             ["bing"],
             ["ciba"],
@@ -46,7 +46,7 @@
     },
     "commands": [
       {
-        "title": "translator",
+        "title": "display translation",
         "command": "translator.popup"
       },
       {
@@ -54,7 +54,7 @@
         "command": "translator.echo"
       },
       {
-        "title": "dd",
+        "title": "replace word with translation",
         "command": "translator.replace"
       },
       {
