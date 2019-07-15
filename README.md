@@ -2,7 +2,7 @@
 
 Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim)
 
-Ported from [vim-translate-me](https://github/voldikss/vim-translate-me)
+Ported from [vim-translate-me](https://github.com/voldikss/vim-translate-me)
 
 ## Install
 
