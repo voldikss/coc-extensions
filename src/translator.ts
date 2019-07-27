@@ -1,6 +1,6 @@
-import {workspace, WorkspaceConfiguration} from 'coc.nvim'
-import {md5, request, showMessage} from './util'
-import {TransType} from './types'
+import { workspace, WorkspaceConfiguration } from 'coc.nvim'
+import { md5, request, showMessage } from './util'
+import { TransType } from './types'
 
 class Translation implements TransType {
   public engine: string
@@ -17,12 +17,11 @@ class Translation implements TransType {
 }
 
 class Translator {
-  public name: string
-  constructor(name: string) {this.name = name}
+  constructor(public name: string) { }
 }
 
 class BingTranslator extends Translator {
-  constructor(name: string) {super(name)}
+  constructor(name: string) { super(name) }
 
   public async translate(query: string, toLang: string): Promise<TransType> {
     let url = 'http://bing.com/dict/SerpHoverTrans'
@@ -40,19 +39,19 @@ class BingTranslator extends Translator {
     const result: TransType = new Translation()
     result['engine'] = this.name
     result['query'] = query
-    result['phonetic'] = this.get_phonetic(resp)
-    result['explain'] = this.get_explain(resp)
+    result['phonetic'] = this.getPhonetic(resp)
+    result['explain'] = this.getExplain(resp)
     return result
   }
 
-  private get_phonetic(html: string): string {
+  private getPhonetic(html: string): string {
     const re = /<span class="ht_attr" lang=".*?">(.*?)<\/span>/g
     const match = re.exec(html)
     if (match) return match[1]
     else return ''
   }
 
-  private get_explain(html: string): string[] {
+  private getExplain(html: string): string[] {
     const re = /<span class="ht_pos">(.*?)<\/span><span class="ht_trs">(.*?)<\/span>/g
     const explain = []
     let expl = re.exec(html)
@@ -65,7 +64,7 @@ class BingTranslator extends Translator {
 }
 
 class CibaTranslator extends Translator {
-  constructor(name: string) {super(name)}
+  constructor(name: string) { super(name) }
 
   public async translate(query: string, toLang: string): Promise<TransType> {
     const url = `https://fy.iciba.com/ajax.php`
@@ -94,7 +93,7 @@ class CibaTranslator extends Translator {
 }
 
 class GoogleTranslator extends Translator {
-  constructor(name: string) {super(name)}
+  constructor(name: string) { super(name) }
 
   private getParaphrase(obj: object): string {
     let paraphrase = ""
@@ -146,7 +145,7 @@ class GoogleTranslator extends Translator {
 // e.g. https://github.com/voldikss/vim-translate-me/blob/41db2e5fed033e2be9b5c7458d7ae102a129643d/autoload/script/query.py#L264
 // currently not work, always get "errorCode:50"
 class YoudaoTranslator extends Translator {
-  constructor(name: string) {super(name)}
+  constructor(name: string) { super(name) }
 
   public async translate(query: string, toLang: string): Promise<TransType> {
     const url = 'https://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
@@ -186,12 +185,12 @@ class YoudaoTranslator extends Translator {
     const result: TransType = new Translation()
     result['engine'] = this.name
     result['query'] = query
-    result['paraphrase'] = this.get_paraphrase(obj)
-    result['explain'] = this.get_explain(obj)
+    result['paraphrase'] = this.getParaphrase(obj)
+    result['explain'] = this.getExplain(obj)
     return result
   }
 
-  private get_paraphrase(obj: object): string {
+  private getParaphrase(obj: object): string {
     if (!('translateResult' in obj)) return ''
     let paraphrase = ''
     const translateResult = obj['translateResult']
@@ -208,7 +207,7 @@ class YoudaoTranslator extends Translator {
     return paraphrase
   }
 
-  private get_explain(obj: object): string[] {
+  private getExplain(obj: object): string[] {
     if (!('smartResult' in obj)) return
     const smarts = obj['smartResult']['entries']
     const explain = []

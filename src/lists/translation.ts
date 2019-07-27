@@ -1,6 +1,6 @@
-import {Neovim, BasicList, ListContext, workspace, ListItem} from 'coc.nvim'
-import {Position, Range, TextEdit} from 'vscode-languageserver-protocol'
-import {HistoryItem} from '../types'
+import { Neovim, BasicList, ListContext, workspace, ListItem } from 'coc.nvim'
+import { Position, Range, TextEdit } from 'vscode-languageserver-protocol'
+import { HistoryItem } from '../types'
 import DB from '../db'
 
 export default class TranslationList extends BasicList {
@@ -12,10 +12,10 @@ export default class TranslationList extends BasicList {
     super(nvim)
 
     this.addAction('append', async (item: ListItem) => {
-      let {document, position} = await workspace.getCurrentState()
+      let { document, position } = await workspace.getCurrentState()
       let doc = workspace.getDocument(document.uri)
       let edits: TextEdit[] = []
-      let {content} = item.data as HistoryItem
+      let { content } = item.data as HistoryItem
       let line = doc.getline(position.line)
       let pos = Position.create(position.line, Math.min(position.character + 1, line.length))
       edits.push({
@@ -26,10 +26,10 @@ export default class TranslationList extends BasicList {
     })
 
     this.addAction('prepend', async (item: ListItem) => {
-      let {document, position} = await workspace.getCurrentState()
+      let { document, position } = await workspace.getCurrentState()
       let doc = workspace.getDocument(document.uri)
       let edits: TextEdit[] = []
-      let {content} = item.data as HistoryItem
+      let { content } = item.data as HistoryItem
       let pos = Position.create(position.line, position.character)
       edits.push({
         range: Range.create(pos, pos),
@@ -52,12 +52,12 @@ export default class TranslationList extends BasicList {
     })
 
     this.addAction('delete', async (item: ListItem) => {
-      let {id} = item.data
+      let { id } = item.data
       await this.db.delete(id)
-    }, {persist: true, reload: true})
+    }, { persist: true, reload: true })
 
     this.addAction('preview', async (item: ListItem, context) => {
-      let {content} = item.data as HistoryItem
+      let { content } = item.data as HistoryItem
       let mod = context.options.position == 'top' ? 'below' : ''
       let height = content.length
       let winid = context.listWindow.id
@@ -92,7 +92,7 @@ export default class TranslationList extends BasicList {
   }
 
   public doHighlight(): void {
-    let {nvim} = this
+    let { nvim } = this
     nvim.pauseNotification()
     nvim.command('syntax match CocTranslatorQuery /\\v^.*\\v%20v/', true)
     nvim.command('syntax match CocTranslatorOmit /\\v\\.\\.\\./', true)

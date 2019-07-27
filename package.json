@@ -31,11 +31,20 @@
         },
         "translator.engines": {
           "type": "array",
-          "default": ["bing", "ciba"],
+          "default": [
+            "bing",
+            "ciba"
+          ],
           "enum": [
-            ["bing"],
-            ["ciba"],
-            ["google"]
+            [
+              "bing"
+            ],
+            [
+              "ciba"
+            ],
+            [
+              "google"
+            ]
           ]
         },
         "translator.maxsize": {

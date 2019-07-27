@@ -2,7 +2,7 @@
 
 Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim)
 
-Ported from [vim-translate-me](https://github.com/voldikss/vim-translate-me)
+Inspired by [vim-translate-me](https://github.com/voldikss/vim-translate-me)
 
 ## Install
 
@@ -28,7 +28,7 @@ more information, see [package.json](https://github.com/voldikss/coc-translator/
 ## Engines
 
 | engine                 | needs id/key | supported languages |
-|------------------------|--------------|---------------------|
+| ---------------------- | ------------ | ------------------- |
 | bing                   | no           | [language list][1]  |
 | ciba                   | no           | [language list][2]  |
 | google                 | no           | [language list][3]  |
@@ -39,9 +39,9 @@ more information, see [package.json](https://github.com/voldikss/coc-translator/
 Example
 
 ```vim
-" popup 
+" popup
 nmap <Leader>t <Plug>(coc-translator-p)
-" echo 
+" echo
 nmap <Leader>e <Plug>(coc-translator-e)
 " replace
 nmap <Leader>r <Plug>(coc-translator-r)

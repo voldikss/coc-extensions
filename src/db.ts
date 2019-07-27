@@ -1,5 +1,5 @@
-import {statAsync, writeFile, readFile} from './util'
-import {HistoryItem} from './types'
+import { statAsync, writeFile, readFile } from './util'
+import { HistoryItem } from './types'
 import path from 'path'
 import uuid = require('uuid/v1')
 
@@ -27,7 +27,7 @@ export default class DB {
     let arr = items.map(item => item['content'][0])
     if (arr.indexOf(content[0]) >= 0) return
 
-    items.unshift({id: uuid(), content, path})
+    items.unshift({ id: uuid(), content, path })
     await writeFile(this.file, JSON.stringify(items, null, 2))
   }
 

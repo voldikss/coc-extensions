@@ -1,12 +1,21 @@
-import {configure, xhr, XHROptions} from 'request-light'
-import {workspace, MsgTypes} from 'coc.nvim'
+import { configure, xhr, XHROptions } from 'request-light'
+import { workspace, MsgTypes } from 'coc.nvim'
 import crypto from 'crypto'
 import fs from 'fs'
 import util from 'util'
 
-export async function request(type: string, url: string, data: object = null, headers: object = null, responseType = 'json'): Promise<any> {
+export async function request(
+  type: string,
+  url: string,
+  data: object = null,
+  headers: object = null,
+  responseType = 'json'
+): Promise<any> {
   const httpConfig = workspace.getConfiguration('http')
-  configure(httpConfig.get<string>('proxy', undefined), httpConfig.get<boolean>('proxyStrictSSL', undefined))
+  configure(
+    httpConfig.get<string>('proxy', undefined),
+    httpConfig.get<boolean>('proxyStrictSSL', undefined)
+  )
 
   if (!headers)
     headers = {
@@ -32,7 +41,7 @@ export async function request(type: string, url: string, data: object = null, he
 
   try {
     let response = await xhr(options)
-    let {responseText} = response
+    let { responseText } = response
     if (responseType === 'json')
       return JSON.parse(responseText)
     else

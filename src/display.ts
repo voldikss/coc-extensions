@@ -1,12 +1,10 @@
-import {workspace, FloatFactory, Neovim} from 'coc.nvim'
-import {showMessage} from './util'
-import {TransType, DisplayMode} from './types'
+import { workspace, FloatFactory, Neovim } from 'coc.nvim'
+import { showMessage } from './util'
+import { TransType, DisplayMode } from './types'
 
 class Display {
 
-  constructor(private nvim: Neovim) {
-    this.nvim = nvim
-  }
+  constructor(private nvim: Neovim) { }
 
   private buildContent(trans: TransType[]): string[] {
     const content: string[] = []
@@ -40,17 +38,26 @@ class Display {
       let line = content[i]
       if (line.startsWith('---') && width > line.length) {
         let padding = Math.floor((width - line.length) / 2)
-        content[i] = `${'-'.repeat(padding)}${content[i]}${'-'.repeat(padding - 1)}`
+        content[i] = `${'-'.repeat(padding)}${content[i]}${'-'.repeat(padding - 2)}`
       } else if (line.startsWith('{{')) {
         let padding = Math.floor((width - line.length) / 2)
-        content[i] = `${' '.repeat(padding)}${content[i]}${' '.repeat(padding - 1)}`
+        content[i] = `${' '.repeat(padding)}${content[i]}${' '.repeat(padding - 2)}`
       }
     }
 
     // TODO: workspace.env.textprop for vim (won't open popup unless cursor was moved)
     if (workspace.env.floating) {
-      const floatFactory = new FloatFactory(this.nvim, workspace.env, false, height, width)
-      const docs = [{content: content.join('\n'), filetype: "ct"}]
+      const floatFactory = new FloatFactory(
+        this.nvim,
+        workspace.env,
+        false,
+        height,
+        width
+      )
+      const docs = [{
+        content: content.join('\n'),
+        filetype: "markdown"
+      }]
       await floatFactory.create(docs, false)
     } else {
       this.nvim.pauseNotification()
@@ -92,7 +99,11 @@ class Display {
   }
 }
 
-export default async function display(nvim: Neovim, trans: TransType[], mode: DisplayMode): Promise<void> {
+export default async function display(
+  nvim: Neovim,
+  trans: TransType[],
+  mode: DisplayMode
+): Promise<void> {
   const displayer = new Display(nvim)
 
   switch (mode) {
