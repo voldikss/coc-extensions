@@ -45,8 +45,7 @@ class Display {
       }
     }
 
-    // TODO: workspace.env.textprop for vim (won't open popup unless cursor was moved)
-    if (workspace.env.floating) {
+    if (workspace.env.floating || workspace.env.textprop) {
       const floatFactory = new FloatFactory(
         this.nvim,
         workspace.env,
