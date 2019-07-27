@@ -5,6 +5,7 @@ import TranslationList from './lists/translation'
 import DB from './db'
 import translate from './translator'
 import display from './display'
+import History from './history'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
@@ -15,6 +16,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
   const config = workspace.getConfiguration('translator')
   const db = new DB(storagePath, config.get<number>('maxsize', 5000))
+  const history = new History(nvim, db)
 
   subscriptions.push(
     workspace.registerKeymap(
@@ -47,7 +49,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     workspace.registerKeymap(
       ['n'],
       'translator-h',
-      async () => { await exportHistory(db) },
+      async () => { await history.export() },
       { sync: false }
     )
   )
@@ -75,7 +77,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     commands.registerCommand(
       'translator.exportHistory',
-      async () => { await exportHistory(db) }
+      async () => { await history.export() }
     )
   )
 
@@ -88,52 +90,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
 async function manager(mode: DisplayMode, db: DB): Promise<void> {
   const { nvim } = workspace
+  const history = new History(nvim, db)
   const currWord = (await nvim.eval("expand('<cword>')")).toString()
   const result: TransType[] = await translate(currWord)
   if (!result) return
   await display(nvim, result, mode)
-  await saveHistory(db, result)
+  await history.save(result)
 }
 
-async function saveHistory(db: DB, result: TransType[]): Promise<void> {
-  const { nvim } = workspace
-  const bufnr = workspace.bufnr
-  const doc = workspace.getDocument(bufnr)
-  const [, lnum, col] = await nvim.call('getpos', ".")
-  const path = `${doc.uri}\t${lnum}\t${col}`
-
-  for (const i of Object.keys(result)) {
-    let t: TransType = result[i]
-    let query: string = t['query']
-    let paraphrase: string = t['paraphrase']
-    let explain: string[] = t['explain']
-    let item: string[] = []
-
-    if (explain)
-      item = [t['query'], explain[0]]
-    else if (paraphrase && query.toLowerCase() !== paraphrase.toLowerCase())
-      item = [t['query'], paraphrase]
-
-    if (item) {
-      await db.add(item, path)
-      return
-    }
-  }
-}
-
-async function exportHistory(db: DB): Promise<void> {
-  const arr = await db.load()
-  const { nvim } = workspace
-  nvim.pauseNotification()
-  nvim.command('tabnew', true)
-  for (let item of arr) {
-    let text = item.content[0].padEnd(20) + item.content[1]
-    nvim.call('append', [0, text], true)
-  }
-  nvim.command('syntax match CocTranslatorQuery /\\v^.*\\v%20v/', true)
-  nvim.command('syntax match CocTranslatorOmit /\\v\\.\\.\\./', true)
-  nvim.command('syntax match CocTranslatorResult /\\v%21v.*$/', true)
-  nvim.command('highlight default link CocTranslatorQuery Keyword', true)
-  nvim.command('highlight default link CocTranslatorResult String', true)
-  await nvim.resumeNotification()
-}
