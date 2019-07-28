@@ -45,7 +45,8 @@ class BingTranslator extends Translator {
   }
 
   private getPhonetic(html: string): string {
-    const re = /<span class="ht_attr" lang=".*?">(.*?)<\/span>/g
+    // there is a blank here \] <\/span>
+    const re = /<span class="ht_attr" lang=".*?">\[(.*?)\] <\/span>/g
     const match = re.exec(html)
     if (match) return match[1]
     else return ''
@@ -84,7 +85,7 @@ class CibaTranslator extends Translator {
     const result: TransType = new Translation()
     result['engine'] = this.name
     result['query'] = query
-    if ('ph_en' in obj['content']) result['phonetic'] = `[${obj['content']['ph_en']}]`
+    if ('ph_en' in obj['content']) result['phonetic'] = `${obj['content']['ph_en']}`
     if ('out' in obj['content']) result['paraphrase'] = `${obj['content']['out']}`
     if ('word_mean' in obj['content']) result['explain'] = obj['content']['word_mean']
 
