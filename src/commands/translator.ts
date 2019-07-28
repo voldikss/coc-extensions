@@ -1,6 +1,6 @@
 import { workspace, WorkspaceConfiguration } from 'coc.nvim'
-import { md5, request, showMessage } from './util'
-import { TransType } from './types'
+import { md5, request, showMessage } from '../util'
+import { TransType } from '../types'
 
 class Translation implements TransType {
   public engine: string
@@ -223,7 +223,7 @@ class YoudaoTranslator extends Translator {
   }
 }
 
-export default async function translate(query: string): Promise<TransType[]> {
+export async function translate(query: string): Promise<TransType[]> {
   const ENGINES = {
     bing: BingTranslator,
     ciba: CibaTranslator,

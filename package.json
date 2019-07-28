@@ -34,17 +34,6 @@
           "default": [
             "bing",
             "ciba"
-          ],
-          "enum": [
-            [
-              "bing"
-            ],
-            [
-              "ciba"
-            ],
-            [
-              "google"
-            ]
           ]
         },
         "translator.maxsize": {

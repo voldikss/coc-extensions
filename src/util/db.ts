@@ -1,5 +1,5 @@
-import { statAsync, writeFile, readFile } from './util'
-import { HistoryItem } from './types'
+import { statAsync, writeFile, readFile } from './io'
+import { HistoryItem } from '../types'
 import path from 'path'
 import uuid = require('uuid/v1')
 

@@ -1,11 +1,9 @@
 import { ExtensionContext, commands, workspace, listManager } from 'coc.nvim'
-import { statAsync, mkdirAsync } from './util'
+import { statAsync, mkdirAsync } from './util/io'
 import { TransType, DisplayMode } from './types'
+import { translate, display, History } from './commands'
 import TranslationList from './lists/translation'
-import DB from './db'
-import translate from './translator'
-import display from './display'
-import History from './history'
+import DB from './util/db'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
@@ -104,4 +102,3 @@ async function manager(mode: DisplayMode, db: DB): Promise<void> {
   await display(nvim, result, mode)
   await history.save(result)
 }
-

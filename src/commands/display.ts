@@ -1,7 +1,7 @@
 import { workspace, Neovim } from 'coc.nvim'
-import FloatFactory from './window'
-import { showMessage } from './util'
-import { TransType, DisplayMode } from './types'
+import { FloatFactory } from './window'
+import { showMessage } from '../util/io'
+import { TransType, DisplayMode } from '../types'
 
 class Display {
 
@@ -99,7 +99,7 @@ class Display {
   }
 }
 
-export default async function display(
+export async function display(
   nvim: Neovim,
   trans: TransType[],
   mode: DisplayMode

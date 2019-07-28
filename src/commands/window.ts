@@ -1,6 +1,6 @@
 // modified from: github.com/neoclide/coc.nvim/blob/master/src/model/floatFactory.ts
-import { FloatBuffer, Env, events, Documentation, workspace } from 'coc.nvim'
 import { CancellationTokenSource, Disposable } from 'vscode-languageserver-protocol'
+import { FloatBuffer, Env, events, Documentation, workspace } from 'coc.nvim'
 import createPopup, { Popup } from 'coc.nvim/lib/model/popup'
 import { Buffer, Neovim, Window } from '@chemzqm/neovim'
 import { disposeAll } from 'coc.nvim/lib/util'
@@ -16,7 +16,7 @@ export interface WindowConfig {
 }
 
 // factory class for floating window
-export default class FloatFactory implements Disposable {
+export class FloatFactory implements Disposable {
   private targetBufnr: number
   private window: Window
   private disposables: Disposable[] = []

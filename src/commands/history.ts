@@ -1,9 +1,9 @@
 import { workspace } from 'coc.nvim'
-import { TransType } from './types'
-import DB from './db'
+import { TransType } from '../types'
 import { NeovimClient as Neovim } from '@chemzqm/neovim'
+import DB from '../util/db'
 
-export default class History {
+export class History {
   constructor(private nvim: Neovim, private db: DB) { }
 
   public async save(result: TransType[]): Promise<void> {
