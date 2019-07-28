@@ -18,6 +18,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const db = new DB(storagePath, config.get<number>('maxsize', 5000))
   const history = new History(nvim, db)
 
+  nvim.command('autocmd FileType translation | ' +
+    'syn match CTQuery #@ \\w\\+ @# | hi def link CTQuery Keyword | ' +
+    'syn match CTEngine #-\\+ .* -\\+# | hi def link CTEngine Constant | ' +
+    'syn match CTParaphrase #🌀.*# | hi def link CTParaphrase PreProc | ' +
+    'syn match CTPhonetic #🔉.*# | hi def link CTPhonetic Special | ' +
+    'syn match CTExplain #📝.*# | hi def link CTExplain Comment', true)
+
   subscriptions.push(
     workspace.registerKeymap(
       ['n'],

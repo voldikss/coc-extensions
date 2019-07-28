@@ -1,4 +1,5 @@
-import { workspace, FloatFactory, Neovim } from 'coc.nvim'
+import { workspace, Neovim } from 'coc.nvim'
+import FloatFactory from './window'
 import { showMessage } from './util'
 import { TransType, DisplayMode } from './types'
 
@@ -8,7 +9,7 @@ class Display {
 
   private buildContent(trans: TransType[]): string[] {
     const content: string[] = []
-    content.push(`{{ ${trans[0]['query']} }}`)
+    content.push(`@ ${trans[0]['query']} @`)
     for (const i of Object.keys(trans)) {
       content.push(' ')
       const t = trans[i]
@@ -39,7 +40,7 @@ class Display {
       if (line.startsWith('---') && width > line.length) {
         let padding = Math.floor((width - line.length) / 2)
         content[i] = `${'-'.repeat(padding)}${content[i]}${'-'.repeat(padding - 2)}`
-      } else if (line.startsWith('{{')) {
+      } else if (line.startsWith('@')) {
         let padding = Math.floor((width - line.length) / 2)
         content[i] = `${' '.repeat(padding)}${content[i]}${' '.repeat(padding - 2)}`
       }
@@ -57,7 +58,7 @@ class Display {
         content: content.join('\n'),
         filetype: "markdown"
       }]
-      await floatFactory.create(docs, false)
+      await floatFactory.create(docs)
     } else {
       this.nvim.pauseNotification()
       this.nvim.command('autocmd FileType ct | ' +
