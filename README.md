@@ -68,6 +68,12 @@ run `:CocList translation` to open the translation list.
 
 For more advance usage, checkout `:h coc-list`
 
+## F.A.Q
+
+Q: Where are the translation data stored?
+
+A: Normally the data is saved in `~/.config/coc/extensions/coc-translation-data`, but if you set `g:coc_extension_root` to another location, it will change as well
+
 ## License
 
 MIT
