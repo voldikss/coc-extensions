@@ -24,8 +24,8 @@ export default class DB {
     }
 
     // check duplication
-    let arr = items.map(item => item['content'][0])
-    if (arr.indexOf(content[0]) >= 0) return
+    let arr = items.map(item => item['content'][0].toLowerCase())
+    if (arr.indexOf(content[0].toLowerCase()) >= 0) return
 
     items.unshift({ id: uuid(), content, path })
     await writeFile(this.file, JSON.stringify(items, null, 2))
