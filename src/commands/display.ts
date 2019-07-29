@@ -11,12 +11,13 @@ class Display {
     const content: string[] = []
     content.push(`@ ${trans[0]['query']} @`)
     for (const i of Object.keys(trans)) {
-      content.push(' ')
       const t = trans[i]
+      if (!t['phonetic'] && !t['paraphrase'] && !t['explain'].length) continue
+      content.push(' ')
       content.push(`------ ${t['engine']} ------`)
       if (t['phonetic']) content.push(`🔉 [${t['phonetic']}]`)
       if (t['paraphrase']) content.push(`🌀 ${t['paraphrase']}`)
-      if (t['explain']) content.push(...t['explain'].map((i: string) => "📝 " + i))
+      if (t['explain'].length) content.push(...t['explain'].map((i: string) => "📝 " + i))
     }
 
     return content
@@ -42,7 +43,7 @@ class Display {
         content[i] = `${'-'.repeat(padding)}${content[i]}${'-'.repeat(padding - 2)}`
       } else if (line.startsWith('@')) {
         let padding = Math.floor((width - line.length) / 2)
-        content[i] = `${' '.repeat(padding)}${content[i]}${' '.repeat(padding - 2)}`
+        content[i] = `${' '.repeat(padding)}${content[i]}`
       }
     }
 
