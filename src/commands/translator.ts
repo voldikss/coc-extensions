@@ -20,7 +20,7 @@ class Translator {
   constructor(public name: string) { }
 }
 
-class BingTranslator extends Translator {
+export class BingTranslator extends Translator {
   constructor(name: string) { super(name) }
 
   public async translate(query: string, toLang: string): Promise<TransType> {
@@ -64,7 +64,7 @@ class BingTranslator extends Translator {
   }
 }
 
-class CibaTranslator extends Translator {
+export class CibaTranslator extends Translator {
   constructor(name: string) { super(name) }
 
   public async translate(query: string, toLang: string): Promise<TransType> {
@@ -93,7 +93,7 @@ class CibaTranslator extends Translator {
   }
 }
 
-class GoogleTranslator extends Translator {
+export class GoogleTranslator extends Translator {
   constructor(name: string) { super(name) }
 
   private getParaphrase(obj: object): string {
@@ -145,7 +145,7 @@ class GoogleTranslator extends Translator {
 // TODO: use non-standard api
 // e.g. https://github.com/voldikss/vim-translate-me/blob/41db2e5fed033e2be9b5c7458d7ae102a129643d/autoload/script/query.py#L264
 // currently not work, always get "errorCode:50"
-class YoudaoTranslator extends Translator {
+export class YoudaoTranslator extends Translator {
   constructor(name: string) { super(name) }
 
   public async translate(query: string, toLang: string): Promise<TransType> {
