@@ -4,6 +4,8 @@ Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim)
 
 Inspired by [vim-translate-me](https://github.com/voldikss/vim-translate-me)
 
+[![Build Status](https://travis-ci.org/voldikss/coc-translator.svg?branch=master)](https://travis-ci.org/voldikss/coc-translator)
+
 ## Install
 
 ```
