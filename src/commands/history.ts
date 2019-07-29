@@ -19,12 +19,12 @@ export class History {
       let explain: string[] = t['explain']
       let item: string[] = []
 
-      if (explain)
+      if (explain.length)
         item = [t['query'], explain[0]]
       else if (paraphrase && query.toLowerCase() !== paraphrase.toLowerCase())
         item = [t['query'], paraphrase]
 
-      if (item) {
+      if (item.length) {
         await this.db.add(item, path)
         return
       }
