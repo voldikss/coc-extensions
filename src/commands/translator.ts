@@ -25,9 +25,9 @@ export class BingTranslator extends Translator {
 
   public async translate(query: string, toLang: string): Promise<TransType> {
     let url = 'http://bing.com/dict/SerpHoverTrans'
-    if (toLang.match('zh').index >= 0)
+    if (/^zh/.test(toLang))
       url = 'http://cn.bing.com/dict/SerpHoverTrans'
-    url += '?q=' + query
+    url += '?q=' + encodeURI(query)
 
     const headers = {
       Host: 'cn.bing.com',
@@ -120,10 +120,10 @@ export class GoogleTranslator extends Translator {
 
   public async translate(query: string, toLang: string): Promise<TransType> {
     let host = 'translate.googleapis.com'
-    if (toLang.match('zh').index >= 0) host = 'translate.google.cn'
+    if (/^zh/.test(toLang)) host = 'translate.google.cn'
 
     const url = `https://${host}/translate_a/single?client=gtx&sl=auto&tl=${toLang}` +
-      `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${query}`
+      `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${encodeURI(query)}`
 
     const obj = await request('GET', url)
 

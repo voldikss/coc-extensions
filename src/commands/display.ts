@@ -39,11 +39,12 @@ class Display {
     for (let i of Object.keys(content)) {
       let line = content[i]
       if (line.startsWith('---') && width > line.length) {
-        let padding = Math.floor((width - line.length) / 2)
-        content[i] = `${'-'.repeat(padding)}${content[i]}${'-'.repeat(padding - 2)}`
+        let padding = Math.floor((width - line.length) / 2) - 1 // foldcolumn
+        if (padding < 0) padding = 0
+        content[i] = `${'-'.repeat(padding)}${line}${'-'.repeat(padding)}`
       } else if (line.startsWith('@')) {
         let padding = Math.floor((width - line.length) / 2)
-        content[i] = `${' '.repeat(padding)}${content[i]}`
+        content[i] = `${' '.repeat(padding)}${line}`
       }
     }
 
