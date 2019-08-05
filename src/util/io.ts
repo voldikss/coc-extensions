@@ -1,6 +1,5 @@
 import { configure, xhr, XHROptions } from 'request-light'
 import { workspace, MsgTypes } from 'coc.nvim'
-import crypto from 'crypto'
 import fs from 'fs'
 import util from 'util'
 
@@ -43,12 +42,4 @@ export function group<T>(array: T[], size: number): T[][] {
     res.push(array.slice(i * size, (i + 1) * size))
   }
   return res
-}
-
-export function md5(str: string): string {
-  return crypto.createHash('md5').update(str).digest('hex')
-}
-
-export function showMessage(message: string, type: MsgTypes = 'more'): void {
-  workspace.showMessage(`[coc-translator] ${message}`, type)
 }

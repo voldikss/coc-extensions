@@ -1,6 +1,6 @@
 import { workspace, Neovim } from 'coc.nvim'
 import { FloatFactory } from './window'
-import { showMessage } from '../util/io'
+import { showMessage } from '../util'
 import { TransType, DisplayMode } from '../types'
 
 class Display {
@@ -58,18 +58,12 @@ class Display {
       )
       const docs = [{
         content: content.join('\n'),
-        filetype: "markdown"
+        filetype: "translation"
       }]
       await floatFactory.create(docs)
     } else {
       this.nvim.pauseNotification()
-      this.nvim.command('autocmd FileType ct | ' +
-        'syn match CTQuery #------ .* ------# | hi def link CTQuery Keyword | ' +
-        'syn match CTParaphrase #🌀.*# | hi def link CTParaphrase Define | ' +
-        'syn match CTPhonetic #🔉.*# | hi def link CTPhonetic Special | ' +
-        'syn match CTExplain #📝.*# | hi def link CTExplain String', true)
-
-      this.nvim.call('coc#util#preview_info', [content, 'ct'], true)
+      this.nvim.call('coc#util#preview_info', [content, 'translation'], true)
       // preview window won't open without redraw...
       this.nvim.command('redraw', true)
       // NOTE: this will make preview window crash immediately
