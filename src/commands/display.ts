@@ -39,9 +39,9 @@ class Display {
     for (let i of Object.keys(content)) {
       let line = content[i]
       if (line.startsWith('---') && width > line.length) {
-        let padding = Math.floor((width - line.length) / 2) - 1 // foldcolumn
-        if (padding < 0) padding = 0
+        let padding = Math.floor((width - line.length) / 2)
         content[i] = `${'-'.repeat(padding)}${line}${'-'.repeat(padding)}`
+        content[i] += '-'.repeat((width - line.length) % 2)
       } else if (line.startsWith('@')) {
         let padding = Math.floor((width - line.length) / 2)
         content[i] = `${' '.repeat(padding)}${line}`
@@ -54,7 +54,7 @@ class Display {
         workspace.env,
         false,
         height,
-        width
+        width + 2 // for foldcolumn and padding in the line end
       )
       const docs = [{
         content: content.join('\n'),

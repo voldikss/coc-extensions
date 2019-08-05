@@ -173,7 +173,7 @@ export class FloatFactory implements Disposable {
       if (!reuse) {
         nvim.command(`noa call win_gotoid(${this.window.id})`, true)
         this.window.setVar('float', 1, true)
-        nvim.command(`setl nospell nolist wrap linebreak foldcolumn=1`, true)
+        nvim.command(`setl nospell nolist nowrap linebreak foldcolumn=1`, true)
         nvim.command(`setl nonumber norelativenumber nocursorline nocursorcolumn`, true)
         nvim.command(`setl signcolumn=no conceallevel=2 concealcursor=n`, true)
         nvim.call('coc#util#do_autocmd', ['CocOpenFloat'], true)
