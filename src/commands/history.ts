@@ -1,32 +1,30 @@
 import { workspace } from 'coc.nvim'
-import { TransType } from '../types'
+import { Translation } from '../types'
 import { NeovimClient as Neovim } from '@chemzqm/neovim'
 import DB from '../util/db'
 
 export class History {
   constructor(private nvim: Neovim, private db: DB) { }
 
-  public async save(result: TransType[]): Promise<void> {
+  public async save(trans: Translation): Promise<void> {
     const bufnr = workspace.bufnr
     const doc = workspace.getDocument(bufnr)
     const [, lnum, col] = await this.nvim.call('getpos', ".")
     const path = `${doc.uri}\t${lnum}\t${col}`
 
-    for (const i of Object.keys(result)) {
-      let t: TransType = result[i]
-      let query: string = t['query']
+    let text: string = trans.text
+    for (const t of trans.results) {
       let paraphrase: string = t['paraphrase']
       let explain: string[] = t['explain']
       let item: string[] = []
 
       if (explain.length)
-        item = [t['query'], explain[0]]
-      else if (paraphrase && query.toLowerCase() !== paraphrase.toLowerCase())
-        item = [t['query'], paraphrase]
+        item = [text, explain[0]]
+      else if (paraphrase && text.toLowerCase() !== paraphrase.toLowerCase())
+        item = [text, paraphrase]
 
       if (item.length) {
         await this.db.add(item, path)
-        return
       }
     }
   }

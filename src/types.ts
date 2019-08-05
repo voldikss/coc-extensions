@@ -1,12 +1,18 @@
 
 export declare type DisplayMode = 'popup' | 'echo' | 'replace'
+export declare type MsgTypes = 'info' | 'warning' | 'error'
+export declare type TranslationStatus = 0 | 1
 
-export interface TransType {
+export interface SingleTranslation {
   engine: string
-  query: string
-  phonetic: string
-  paraphrase: string
-  explain: string[]
+  phonetic?: string
+  paraphrase?: string
+  explain?: string[]
+}
+export interface Translation {
+  text: string
+  results: SingleTranslation[]
+  status: TranslationStatus
 }
 
 export interface HistoryItem {

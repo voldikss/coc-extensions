@@ -1,20 +1,20 @@
 import { workspace, Neovim } from 'coc.nvim'
 import { FloatFactory } from './window'
 import { showMessage } from '../util'
-import { TransType, DisplayMode } from '../types'
+import { DisplayMode, Translation } from '../types'
 
 class Display {
 
   constructor(private nvim: Neovim) { }
 
-  private buildContent(trans: TransType[]): string[] {
+  private buildContent(trans: Translation): string[] {
     const content: string[] = []
-    content.push(`@ ${trans[0]['query']} @`)
-    for (const i of Object.keys(trans)) {
-      const t = trans[i]
+    content.push(`@ ${trans.text} @`)
+    for (const t of trans.results) {
+      if (!t) continue
       if (!t['phonetic'] && !t['paraphrase'] && !t['explain'].length) continue
       content.push(' ')
-      content.push(`------ ${t['engine']} ------`)
+      content.push(`------ ${t.engine} ------`)
       if (t['phonetic']) content.push(`🔉 [${t['phonetic']}]`)
       if (t['paraphrase']) content.push(`🌀 ${t['paraphrase']}`)
       if (t['explain'].length) content.push(...t['explain'].map((i: string) => "📝 " + i))
@@ -26,15 +26,16 @@ class Display {
   public async winSize(content: string[]): Promise<number[]> {
     const height = content.length
     let width = 0
-    for (let i of Object.keys(content)) {
-      let line_width = await this.nvim.call('strdisplaywidth', content[i]) + 2
+    for (let line of content) {
+      let line_width = await this.nvim.call('strdisplaywidth', line) + 2
       if (line_width > width) width = line_width
     }
     return [height, width]
   }
 
-  public async popup(trans: TransType[]): Promise<void> {
+  public async popup(trans: Translation): Promise<void> {
     const content = this.buildContent(trans)
+    if (content.length === 0) return
     let [height, width] = await this.winSize(content)
     for (let i of Object.keys(content)) {
       let line = content[i]
@@ -72,15 +73,15 @@ class Display {
     }
   }
 
-  public async echo(trans: TransType[]): Promise<void> {
-    let t = trans[0]
-    let message = `${t['query']} ==> ${t['paraphrase']} ${t['explain'].join(' ')}`
+  public async echo(trans: Translation): Promise<void> {
+    // TODO
+    let t = trans.results[0]
+    let message = `${trans.text} ==> ${t['paraphrase']} ${t['explain'].join(' ')}`
     showMessage(message)
   }
 
-  public async replace(trans: TransType[]): Promise<void> {
-    for (let i of Object.keys(trans)) {
-      let t = trans[i]
+  public async replace(trans: Translation): Promise<void> {
+    for (let t of trans.results) {
       if (t['paraphrase']) {
         this.nvim.pauseNotification()
         this.nvim.command('let reg_tmp=@a', true)
@@ -97,7 +98,7 @@ class Display {
 
 export async function display(
   nvim: Neovim,
-  trans: TransType[],
+  trans: Translation,
   mode: DisplayMode
 ): Promise<void> {
   const displayer = new Display(nvim)

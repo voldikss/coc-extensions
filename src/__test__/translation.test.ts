@@ -3,7 +3,6 @@ import { BingTranslator, CibaTranslator, GoogleTranslator } from '../commands/tr
 test('bing translator', async () => {
   const bing = new BingTranslator('bing')
   const translation = await bing.translate('good', 'zh')
-  expect(translation.query === 'good').toBe(true)
   expect(translation.engine === 'bing').toBe(true)
   expect(translation.paraphrase === '').toBe(true)
   ///////////// Network problem leads to ci failure
@@ -17,7 +16,6 @@ test('bing translator', async () => {
 test('ciba translator', async () => {
   const bing = new CibaTranslator('ciba')
   const translation = await bing.translate('good', 'zh')
-  expect(translation.query === 'good').toBe(true)
   expect(translation.engine === 'ciba').toBe(true)
   expect(translation.paraphrase === '').toBe(true)
   expect(translation.explain[0].trim() === 'adj. 好的;优秀的;有益的;漂亮的，健全的;').toBe(true)
@@ -29,7 +27,6 @@ test('ciba translator', async () => {
 test('google translator', async () => {
   const bing = new GoogleTranslator('google')
   const translation = await bing.translate('google', 'zh')
-  expect(translation.query === 'google').toBe(true)
   expect(translation.engine === 'google').toBe(true)
   expect(translation.paraphrase.trim() === '谷歌').toBe(true)
   expect(translation.explain.length === 0).toBe(true)

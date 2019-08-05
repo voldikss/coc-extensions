@@ -1,9 +1,10 @@
 import { ExtensionContext, commands, workspace, listManager } from 'coc.nvim'
 import { statAsync, mkdirAsync } from './util/io'
-import { TransType, DisplayMode } from './types'
+import { DisplayMode, Translation } from './types'
 import { translate, display, History } from './commands'
 import TranslationList from './lists/translation'
 import DB from './util/db'
+import { showMessage } from './util'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
@@ -97,8 +98,11 @@ async function manager(mode: DisplayMode, db: DB): Promise<void> {
   const { nvim } = workspace
   const history = new History(nvim, db)
   const currWord = (await nvim.eval("expand('<cword>')")).toString()
-  const result: TransType[] = await translate(currWord)
-  if (!result) return
+  const result: Translation = await translate(currWord)
+  if (!result.status) {
+    showMessage('Translation failed', 'error')
+    return
+  }
   await display(nvim, result, mode)
   await history.save(result)
 }

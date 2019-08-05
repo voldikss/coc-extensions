@@ -1,5 +1,6 @@
 import { configure, xhr, XHROptions } from 'request-light'
-import { workspace, MsgTypes } from 'coc.nvim'
+import { workspace } from 'coc.nvim'
+import { MsgTypes } from '../types'
 import crypto from 'crypto'
 
 export async function request(
