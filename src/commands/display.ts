@@ -79,6 +79,7 @@ class Display {
     const content = []
 
     for (const t of trans.results) {
+      if (!t) continue
       if (t.phonetic && !hasPhonetic) {
         content.push(`[${t.phonetic}]`)
         hasPhonetic = true
