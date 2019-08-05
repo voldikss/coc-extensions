@@ -61,6 +61,19 @@ export function md5(str: string): string {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
-export function showMessage(message: string, type: MsgTypes = 'more'): void {
-  workspace.showMessage(`[coc-translator] ${message}`, type)
+export function showMessage(message: string, type: MsgTypes = 'info'): void {
+  let prefix = '[coc-translator] '
+  let msgLevel = 'MoreMsg'
+  let msg = prefix + message
+  switch (type) {
+    case 'error':
+      msgLevel = 'Error'
+      break
+    case 'warning':
+      msgLevel = 'WarningMsg'
+      break
+    default:
+      break
+  }
+  workspace.nvim.call('coc#util#echo_messages', [msgLevel, msg.split('\n')], true)
 }
