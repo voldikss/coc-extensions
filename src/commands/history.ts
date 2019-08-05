@@ -14,7 +14,7 @@ export class History {
 
     let text: string = trans.text
     for (const t of trans.results) {
-      if (!t) return
+      if (!t) continue
       let paraphrase = t.paraphrase
       let explain = t.explain
       let item: string[] = []
