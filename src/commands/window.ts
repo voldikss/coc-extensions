@@ -6,6 +6,7 @@ import { Buffer, Neovim, Window } from '@chemzqm/neovim'
 import { disposeAll } from 'coc.nvim/lib/util'
 import { equals } from 'coc.nvim/lib/util/object'
 import debounce from 'debounce'
+import { showMessage } from '../util'
 
 export interface WindowConfig {
   width: number
@@ -199,7 +200,7 @@ export class FloatFactory implements Disposable {
     }
     let [, err] = await nvim.resumeNotification()
     if (err) {
-      workspace.showMessage(`Error on ${err[0]}: ${err[1]} - ${err[2]}`, 'error')
+      showMessage(`Error on ${err[0]}: ${err[1]} - ${err[2]}`, 'error')
       return false
     }
     return true

@@ -74,9 +74,28 @@ class Display {
   }
 
   public async echo(trans: Translation): Promise<void> {
-    // TODO
-    let t = trans.results[0]
-    let message = `${trans.text} ==> ${t['paraphrase']} ${t['explain'].join(' ')}`
+    let hasPhonetic = false
+    let hasParaphrase = false
+    let hasExplain = false
+    const content = []
+
+    for (const t of trans.results) {
+      if (t.phonetic && !hasPhonetic) {
+        content.push(`[${t.phonetic}]`)
+        hasPhonetic = true
+      }
+
+      if (t.paraphrase && !hasParaphrase) {
+        content.push(t.paraphrase)
+        hasParaphrase = true
+      }
+
+      if (t.explain.length !== 0 && !hasExplain) {
+        content.push(t.explain.join('; '))
+        hasExplain = true
+      }
+    }
+    let message = `${trans.text} ==> ${content.join(' ')}`
     showMessage(message)
   }
 
