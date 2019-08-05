@@ -11,7 +11,6 @@ class Display {
     const content: string[] = []
     content.push(`@ ${trans.text} @`)
     for (const t of trans.results) {
-      if (!t) continue
       content.push(' ')
       content.push(`------ ${t.engine} ------`)
       if (t.phonetic) content.push(`🔉 [${t.phonetic}]`)
@@ -79,7 +78,6 @@ class Display {
     const content = []
 
     for (const t of trans.results) {
-      if (!t) continue
       if (t.phonetic && !hasPhonetic) {
         content.push(`[${t.phonetic}]`)
         hasPhonetic = true

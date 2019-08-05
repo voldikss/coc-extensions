@@ -237,8 +237,10 @@ export async function translate(text: string): Promise<Translation> {
     const cls = ENGINES[e]
     const translator = new cls(e)
     const result = await translator.translate(text, toLang)
-    if (result) trans.status = 1 // if only one is valid, the whole status is valid
-    trans.results.push(result)
+    if (result) {
+      trans.status = 1 // if only one is valid, the whole status is valid
+      trans.results.push(result)
+    }
   }
   return trans
 }
