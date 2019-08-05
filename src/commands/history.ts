@@ -14,11 +14,11 @@ export class History {
 
     let text: string = trans.text
     for (const t of trans.results) {
-      let paraphrase: string = t['paraphrase']
-      let explain: string[] = t['explain']
+      let paraphrase = t.paraphrase
+      let explain = t.explain
       let item: string[] = []
 
-      if (explain.length)
+      if (explain.length !== 0)
         item = [text, explain[0]]
       else if (paraphrase && text.toLowerCase() !== paraphrase.toLowerCase())
         item = [text, paraphrase]

@@ -12,12 +12,11 @@ class Display {
     content.push(`@ ${trans.text} @`)
     for (const t of trans.results) {
       if (!t) continue
-      if (!t['phonetic'] && !t['paraphrase'] && !t['explain'].length) continue
       content.push(' ')
       content.push(`------ ${t.engine} ------`)
-      if (t['phonetic']) content.push(`🔉 [${t['phonetic']}]`)
-      if (t['paraphrase']) content.push(`🌀 ${t['paraphrase']}`)
-      if (t['explain'].length) content.push(...t['explain'].map((i: string) => "📝 " + i))
+      if (t.phonetic) content.push(`🔉 [${t.phonetic}]`)
+      if (t.paraphrase) content.push(`🌀 ${t.paraphrase}`)
+      if (t.explain.length) content.push(...t.explain.map((i: string) => "📝 " + i))
     }
 
     return content
@@ -95,13 +94,13 @@ class Display {
         hasExplain = true
       }
     }
-    let message = `${trans.text} ==> ${content.join(' ')}`
+    const message = `${trans.text} ==> ${content.join(' ')}`
     showMessage(message)
   }
 
   public async replace(trans: Translation): Promise<void> {
     for (let t of trans.results) {
-      if (t['paraphrase']) {
+      if (t.paraphrase) {
         this.nvim.pauseNotification()
         this.nvim.command('let reg_tmp=@a', true)
         this.nvim.command(`let @a='${t["paraphrase"]}'`, true)

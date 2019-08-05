@@ -6,6 +6,18 @@ class Translator {
   constructor(public name: string) { }
 }
 
+class SingleResult implements SingleTranslation {
+  public engine: string
+  public paraphrase: string
+  public phonetic: string
+  public explain: string[]
+  constructor() {
+    this.phonetic = ''
+    this.paraphrase = ''
+    this.explain = []
+  }
+}
+
 export class BingTranslator extends Translator {
   constructor(name: string) { super(name) }
 
@@ -24,11 +36,11 @@ export class BingTranslator extends Translator {
     const resp = await request('GET', url, null, headers, 'document')
     if (!resp) return
 
-    const result = {}
-    result['engine'] = this.name
-    result['phonetic'] = this.getPhonetic(resp)
-    result['explain'] = this.getExplain(resp)
-    return result as SingleTranslation
+    const result = new SingleResult()
+    result.engine = this.name
+    result.phonetic = this.getPhonetic(resp)
+    result.explain = this.getExplain(resp)
+    return result
   }
 
   private getPhonetic(html: string): string {
@@ -69,13 +81,13 @@ export class CibaTranslator extends Translator {
       return
     }
 
-    const result = {}
-    result['engine'] = this.name
-    if ('ph_en' in obj['content']) result['phonetic'] = `${obj['content']['ph_en']}`
-    if ('out' in obj['content']) result['paraphrase'] = `${obj['content']['out']}`
-    if ('word_mean' in obj['content']) result['explain'] = obj['content']['word_mean']
+    const result = new SingleResult()
+    result.engine = this.name
+    if ('ph_en' in obj['content']) result.phonetic = `${obj['content']['ph_en']}`
+    if ('out' in obj['content']) result.paraphrase = `${obj['content']['out']}`
+    if ('word_mean' in obj['content']) result.explain = obj['content']['word_mean']
 
-    return result as SingleTranslation
+    return result
   }
 }
 
@@ -116,12 +128,12 @@ export class GoogleTranslator extends Translator {
       return
     }
 
-    const result = {}
-    result['engine'] = this.name
-    result['paraphrase'] = this.getParaphrase(obj)
-    result['explain'] = this.getExplain(obj)
+    const result = new SingleResult()
+    result.engine = this.name
+    result.paraphrase = this.getParaphrase(obj)
+    result.explain = this.getExplain(obj)
 
-    return result as SingleTranslation
+    return result
   }
 }
 
@@ -165,10 +177,10 @@ export class YoudaoTranslator extends Translator {
       return
     }
 
-    const result = {}
-    result['engine'] = this.name
-    result['paraphrase'] = this.getParaphrase(obj)
-    result['explain'] = this.getExplain(obj)
+    const result = new SingleResult()
+    result.engine = this.name
+    result.paraphrase = this.getParaphrase(obj)
+    result.explain = this.getExplain(obj)
     return result as SingleTranslation
   }
 
