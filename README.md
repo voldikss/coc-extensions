@@ -51,10 +51,12 @@ nmap <Leader>r <Plug>(coc-translator-r)
 
 ## Commands
 
-- `:CocCommand translator.popup` Display translation result via floating window or preview window
-- `:CocCommand translator.echo` Echo the translation result in the cmdline
-- `:CocCommand translator.replace` Replace the word under the cursor with the translation
+- `:CocCommand translator.popup [text]` Display translation result via floating/popup window
+- `:CocCommand translator.echo [text]` Echo the translation result in the cmdline
+- `:CocCommand translator.replace [text]` Replace the word under the cursor with the translation
 - `:CocCommand translator.exportHistory` Export translation history in the tabpage
+
+**Note:** `[text]` is optional, if no `text`, the extension will use the `<word>` under the cursor.
 
 ## Work with translation lists
 

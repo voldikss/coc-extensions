@@ -63,20 +63,20 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     commands.registerCommand(
       'translator.popup',
-      async () => { await manager('popup', db) }
+      async text => { await manager('popup', db, text) }
     )
   )
 
   subscriptions.push(
     commands.registerCommand(
       'translator.echo',
-      async () => { await manager('echo', db) }
+      async text => { await manager('echo', db, text) }
     )
   )
   subscriptions.push(
     commands.registerCommand(
       'translator.replace',
-      async () => { await manager('replace', db) }
+      async text => { await manager('replace', db, text) }
     )
   )
 
@@ -94,11 +94,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   )
 }
 
-async function manager(mode: DisplayMode, db: DB): Promise<void> {
+async function manager(mode: DisplayMode, db: DB, text?: string): Promise<void> {
   const { nvim } = workspace
   const history = new History(nvim, db)
-  const currWord = (await nvim.eval("expand('<cword>')")).toString()
-  const result: Translation = await translate(currWord)
+  if (text === undefined)
+    text = (await nvim.eval("expand('<cword>')")).toString()
+  const result: Translation = await translate(text)
   if (!result.status) {
     showMessage('Translation failed', 'error')
     return
