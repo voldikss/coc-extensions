@@ -1,21 +1,36 @@
-import { ExtensionContext, commands, workspace, listManager } from 'coc.nvim'
+import {
+  ExtensionContext,
+  commands,
+  workspace,
+  listManager,
+  WorkspaceConfiguration,
+  Neovim
+} from 'coc.nvim'
+import {
+  YoudaoTranslator,
+  GoogleTranslator,
+  CibaTranslator,
+  BingTranslator,
+  History,
+  Display
+} from './commands'
 import { statAsync, mkdirAsync } from './util/io'
-import { DisplayMode, Translation } from './types'
-import { translate, display, History } from './commands'
+import { Translation, SingleTranslation } from './types'
 import TranslationList from './lists/translation'
-import DB from './util/db'
-import { showMessage } from './util'
+import { DB, showMessage } from './util'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
   const { nvim } = workspace
   const stat = await statAsync(storagePath)
-  if (!stat || !stat.isDirectory()) {
-    await mkdirAsync(storagePath)
-  }
-  const config = workspace.getConfiguration('translator')
+  if (!stat || !stat.isDirectory()) await mkdirAsync(storagePath)
+
+  const config: WorkspaceConfiguration = workspace.getConfiguration('translator')
+  const engines = config.get<string[]>('engines', ['ciba', 'google'])
+  const toLang = config.get<string>('toLang', 'zh')
   const db = new DB(storagePath, config.get<number>('maxsize', 5000))
   const history = new History(nvim, db)
+  const displayer = new Display(nvim)
 
   nvim.command('autocmd FileType translation | ' +
     'syn match CTQuery #@ \\w\\+ @# | hi def link CTQuery Keyword | ' +
@@ -28,8 +43,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
     workspace.registerKeymap(
       ['n'],
       'translator-p',
-      async () => { await manager('popup', db) },
-      { sync: false }
+      async () => {
+        const text = await getText(nvim)
+        const trans = await translate(text, engines, toLang)
+        if (!trans) return
+        await displayer.popup(trans)
+        await history.save(trans)
+      }, { sync: false }
     )
   )
 
@@ -37,8 +57,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
     workspace.registerKeymap(
       ['n'],
       'translator-e',
-      async () => { await manager('echo', db) },
-      { sync: false }
+      async () => {
+        const text = await getText(nvim)
+        const trans = await translate(text, engines, toLang)
+        if (!trans) return
+        await displayer.echo(trans)
+        await history.save(trans)
+      }, { sync: false }
     )
   )
 
@@ -46,8 +71,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
     workspace.registerKeymap(
       ['n'],
       'translator-r',
-      async () => { await manager('replace', db) },
-      { sync: false }
+      async () => {
+        const text = await getText(nvim)
+        const trans = await translate(text, engines, toLang)
+        if (!trans) return
+        await displayer.replace(trans)
+        await history.save(trans)
+      }, { sync: false }
     )
   )
 
@@ -55,35 +85,56 @@ export async function activate(context: ExtensionContext): Promise<void> {
     workspace.registerKeymap(
       ['n'],
       'translator-h',
-      async () => { await history.export() },
-      { sync: false }
+      async () => {
+        await history.export()
+      }, { sync: false }
     )
   )
 
   subscriptions.push(
     commands.registerCommand(
       'translator.popup',
-      async text => { await manager('popup', db, text) }
+      async (text: string) => {
+        if (!text || text.trim() === '') text = await getText(nvim)
+        const trans = await translate(text, engines, toLang)
+        if (!trans) return
+        await displayer.popup(trans)
+        await history.save(trans)
+      }
     )
   )
 
   subscriptions.push(
     commands.registerCommand(
       'translator.echo',
-      async text => { await manager('echo', db, text) }
+      async text => {
+        if (!text || text.trim() === '') text = await getText(nvim)
+        const trans = await translate(text, engines, toLang)
+        if (!trans) return
+        await displayer.echo(trans)
+        await history.save(trans)
+      }
     )
   )
   subscriptions.push(
     commands.registerCommand(
       'translator.replace',
-      async text => { await manager('replace', db, text) }
+      async text => {
+        if (!text || text.trim() === '') text = await getText(nvim)
+        const trans = await translate(text, engines, toLang)
+        if (!trans) return
+        await displayer.replace(trans)
+        await history.save(trans)
+      }
     )
   )
 
   subscriptions.push(
     commands.registerCommand(
       'translator.exportHistory',
-      async () => { await history.export() }
+      async () => {
+        await history.export()
+      }
     )
   )
 
@@ -94,16 +145,45 @@ export async function activate(context: ExtensionContext): Promise<void> {
   )
 }
 
-async function manager(mode: DisplayMode, db: DB, text?: string): Promise<void> {
-  const { nvim } = workspace
-  const history = new History(nvim, db)
-  if (text === undefined)
-    text = (await nvim.eval("expand('<cword>')")).toString()
-  const result: Translation = await translate(text)
-  if (!result.status) {
-    showMessage('Translation failed', 'error')
-    return
+async function getText(nvim: Neovim): Promise<string> {
+  const text = (await nvim.eval("expand('<cword>')")).toString()
+  if (!text || text.trim() === '') return
+  return text
+}
+
+export async function translate(
+  text: string,
+  engines: string[],
+  toLang: string,
+): Promise<Translation | void> {
+  if (!text || text.trim() === '') return
+
+  const ENGINES = {
+    bing: BingTranslator,
+    ciba: CibaTranslator,
+    google: GoogleTranslator,
+    youdao: YoudaoTranslator
   }
-  await display(nvim, result, mode)
-  await history.save(result)
+
+  const translatePromises = engines.map(e => {
+    const cls = ENGINES[e]
+    const translator = new cls(e)
+    return translator.translate(text, toLang)
+  })
+
+  return Promise.all(translatePromises)
+    .then((results: SingleTranslation[]) => {
+      results = results.filter(result => {
+        return result.status === 1 &&
+          !(result.explain.length === 0 && result.paraphrase === '')
+      })
+      return {
+        text,
+        results
+      } as Translation
+    })
+    .catch(_e => {
+      showMessage('Translation failed', 'error')
+      return
+    })
 }

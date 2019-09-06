@@ -1,7 +1,7 @@
 import { workspace } from 'coc.nvim'
-import { Translation } from '../types'
+import { Translation, HistoryContent } from '../types'
 import { NeovimClient as Neovim } from '@chemzqm/neovim'
-import DB from '../util/db'
+import { DB } from '../util'
 
 export class History {
   constructor(private nvim: Neovim, private db: DB) { }
@@ -16,15 +16,16 @@ export class History {
     for (const t of trans.results) {
       let paraphrase = t.paraphrase
       let explain = t.explain
-      let item: string[] = []
+      let content = []
 
-      if (explain.length !== 0)
-        item = [text, explain[0]]
-      else if (paraphrase && text.toLowerCase() !== paraphrase.toLowerCase())
-        item = [text, paraphrase]
+      if (explain.length !== 0) {
+        content = [text, explain[0]]
+      } else if (paraphrase && text.toLowerCase() !== paraphrase.toLowerCase()) {
+        content = [text, paraphrase]
+      }
 
-      if (item.length) {
-        await this.db.add(item, path)
+      if (content.length) {
+        await this.db.add(content as HistoryContent, path)
       }
     }
   }

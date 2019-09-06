@@ -94,7 +94,6 @@ MIT
 [3]: https://github.com/voldikss/vim-translate-me/wiki/Google-api
 [4]: https://github.com/voldikss/vim-translate-me/wiki/Youdao-api
 
-
 ## Donation
 
 - Paypal
@@ -102,6 +101,7 @@ MIT
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/voldikss)
 
 - Wechat
+
 <div>
-	<img src="https://user-images.githubusercontent.com/20282795/62786670-a933aa00-baf5-11e9-9941-6d2551758faa.jpg" width=400>
+<img src="https://user-images.githubusercontent.com/20282795/64410950-b3c66c80-d0be-11e9-8500-973382366324.jpg" width=150>
 </div>

@@ -1,7 +1,7 @@
 import { Neovim, BasicList, ListContext, workspace, ListItem } from 'coc.nvim'
 import { Position, Range, TextEdit } from 'vscode-languageserver-protocol'
 import { HistoryItem } from '../types'
-import DB from '../util/db'
+import { DB } from '../util/db'
 
 export default class TranslationList extends BasicList {
   public readonly name = 'translation'

@@ -1,10 +1,9 @@
 import { workspace, Neovim } from 'coc.nvim'
 import { FloatFactory } from './window'
 import { showMessage } from '../util'
-import { DisplayMode, Translation } from '../types'
+import { Translation } from '../types'
 
-class Display {
-
+export class Display {
   constructor(private nvim: Neovim) { }
 
   private buildContent(trans: Translation): string[] {
@@ -14,7 +13,7 @@ class Display {
       content.push(' ')
       content.push(`------ ${t.engine} ------`)
       if (t.phonetic) content.push(`🔉 [${t.phonetic}]`)
-      if (t.paraphrase) content.push(`🌀 ${t.paraphrase}`)
+      if (t.paraphrase) content.push(`📕 ${t.paraphrase}`)
       if (t.explain.length) content.push(...t.explain.map((i: string) => "📝 " + i))
     }
 
@@ -110,25 +109,5 @@ class Display {
       }
     }
     showMessage('No paraphrase for replacement')
-  }
-}
-
-export async function display(
-  nvim: Neovim,
-  trans: Translation,
-  mode: DisplayMode
-): Promise<void> {
-  const displayer = new Display(nvim)
-
-  switch (mode) {
-    case 'popup':
-      await displayer.popup(trans)
-      break
-    case 'echo':
-      await displayer.echo(trans)
-      break
-    case 'replace':
-      await displayer.replace(trans)
-      break
   }
 }

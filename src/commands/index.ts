@@ -1,3 +1,8 @@
-export { translate } from './translator'
-export { display } from './display'
+export {
+  BingTranslator,
+  CibaTranslator,
+  GoogleTranslator,
+  YoudaoTranslator
+} from './translator'
+export { Display } from './display'
 export { History } from './history'

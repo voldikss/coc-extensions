@@ -34,12 +34,3 @@ export function mkdirAsync(filepath: string): Promise<void> {
     })
   })
 }
-
-export function group<T>(array: T[], size: number): T[][] {
-  let len = array.length
-  let res: T[][] = []
-  for (let i = 0; i < Math.ceil(len / size); i++) {
-    res.push(array.slice(i * size, (i + 1) * size))
-  }
-  return res
-}

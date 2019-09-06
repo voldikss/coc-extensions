@@ -1,9 +1,9 @@
 import { statAsync, writeFile, readFile } from './io'
-import { HistoryItem } from '../types'
+import { HistoryItem, HistoryContent } from '../types'
 import path from 'path'
 import uuid = require('uuid/v1')
 
-export default class DB {
+export class DB {
   private file: string
 
   constructor(directory: string, private maxsize: number) {
@@ -17,7 +17,7 @@ export default class DB {
     return JSON.parse(content) as HistoryItem[]
   }
 
-  public async add(content: string[], path: string): Promise<void> {
+  public async add(content: HistoryContent, path: string): Promise<void> {
     let items = await this.load()
     if (items.length == this.maxsize) {
       items.pop()
@@ -27,7 +27,7 @@ export default class DB {
     let arr = items.map(item => item['content'][0].toLowerCase())
     if (arr.indexOf(content[0].toLowerCase()) >= 0) return
 
-    items.unshift({ id: uuid(), content, path })
+    items.unshift({ id: uuid(), content, path } as HistoryItem)
     await writeFile(this.file, JSON.stringify(items, null, 2))
   }
 

@@ -1,6 +1,5 @@
-import { workspace, WorkspaceConfiguration } from 'coc.nvim'
 import { md5, request, showMessage } from '../util'
-import { Translation, SingleTranslation } from '../types'
+import { SingleTranslation } from '../types'
 
 class Translator {
   constructor(public name: string) { }
@@ -8,23 +7,23 @@ class Translator {
 
 class SingleResult implements SingleTranslation {
   public engine: string
-  public paraphrase: string
-  public phonetic: string
-  public explain: string[]
-  constructor() {
-    this.phonetic = ''
-    this.paraphrase = ''
-    this.explain = []
-  }
+  public paraphrase = ''
+  public phonetic = ''
+  public explain = []
+  public status = 0
+  constructor() { }
 }
 
 export class BingTranslator extends Translator {
   constructor(name: string) { super(name) }
 
   public async translate(text: string, toLang: string): Promise<SingleTranslation> {
+    const result = new SingleResult()
+    result.engine = this.name
+
+    if (toLang === undefined) return result
     let url = 'http://bing.com/dict/SerpHoverTrans'
-    if (/^zh/.test(toLang))
-      url = 'http://cn.bing.com/dict/SerpHoverTrans'
+    if (/^zh/.test(toLang)) url = 'http://cn.bing.com/dict/SerpHoverTrans'
     url += '?q=' + encodeURI(text)
 
     const headers = {
@@ -34,12 +33,10 @@ export class BingTranslator extends Translator {
     }
 
     const resp = await request('GET', url, null, headers, 'document')
-    if (!resp) return
-
-    const result = new SingleResult()
-    result.engine = this.name
+    if (!resp) return result
     result.phonetic = this.getPhonetic(resp)
     result.explain = this.getExplain(resp)
+    result.status = 1
     return result
   }
 
@@ -47,8 +44,11 @@ export class BingTranslator extends Translator {
     // there is a blank here \] <\/span>
     const re = /<span class="ht_attr" lang=".*?">\[(.*?)\] <\/span>/g
     const match = re.exec(html)
-    if (match) return match[1]
-    else return ''
+    if (match) {
+      return match[1]
+    } else {
+      return ''
+    }
   }
 
   private getExplain(html: string): string[] {
@@ -67,8 +67,11 @@ export class CibaTranslator extends Translator {
   constructor(name: string) { super(name) }
 
   public async translate(text: string, toLang: string): Promise<SingleTranslation> {
-    const url = `https://fy.iciba.com/ajax.php`
+    const result = new SingleResult()
+    result.engine = this.name
 
+    if (toLang === undefined) return result
+    const url = `https://fy.iciba.com/ajax.php`
     const data = {}
     data['a'] = 'fy'
     data['w'] = text
@@ -78,15 +81,13 @@ export class CibaTranslator extends Translator {
 
     if (!obj || !('status' in obj)) {
       showMessage("HTTP request failed", 'error')
-      return
+      return result
     }
 
-    const result = new SingleResult()
-    result.engine = this.name
     if ('ph_en' in obj['content']) result.phonetic = `${obj['content']['ph_en']}`
     if ('out' in obj['content']) result.paraphrase = `${obj['content']['out']}`
     if ('word_mean' in obj['content']) result.explain = obj['content']['word_mean']
-
+    result.status = 1
     return result
   }
 }
@@ -97,7 +98,7 @@ export class GoogleTranslator extends Translator {
   private getParaphrase(obj: object): string {
     let paraphrase = ""
     for (let x of obj[0]) {
-      if (x[0]) paraphrase += x[0]
+      if (x[0]) { paraphrase += x[0] }
     }
     return paraphrase
   }
@@ -115,35 +116,39 @@ export class GoogleTranslator extends Translator {
   }
 
   public async translate(text: string, toLang: string): Promise<SingleTranslation> {
+    const result = new SingleResult()
+    result.engine = this.name
+
+    if (toLang === undefined) return result
     let host = 'translate.googleapis.com'
-    if (/^zh/.test(toLang)) host = 'translate.google.cn'
+    if (/^zh/.test(toLang)) { host = 'translate.google.cn' }
 
     const url = `https://${host}/translate_a/single?client=gtx&sl=auto&tl=${toLang}` +
       `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${encodeURI(text)}`
 
     const obj = await request('GET', url)
-
     if (!obj) {
       showMessage("HTTP request failed", 'error')
-      return
+      return result
     }
-
-    const result = new SingleResult()
-    result.engine = this.name
     result.paraphrase = this.getParaphrase(obj)
     result.explain = this.getExplain(obj)
-
+    result.status = 1
     return result
   }
 }
 
 // TODO: use non-standard api
 // e.g. https://github.com/voldikss/vim-translate-me/blob/41db2e5fed033e2be9b5c7458d7ae102a129643d/autoload/script/query.py#L264
-// currently not work, always get "errorCode:50"
+// currently it doesn't work, always get "errorCode:50"
 export class YoudaoTranslator extends Translator {
   constructor(name: string) { super(name) }
 
   public async translate(text: string, toLang: string): Promise<SingleTranslation> {
+    const result = new SingleResult()
+    result.engine = this.name
+
+    if (toLang === undefined) return result
     const url = 'https://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
     const salt = new Date().getTime()
     const sign = md5("fanyideskweb" + text + salt + 'ebSeFb%=XZ%T[KZ)c(sy!')
@@ -166,43 +171,43 @@ export class YoudaoTranslator extends Translator {
       Referer: 'http://fanyi.youdao.com/',
       'User-Agent': 'Mozilla/5.0 (Windows NT 6.2; rv:51.0) Gecko/20100101 Firefox/51.0',
     }
-
     const obj = await request('POST', url, data, headers)
 
     if (!obj) {
       showMessage("HTTP request failed", 'error')
-      return
+      return result
     } else if ('errorCode' in obj) {
       showMessage('errorCode' + obj['errorCode'])
-      return
+      return result
     }
 
-    const result = new SingleResult()
-    result.engine = this.name
     result.paraphrase = this.getParaphrase(obj)
     result.explain = this.getExplain(obj)
-    return result as SingleTranslation
+    result.status = 1
+    return result
   }
 
   private getParaphrase(obj: object): string {
-    if (!('translateResult' in obj)) return ''
+    if (!('translateResult' in obj)) { return '' }
     let paraphrase = ''
     const translateResult = obj['translateResult']
     for (const n of translateResult) {
       const part = []
       for (const m of n) {
         const x = m['tat']
-        if (x)
+        if (x) {
           part.push(x)
+        }
       }
-      if (part)
+      if (part) {
         paraphrase += part.join(', ')
+      }
     }
     return paraphrase
   }
 
   private getExplain(obj: object): string[] {
-    if (!('smartResult' in obj)) return
+    if (!('smartResult' in obj)) { return }
     const smarts = obj['smartResult']['entries']
     const explain = []
     for (let entry of smarts) {
@@ -214,33 +219,4 @@ export class YoudaoTranslator extends Translator {
     }
     return explain
   }
-}
-
-export async function translate(text: string): Promise<Translation> {
-  const ENGINES = {
-    bing: BingTranslator,
-    ciba: CibaTranslator,
-    google: GoogleTranslator,
-    youdao: YoudaoTranslator
-  }
-
-  const config: WorkspaceConfiguration = workspace.getConfiguration('translator')
-  const engines = config.get<string[]>('engines', ['ciba', 'google'])
-  const toLang = config.get<string>('toLang', 'zh')
-
-  const trans: Translation = {
-    text,
-    results: [],
-    status: 0  // 0 represents failure
-  }
-  for (const e of engines) {
-    const cls = ENGINES[e]
-    const translator = new cls(e)
-    const result = await translator.translate(text, toLang)
-    if (result) {
-      trans.status = 1 // if only one is valid, the whole status is valid
-      trans.results.push(result)
-    }
-  }
-  return trans
 }
