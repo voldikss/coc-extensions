@@ -4,7 +4,7 @@ import { showMessage } from '../util'
 import { Translation } from '../types'
 
 export class Display {
-  constructor(private nvim: Neovim) { }
+  constructor(private nvim: Neovim, private winConfig) { }
 
   private buildContent(trans: Translation): string[] {
     const content: string[] = []
@@ -21,12 +21,29 @@ export class Display {
   }
 
   public async winSize(content: string[]): Promise<number[]> {
-    const height = content.length
+    let height = 0
     let width = 0
+    let maxWidth = this.winConfig.get('maxWidth')
+    let maxHeight = this.winConfig.get('maxHeight')
+    if (maxWidth === 0) {
+      let columns = await this.nvim.eval('&columns')
+      maxWidth = Math.round(0.6 * parseInt(columns.toString(), 10))
+    }
+    if (maxHeight === 0) {
+      let lines = await this.nvim.eval('&lines')
+      maxHeight = Math.round(0.6 * parseInt(lines.toString(), 10))
+    }
     for (let line of content) {
       let line_width = await this.nvim.call('strdisplaywidth', line) + 2
-      if (line_width > width) width = line_width
+      if (line_width > maxWidth) {
+        width = maxWidth
+        height += Math.floor(line_width / maxWidth) + 1
+      } else {
+        width = Math.max(line_width, width)
+        height += 1
+      }
     }
+    if (height > maxHeight) height = maxHeight
     return [height, width]
   }
 

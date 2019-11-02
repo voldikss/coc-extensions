@@ -26,11 +26,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   if (!stat || !stat.isDirectory()) await mkdirAsync(storagePath)
 
   const config: WorkspaceConfiguration = workspace.getConfiguration('translator')
+  const winConfig: WorkspaceConfiguration = workspace.getConfiguration('translator.window')
   const engines = config.get<string[]>('engines', ['ciba', 'google'])
   const toLang = config.get<string>('toLang', 'zh')
   const db = new DB(storagePath, config.get<number>('maxsize', 5000))
   const history = new History(nvim, db)
-  const displayer = new Display(nvim)
+  const displayer = new Display(nvim, winConfig)
 
   nvim.command('autocmd FileType translation | ' +
     'syn match CTQuery #@ \\w\\+ @# | hi def link CTQuery Keyword | ' +

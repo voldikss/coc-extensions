@@ -24,6 +24,8 @@ Inspired by [vim-translate-me](https://github.com/voldikss/vim-translate-me)
 - `translator.toLang`: Target language, default: `'zh'`
 - `translator.engines`: Translation engines, default: `['bing', 'ciba', 'google']`
 - `translator.maxsize`: Max count of history items, default: 5000
+- `translator.window.maxWidth`: Max width of the translation floating window, default: `0.6*&columns`
+- `translator.window.maxHeight`: Max height of the translation floating window, default: `0.6*&lines`
 
 more information, see [package.json](https://github.com/voldikss/coc-translator/blob/master/package.json)
 

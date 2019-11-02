@@ -40,6 +40,14 @@
         "translator.maxsize": {
           "type": "number",
           "default": 5000
+        },
+        "translator.window.maxWidth": {
+          "type": "number",
+          "default": 0
+        },
+        "translator.window.maxHeight": {
+          "type": "number",
+          "default": 0
         }
       }
     },
