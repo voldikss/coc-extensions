@@ -4,8 +4,6 @@ Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim)
 
 Inspired by [vim-translate-me](https://github.com/voldikss/vim-translate-me)
 
-[![Build Status](https://travis-ci.org/voldikss/coc-translator.svg?branch=master)](https://travis-ci.org/voldikss/coc-translator)
-
 ## Install
 
 ```
@@ -87,9 +85,8 @@ MIT
 ## Screenshots
 
 ![](https://user-images.githubusercontent.com/20282795/62059151-43256800-b255-11e9-914d-ece4addc5e7c.png)
-![](https://user-images.githubusercontent.com/20282795/60385979-6b893d80-9ac2-11e9-821f-c656dd38c9fa.png)
-![](https://user-images.githubusercontent.com/20282795/60385982-6f1cc480-9ac2-11e9-8519-448c6d9c77e4.png)
-![](https://user-images.githubusercontent.com/20282795/60385983-704df180-9ac2-11e9-9912-96f302f66474.png)
+![](https://user-images.githubusercontent.com/20282795/68870604-1b8bda00-0736-11ea-862f-2b2989d0c1fe.png)
+![](https://user-images.githubusercontent.com/20282795/68870605-1b8bda00-0736-11ea-9442-3a910ab7a6cf.png)
 
 [1]: https://github.com/voldikss/vim-translate-me/wiki/bing-api
 [2]: https://github.com/voldikss/vim-translate-me/wiki/Ciba-api
