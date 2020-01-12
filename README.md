@@ -1,8 +1,9 @@
 # coc-translator
 
-Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim)
+Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim).
+Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 
-Inspired by [vim-translate-me](https://github.com/voldikss/vim-translate-me)
+![](https://user-images.githubusercontent.com/20282795/62059151-43256800-b255-11e9-914d-ece4addc5e7c.png)
 
 ## Install
 
@@ -15,7 +16,7 @@ Inspired by [vim-translate-me](https://github.com/voldikss/vim-translate-me)
 - Multiple translator engines
 - Export translation history
 - View and process translation history via CocList
-- Proxy support(see [coc.txt](https://github.com/neoclide/coc.nvim/blob/master/doc/coc.txt#L113-L119))
+- Proxy support(see [coc.nvim doc](https://github.com/neoclide/coc.nvim/blob/master/doc/coc.txt#L113-L119))
 
 ## Configuration
 
@@ -78,13 +79,8 @@ Q: Where are the translation data stored?
 
 A: Normally the data is saved in `~/.config/coc/extensions/coc-translation-data`, but if you set `g:coc_extension_root` to another location, it will change as well
 
-## License
-
-MIT
-
 ## Screenshots
 
-![](https://user-images.githubusercontent.com/20282795/62059151-43256800-b255-11e9-914d-ece4addc5e7c.png)
 ![](https://user-images.githubusercontent.com/20282795/68870604-1b8bda00-0736-11ea-862f-2b2989d0c1fe.png)
 ![](https://user-images.githubusercontent.com/20282795/68870605-1b8bda00-0736-11ea-9442-3a910ab7a6cf.png)
 
@@ -93,14 +89,6 @@ MIT
 [3]: https://github.com/voldikss/vim-translate-me/wiki/Google-api
 [4]: https://github.com/voldikss/vim-translate-me/wiki/Youdao-api
 
-## Donation
+## License
 
-- Paypal
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/voldikss)
-
-- Wechat
-
-<div>
-<img src="https://user-images.githubusercontent.com/20282795/64410950-b3c66c80-d0be-11e9-8500-973382366324.jpg" width=150>
-</div>
+MIT
