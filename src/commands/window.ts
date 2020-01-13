@@ -184,11 +184,11 @@ export class FloatFactory implements Disposable {
         nvim.command(`noa call win_gotoid(${this.window.id})`, true)
       }
       this.floatBuffer.setLines()
-      nvim.command('silent! setl filetype=translation', true)
+      nvim.command(`silent! setl filetype=${docs[0].filetype}`, true)
       nvim.command(`normal! ${alignTop ? 'G' : 'gg'}0`, true)
       nvim.command('noa wincmd p', true)
     } else {
-      this.popup.setFiletype('translation')
+      this.popup.setFiletype(docs[0].filetype)
       this.popup.move({
         line: cursorPostion(config.row),
         col: cursorPostion(config.col),

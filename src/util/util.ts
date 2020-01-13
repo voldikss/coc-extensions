@@ -64,10 +64,11 @@ export function md5(str: string): string {
   return crypto.createHash('md5').update(str).digest('hex')
 }
 
+// To prevent from being blocked by user settings
 export function showMessage(message: string, type: MsgType = 'info'): void {
-  let prefix = '[coc-translator] '
+  const prefix = '[coc.nvim] '
   let msgLevel = 'MoreMsg'
-  let msg = prefix + message
+  const msg = prefix + message
   switch (type) {
     case 'error':
       msgLevel = 'Error'

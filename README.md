@@ -3,7 +3,7 @@
 Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim).
 Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 
-![](https://user-images.githubusercontent.com/20282795/62059151-43256800-b255-11e9-914d-ece4addc5e7c.png)
+![](https://user-images.githubusercontent.com/20282795/72232547-b56be800-35fc-11ea-980a-3402fea13ec1.png)
 
 ## Install
 

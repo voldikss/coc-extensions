@@ -8,15 +8,14 @@ export class Display {
 
   private buildContent(trans: Translation): string[] {
     const content: string[] = []
-    content.push(`@ ${trans.text} @`)
+    content.push(`⟦ ${trans.text} ⟧`)
     for (const t of trans.results) {
       content.push(' ')
-      content.push(`------ ${t.engine} ------`)
-      if (t.phonetic) content.push(`🔉 [${t.phonetic}]`)
-      if (t.paraphrase) content.push(`📕 ${t.paraphrase}`)
-      if (t.explain.length) content.push(...t.explain.map((i: string) => "📝 " + i))
+      content.push(`─── ${t.engine} ───`)
+      if (t.phonetic) content.push(`• [${t.phonetic}]`)
+      if (t.paraphrase) content.push(`• ${t.paraphrase}`)
+      if (t.explain.length) content.push(...t.explain.map(e => "• " + e))
     }
-
     return content
   }
 
@@ -30,11 +29,11 @@ export class Display {
       maxWidth = Math.round(0.6 * parseInt(columns.toString(), 10))
     }
     if (maxHeight === 0) {
-      let lines = await this.nvim.eval('&lines')
+      const lines = await this.nvim.eval('&lines')
       maxHeight = Math.round(0.6 * parseInt(lines.toString(), 10))
     }
-    for (let line of content) {
-      let line_width = await this.nvim.call('strdisplaywidth', line) + 2
+    for (const line of content) {
+      const line_width = await this.nvim.call('strdisplaywidth', line) + 2
       if (line_width > maxWidth) {
         width = maxWidth
         height += Math.floor(line_width / maxWidth) + 1
@@ -50,15 +49,15 @@ export class Display {
   public async popup(trans: Translation): Promise<void> {
     const content = this.buildContent(trans)
     if (content.length === 0) return
-    let [height, width] = await this.winSize(content)
-    for (let i of Object.keys(content)) {
-      let line = content[i]
-      if (line.startsWith('---') && width > line.length) {
-        let padding = Math.floor((width - line.length) / 2)
-        content[i] = `${'-'.repeat(padding)}${line}${'-'.repeat(padding)}`
-        content[i] += '-'.repeat((width - line.length) % 2)
-      } else if (line.startsWith('@')) {
-        let padding = Math.floor((width - line.length) / 2)
+    const [height, width] = await this.winSize(content)
+    for (const i of Object.keys(content)) {
+      const line = content[i]
+      if (line.startsWith('───') && width > line.length) {
+        const padding = Math.floor((width - line.length) / 2)
+        content[i] = `${'─'.repeat(padding)}${line}${'─'.repeat(padding)}`
+        content[i] += '─'.repeat((width - line.length) % 2)
+      } else if (line.startsWith('⟦')) {
+        const padding = Math.floor((width - line.length) / 2)
         content[i] = `${' '.repeat(padding)}${line}`
       }
     }
@@ -73,13 +72,13 @@ export class Display {
       )
       const docs = [{
         content: content.join('\n'),
-        filetype: "translation"
+        filetype: "coc-translator"
       }]
       await floatFactory.create(docs)
     } else {
       this.nvim.pauseNotification()
-      this.nvim.call('coc#util#preview_info', [content, 'translation'], true)
-      // preview window won't open without redraw...
+      this.nvim.call('coc#util#preview_info', [content, 'coc-translator'], true)
+      // preview window won't open without redraw
       this.nvim.command('redraw', true)
       // NOTE: this will make preview window crash immediately
       // this.nvim.command('augroup TT | autocmd CursorMoved * pclose | autocmd! TT | augroup END', true)
@@ -88,33 +87,27 @@ export class Display {
   }
 
   public async echo(trans: Translation): Promise<void> {
-    let hasPhonetic = false
-    let hasParaphrase = false
-    let hasExplain = false
-    const content = []
+    let phonetic = ''
+    let paraphrase = ''
+    let explain = ''
 
     for (const t of trans.results) {
-      if (t.phonetic && !hasPhonetic) {
-        content.push(`[${t.phonetic}]`)
-        hasPhonetic = true
+      if (t.phonetic && !phonetic) {
+        phonetic = `[ ${t.phonetic} ]`
       }
-
-      if (t.paraphrase && !hasParaphrase) {
-        content.push(t.paraphrase)
-        hasParaphrase = true
+      if (t.paraphrase && !paraphrase) {
+        paraphrase = t.paraphrase
       }
-
-      if (t.explain.length !== 0 && !hasExplain) {
-        content.push(t.explain.join('; '))
-        hasExplain = true
+      if (t.explain && !explain) {
+        explain = t.explain.join(' ')
       }
     }
-    const message = `${trans.text} ==> ${content.join(' ')}`
+    const message = `${trans.text} ==> ${phonetic} ${paraphrase} ${explain}`
     showMessage(message)
   }
 
   public async replace(trans: Translation): Promise<void> {
-    for (let t of trans.results) {
+    for (const t of trans.results) {
       if (t.paraphrase) {
         this.nvim.pauseNotification()
         this.nvim.command('let reg_tmp=@a', true)

@@ -14,10 +14,9 @@ import {
   History,
   Display
 } from './commands'
-import { statAsync, mkdirAsync } from './util/io'
 import { Translation, SingleTranslation } from './types'
 import TranslationList from './lists/translation'
-import { DB, showMessage } from './util'
+import { DB, showMessage, statAsync, mkdirAsync } from './util'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
@@ -30,15 +29,18 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const engines = config.get<string[]>('engines', ['ciba', 'google'])
   const toLang = config.get<string>('toLang', 'zh')
   const db = new DB(storagePath, config.get<number>('maxsize', 5000))
-  const history = new History(nvim, db)
+  const historyer = new History(nvim, db)
   const displayer = new Display(nvim, winConfig)
 
-  nvim.command('autocmd FileType translation | ' +
-    'syn match CTQuery #@ \\w\\+ @# | hi def link CTQuery Keyword | ' +
-    'syn match CTEngine #-\\+ .* -\\+# | hi def link CTEngine Constant | ' +
-    'syn match CTParaphrase #🌀.*# | hi def link CTParaphrase PreProc | ' +
-    'syn match CTPhonetic #🔉.*# | hi def link CTPhonetic Special | ' +
-    'syn match CTExplain #📝.*# | hi def link CTExplain Comment', true)
+  nvim.command(`autocmd FileType coc-translator |
+    syntax match CocTranslatorQuery     /\\v⟦.*⟧/ |
+    syntax match CocTranslatorPhonetic  /\\v•\\s\\[.*\\]$/ |
+    syntax match CocTranslatorExplain   /\\v•.*/ contains=CocTranslatorPhonetic |
+    syntax match CocTranslatorDelimiter /\\v\\─.*\\─/ |
+    hi def link CocTranslatorQuery      Keyword |
+    hi def link CocTranslatorDelimiter  Constant |
+    hi def link CocTranslatorPhonetic   Type |
+    hi def link CocTranslatorExplain    Comment`, true)
 
   subscriptions.push(
     workspace.registerKeymap(
@@ -49,7 +51,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.popup(trans)
-        await history.save(trans)
+        await historyer.save(trans)
       }, { sync: false }
     )
   )
@@ -63,7 +65,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.echo(trans)
-        await history.save(trans)
+        await historyer.save(trans)
       }, { sync: false }
     )
   )
@@ -77,7 +79,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.replace(trans)
-        await history.save(trans)
+        await historyer.save(trans)
       }, { sync: false }
     )
   )
@@ -87,7 +89,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-h',
       async () => {
-        await history.export()
+        await historyer.export()
       }, { sync: false }
     )
   )
@@ -100,7 +102,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.popup(trans)
-        await history.save(trans)
+        await historyer.save(trans)
       }
     )
   )
@@ -113,7 +115,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.echo(trans)
-        await history.save(trans)
+        await historyer.save(trans)
       }
     )
   )
@@ -125,7 +127,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.replace(trans)
-        await history.save(trans)
+        await historyer.save(trans)
       }
     )
   )
@@ -134,7 +136,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.exportHistory',
       async () => {
-        await history.export()
+        await historyer.export()
       }
     )
   )

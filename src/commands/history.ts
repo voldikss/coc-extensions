@@ -12,10 +12,10 @@ export class History {
     const [, lnum, col] = await this.nvim.call('getpos', ".")
     const path = `${doc.uri}\t${lnum}\t${col}`
 
-    let text: string = trans.text
+    const text: string = trans.text
     for (const t of trans.results) {
-      let paraphrase = t.paraphrase
-      let explain = t.explain
+      const paraphrase = t.paraphrase
+      const explain = t.explain
       let content = []
 
       if (explain.length !== 0) {
@@ -35,8 +35,8 @@ export class History {
     const { nvim } = this
     nvim.pauseNotification()
     nvim.command('tabnew', true)
-    for (let item of arr) {
-      let text = item.content[0].padEnd(20) + item.content[1]
+    for (const item of arr) {
+      const text = item.content[0].padEnd(20) + item.content[1]
       nvim.call('append', [0, text], true)
     }
     nvim.command('syntax match CocTranslatorQuery /\\v^.*\\v%20v/', true)
