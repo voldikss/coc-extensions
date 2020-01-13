@@ -1,9 +1,5 @@
 import { md5, request, showMessage } from '../util'
-import { SingleTranslation } from '../types'
-
-class Translator {
-  constructor(public name: string) { }
-}
+import { SingleTranslation, Translation, BaseTranslator } from '../types'
 
 class SingleResult implements SingleTranslation {
   public engine: string
@@ -14,8 +10,8 @@ class SingleResult implements SingleTranslation {
   constructor() { }
 }
 
-export class BingTranslator extends Translator {
-  constructor(name: string) { super(name) }
+class BingTranslator implements BaseTranslator {
+  constructor(private name: string) { }
 
   public async translate(text: string, toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -63,8 +59,8 @@ export class BingTranslator extends Translator {
   }
 }
 
-export class CibaTranslator extends Translator {
-  constructor(name: string) { super(name) }
+class CibaTranslator implements BaseTranslator {
+  constructor(private name: string) { }
 
   public async translate(text: string, toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -92,8 +88,8 @@ export class CibaTranslator extends Translator {
   }
 }
 
-export class GoogleTranslator extends Translator {
-  constructor(name: string) { super(name) }
+class GoogleTranslator implements BaseTranslator {
+  constructor(private name: string) { }
 
   private getParaphrase(obj: object): string {
     let paraphrase = ""
@@ -141,8 +137,8 @@ export class GoogleTranslator extends Translator {
 // TODO: use non-standard api
 // e.g. https://github.com/voldikss/vim-translate-me/blob/41db2e5fed033e2be9b5c7458d7ae102a129643d/autoload/script/query.py#L264
 // currently it doesn't work, always get "errorCode:50"
-export class YoudaoTranslator extends Translator {
-  constructor(name: string) { super(name) }
+class YoudaoTranslator implements BaseTranslator {
+  constructor(private name: string) { }
 
   public async translate(text: string, toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -218,5 +214,43 @@ export class YoudaoTranslator extends Translator {
       }
     }
     return explain
+  }
+}
+
+export class Translator {
+  constructor(private engines, private toLang) {
+  }
+
+  public async translate(text: string): Promise<Translation | void> {
+    if (!text || text.trim() === '') return
+
+    const ENGINES = {
+      bing: BingTranslator,
+      ciba: CibaTranslator,
+      google: GoogleTranslator,
+      youdao: YoudaoTranslator
+    }
+
+    const translatePromises = this.engines.map(e => {
+      const cls = ENGINES[e]
+      const translator: BaseTranslator = new cls(e)
+      return translator.translate(text, this.toLang)
+    })
+
+    return Promise.all(translatePromises)
+      .then((results: any) => { // Here any should be SingleTranslation[]
+        results = results.filter((result: SingleTranslation) => {
+          return result.status === 1 &&
+            !(result.explain.length === 0 && result.paraphrase === '')
+        })
+        return {
+          text,
+          results
+        } as Translation
+      })
+      .catch(_e => {
+        showMessage('Translation failed', 'error')
+        return
+      })
   }
 }

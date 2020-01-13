@@ -2,20 +2,12 @@ import {
   ExtensionContext,
   commands,
   workspace,
-  listManager,
-  WorkspaceConfiguration
+  listManager
 } from 'coc.nvim'
-import {
-  YoudaoTranslator,
-  GoogleTranslator,
-  CibaTranslator,
-  BingTranslator,
-  History,
-  Display
-} from './commands'
-import { Translation, SingleTranslation } from './types'
+import { History, Display, Translator } from './commands'
+import { KeymapMode, DisplayMode } from './types'
 import TranslationList from './lists/translation'
-import { DB, showMessage, statAsync, mkdirAsync } from './util'
+import { DB, statAsync, mkdirAsync } from './util'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
@@ -24,23 +16,34 @@ export async function activate(context: ExtensionContext): Promise<void> {
   if (!stat || !stat.isDirectory()) await mkdirAsync(storagePath)
 
   const config = workspace.getConfiguration('translator')
-  const winConfig: WorkspaceConfiguration = workspace.getConfiguration('translator.window')
-  const engines = config.get<string[]>('engines', ['ciba', 'google'])
+  const maxWidth = config.get<number>('window.maxWidth')
+  const maxHeight = config.get<number>('window.maxHeight')
+  const engines = config.get<string[]>('engines')
   const toLang = config.get<string>('toLang', 'zh')
-  const db = new DB(storagePath, config.get<number>('maxsize', 5000))
+  const maxSize = config.get<number>('maxsize', 5000)
+
+  const db = new DB(storagePath, maxSize)
+  const translator = new Translator(engines, toLang)
   const historyer = new History(nvim, db)
-  const displayer = new Display(nvim, winConfig)
+  const displayer = new Display(nvim, maxWidth, maxHeight)
+  const helper = new Helper(translator, displayer, historyer)
 
   subscriptions.push(
     workspace.registerKeymap(
       ['n'],
       'translator-p',
       async () => {
-        const text = await getText()
-        const trans = await translate(text, engines, toLang)
-        if (!trans) return
-        await displayer.popup(trans)
-        await historyer.save(trans)
+        await helper.keymapCallback('n', 'popup')
+      }, { sync: false }
+    )
+  )
+
+  subscriptions.push(
+    workspace.registerKeymap(
+      ['v'],
+      'translator-pv',
+      async () => {
+        await helper.keymapCallback('v', 'popup')
       }, { sync: false }
     )
   )
@@ -50,11 +53,17 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-e',
       async () => {
-        const text = await getText()
-        const trans = await translate(text, engines, toLang)
-        if (!trans) return
-        await displayer.echo(trans)
-        await historyer.save(trans)
+        await helper.keymapCallback('n', 'echo')
+      }, { sync: false }
+    )
+  )
+
+  subscriptions.push(
+    workspace.registerKeymap(
+      ['v'],
+      'translator-ev',
+      async () => {
+        await helper.keymapCallback('v', 'echo')
       }, { sync: false }
     )
   )
@@ -64,11 +73,17 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-r',
       async () => {
-        const text = await getText()
-        const trans = await translate(text, engines, toLang)
-        if (!trans) return
-        await displayer.replace(trans)
-        await historyer.save(trans)
+        await helper.keymapCallback('n', 'replace')
+      }, { sync: false }
+    )
+  )
+
+  subscriptions.push(
+    workspace.registerKeymap(
+      ['v'],
+      'translator-rv',
+      async () => {
+        await helper.keymapCallback('v', 'replace')
       }, { sync: false }
     )
   )
@@ -87,11 +102,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.popup',
       async (text: string) => {
-        if (!text || text.trim() === '') text = await getText()
-        const trans = await translate(text, engines, toLang)
-        if (!trans) return
-        await displayer.popup(trans)
-        await historyer.save(trans)
+        await helper.commandCallback(text, 'popup')
       }
     )
   )
@@ -100,11 +111,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.echo',
       async text => {
-        if (!text || text.trim() === '') text = await getText()
-        const trans = await translate(text, engines, toLang)
-        if (!trans) return
-        await displayer.echo(trans)
-        await historyer.save(trans)
+        await helper.commandCallback(text, 'echo')
       }
     )
   )
@@ -112,11 +119,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.replace',
       async text => {
-        if (!text || text.trim() === '') text = await getText()
-        const trans = await translate(text, engines, toLang)
-        if (!trans) return
-        await displayer.replace(trans)
-        await historyer.save(trans)
+        await helper.commandCallback(text, 'replace')
       }
     )
   )
@@ -137,47 +140,47 @@ export async function activate(context: ExtensionContext): Promise<void> {
   )
 }
 
-async function getText(): Promise<string> {
-  const doc = await workspace.document
-  const pos = await workspace.getCursorPosition()
-  const range = doc.getWordRangeAtPosition(pos)
-  const text = doc.textDocument.getText(range)
-  return text
-}
+class Helper {
+  constructor(
+    private translator: Translator,
+    private displayer: Display,
+    private historyer: History
+  ) { }
 
-export async function translate(
-  text: string,
-  engines: string[],
-  toLang: string,
-): Promise<Translation | void> {
-  if (!text || text.trim() === '') return
-
-  const ENGINES = {
-    bing: BingTranslator,
-    ciba: CibaTranslator,
-    google: GoogleTranslator,
-    youdao: YoudaoTranslator
+  public async keymapCallback(
+    keymapMode: KeymapMode,
+    displayMode: DisplayMode
+  ): Promise<void> {
+    const text = await this.getText(keymapMode)
+    const trans = await this.translator.translate(text)
+    if (!trans) return
+    await this.displayer.display(trans, displayMode)
+    await this.historyer.save(trans)
   }
 
-  const translatePromises = engines.map(e => {
-    const cls = ENGINES[e]
-    const translator = new cls(e)
-    return translator.translate(text, toLang)
-  })
+  public async commandCallback(
+    text: string,
+    displayMode: DisplayMode
+  ): Promise<void> {
+    if (!text || text.trim() === '') {
+      text = await this.getText('n')
+    }
+    const trans = await this.translator.translate(text)
+    if (!trans) return
+    await this.displayer.display(trans, displayMode)
+    await this.historyer.save(trans)
+  }
 
-  return Promise.all(translatePromises)
-    .then((results: SingleTranslation[]) => {
-      results = results.filter(result => {
-        return result.status === 1 &&
-          !(result.explain.length === 0 && result.paraphrase === '')
-      })
-      return {
-        text,
-        results
-      } as Translation
-    })
-    .catch(_e => {
-      showMessage('Translation failed', 'error')
-      return
-    })
+  public async getText(mode: KeymapMode): Promise<string> {
+    const doc = await workspace.document
+    let range
+    if (mode === 'n') {
+      const pos = await workspace.getCursorPosition()
+      range = doc.getWordRangeAtPosition(pos)
+    } else {
+      range = await workspace.getSelectedRange('v', doc)
+    }
+    const text = doc.textDocument.getText(range)
+    return text
+  }
 }

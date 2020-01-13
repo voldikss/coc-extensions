@@ -1,5 +1,8 @@
 export declare type MsgType = 'info' | 'warning' | 'error'
 export declare type HistoryContent = [string, string]
+export declare type DisplayMode = 'popup' | 'echo' | 'replace'
+export declare type KeymapMode = 'v' | 'n'
+
 /**
  * Single translation from one engine
  *
@@ -24,6 +27,10 @@ export interface SingleTranslation {
 export interface Translation {
   text: string
   results: SingleTranslation[]
+}
+
+export interface BaseTranslator {
+  translate(text: string, toLang: string): Promise<SingleTranslation>
 }
 
 export interface HistoryItem {

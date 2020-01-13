@@ -1,10 +1,10 @@
 import { workspace, Neovim } from 'coc.nvim'
 import { FloatFactory } from './window'
 import { showMessage } from '../util'
-import { Translation } from '../types'
+import { Translation, DisplayMode } from '../types'
 
 export class Display {
-  constructor(private nvim: Neovim, private winConfig) { }
+  constructor(private nvim: Neovim, private maxWidth, private maxHeight) { }
 
   private buildContent(trans: Translation): string[] {
     const content: string[] = []
@@ -22,8 +22,8 @@ export class Display {
   public async winSize(content: string[]): Promise<number[]> {
     let height = 0
     let width = 0
-    let maxWidth = this.winConfig.get('maxWidth')
-    let maxHeight = this.winConfig.get('maxHeight')
+    let maxWidth = this.maxWidth
+    let maxHeight = this.maxHeight
     if (maxWidth === 0) {
       let columns = await this.nvim.eval('&columns')
       maxWidth = Math.round(0.6 * parseInt(columns.toString(), 10))
@@ -129,5 +129,21 @@ export class Display {
       }
     }
     showMessage('No paraphrase for replacement')
+  }
+
+  public async display(trans: Translation, mode: DisplayMode): Promise<void> {
+    switch (mode) {
+      case 'popup':
+        await this.popup(trans)
+        break
+      case 'echo':
+        await this.echo(trans)
+        break
+      case 'replace':
+        await this.replace(trans)
+        break
+      default:
+        break
+    }
   }
 }
