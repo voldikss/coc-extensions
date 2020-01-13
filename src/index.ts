@@ -3,8 +3,7 @@ import {
   commands,
   workspace,
   listManager,
-  WorkspaceConfiguration,
-  Neovim
+  WorkspaceConfiguration
 } from 'coc.nvim'
 import {
   YoudaoTranslator,
@@ -37,7 +36,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-p',
       async () => {
-        const text = await getText(nvim)
+        const text = await getText()
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.popup(trans)
@@ -51,7 +50,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-e',
       async () => {
-        const text = await getText(nvim)
+        const text = await getText()
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.echo(trans)
@@ -65,7 +64,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-r',
       async () => {
-        const text = await getText(nvim)
+        const text = await getText()
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.replace(trans)
@@ -88,7 +87,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.popup',
       async (text: string) => {
-        if (!text || text.trim() === '') text = await getText(nvim)
+        if (!text || text.trim() === '') text = await getText()
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.popup(trans)
@@ -101,7 +100,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.echo',
       async text => {
-        if (!text || text.trim() === '') text = await getText(nvim)
+        if (!text || text.trim() === '') text = await getText()
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.echo(trans)
@@ -113,7 +112,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.replace',
       async text => {
-        if (!text || text.trim() === '') text = await getText(nvim)
+        if (!text || text.trim() === '') text = await getText()
         const trans = await translate(text, engines, toLang)
         if (!trans) return
         await displayer.replace(trans)
@@ -138,9 +137,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
   )
 }
 
-async function getText(nvim: Neovim): Promise<string> {
-  const text = (await nvim.eval("expand('<cword>')")).toString()
-  if (!text || text.trim() === '') return
+async function getText(): Promise<string> {
+  const doc = await workspace.document
+  const pos = await workspace.getCursorPosition()
+  const range = doc.getWordRangeAtPosition(pos)
+  const text = doc.textDocument.getText(range)
   return text
 }
 
