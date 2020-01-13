@@ -47,6 +47,16 @@ export class Display {
   }
 
   public async popup(trans: Translation): Promise<void> {
+    this.nvim.command(`autocmd FileType coc-translator |
+      syntax match CocTranslatorQuery     /\\v⟦.*⟧/ |
+      syntax match CocTranslatorPhonetic  /\\v•\\s\\[.*\\]$/ |
+      syntax match CocTranslatorExplain   /\\v•.*/ contains=CocTranslatorPhonetic |
+      syntax match CocTranslatorDelimiter /\\v\\─.*\\─/ |
+      hi def link CocTranslatorQuery      Keyword |
+      hi def link CocTranslatorDelimiter  Constant |
+      hi def link CocTranslatorPhonetic   Type |
+      hi def link CocTranslatorExplain    Comment`, true)
+
     const content = this.buildContent(trans)
     if (content.length === 0) return
     const [height, width] = await this.winSize(content)

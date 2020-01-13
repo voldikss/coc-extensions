@@ -24,23 +24,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const stat = await statAsync(storagePath)
   if (!stat || !stat.isDirectory()) await mkdirAsync(storagePath)
 
-  const config: WorkspaceConfiguration = workspace.getConfiguration('translator')
+  const config = workspace.getConfiguration('translator')
   const winConfig: WorkspaceConfiguration = workspace.getConfiguration('translator.window')
   const engines = config.get<string[]>('engines', ['ciba', 'google'])
   const toLang = config.get<string>('toLang', 'zh')
   const db = new DB(storagePath, config.get<number>('maxsize', 5000))
   const historyer = new History(nvim, db)
   const displayer = new Display(nvim, winConfig)
-
-  nvim.command(`autocmd FileType coc-translator |
-    syntax match CocTranslatorQuery     /\\v⟦.*⟧/ |
-    syntax match CocTranslatorPhonetic  /\\v•\\s\\[.*\\]$/ |
-    syntax match CocTranslatorExplain   /\\v•.*/ contains=CocTranslatorPhonetic |
-    syntax match CocTranslatorDelimiter /\\v\\─.*\\─/ |
-    hi def link CocTranslatorQuery      Keyword |
-    hi def link CocTranslatorDelimiter  Constant |
-    hi def link CocTranslatorPhonetic   Type |
-    hi def link CocTranslatorExplain    Comment`, true)
 
   subscriptions.push(
     workspace.registerKeymap(
