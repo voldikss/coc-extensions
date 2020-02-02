@@ -1,5 +1,6 @@
 import { md5, request, showMessage } from '../util'
 import { SingleTranslation, Translation, BaseTranslator } from '../types'
+import { workspace } from 'coc.nvim'
 
 class SingleResult implements SingleTranslation {
   public engine: string
@@ -222,6 +223,9 @@ export class Translator {
   }
 
   public async translate(text: string): Promise<Translation | void> {
+    let statusItem = workspace.createStatusBarItem(0, {progress: true})
+    statusItem.text = 'translator querying'
+    statusItem.show()
     if (!text || text.trim() === '') return
 
     const ENGINES = {
@@ -243,12 +247,14 @@ export class Translator {
           return result.status === 1 &&
             !(result.explain.length === 0 && result.paraphrase === '')
         })
+        statusItem.hide()
         return {
           text,
           results
         } as Translation
       })
       .catch(_e => {
+        statusItem.hide()
         showMessage('Translation failed', 'error')
         return
       })
