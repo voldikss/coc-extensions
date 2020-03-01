@@ -2332,7 +2332,7 @@ https-browserify@^1.0.0:
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
   integrity sha1-7AbBDgo0wPL68Zn3/X/Hj//QPHM=
 
-https-proxy-agent@^2.2.3:
+https-proxy-agent@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-2.2.4.tgz#4ee7a737abd92678a293d9b34a1af4d0d08c787b"
   integrity sha512-OmvfoQ53WLjtA9HeYP9RNrWMJzzAz1JGaSFr1nijg0PVR1JaD/xbJq1mdEIIlxGpXp9eSe/O2LgU9DJmTPd0Eg==
@@ -4262,13 +4262,13 @@ repeat-string@^1.6.1:
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
   integrity sha1-jcrkcOHIirwtYA//Sndihtp15jc=
 
-request-light@^0.2.4:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/request-light/-/request-light-0.2.5.tgz#38a3da7b2e56f7af8cbba57e8a94930ee2380746"
-  integrity sha512-eBEh+GzJAftUnex6tcL6eV2JCifY0+sZMIUpUPOVXbs2nV5hla4ZMmO3icYKGuGVuQ2zHE9evh4OrRcH4iyYYw==
+request-light@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/request-light/-/request-light-0.3.0.tgz#04daa783e7f0a70392328dda4b546f3e27845f2d"
+  integrity sha512-xlVlZVT0ZvCT+c3zm3SjeFCzchoQxsUUmx5fkal0I6RIDJK+lmb1UYyKJ7WM4dTfnzHP4ElWwAf8Dli8c0/tVA==
   dependencies:
     http-proxy-agent "^2.1.0"
-    https-proxy-agent "^2.2.3"
+    https-proxy-agent "^2.2.4"
     vscode-nls "^4.1.1"
 
 request-promise-core@1.1.2:
