@@ -6,11 +6,13 @@ import {
 } from 'coc.nvim'
 import { History, Display, Translator } from './commands'
 import { KeymapMode, DisplayMode } from './types'
-import TranslationList from './lists/translation'
+import { TranslationList } from './lists/translation'
 import { DB, statAsync, mkdirAsync } from './util'
+import { logger } from './util/logger'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
+  subscriptions.push(logger)
   const { nvim } = workspace
   const stat = await statAsync(storagePath)
   if (!stat || !stat.isDirectory()) await mkdirAsync(storagePath)
@@ -186,6 +188,7 @@ class Helper {
     } else {
       text = doc.textDocument.getText(range)
     }
+    logger.log(`current text: ${text}`)
     return text
   }
 }

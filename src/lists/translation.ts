@@ -3,7 +3,7 @@ import { Position, Range, TextEdit } from 'vscode-languageserver-protocol'
 import { HistoryItem } from '../types'
 import { DB } from '../util/db'
 
-export default class TranslationList extends BasicList {
+export class TranslationList extends BasicList {
   public readonly name = 'translation'
   public readonly description = 'list of translation history'
   public defaultAction = 'open'
