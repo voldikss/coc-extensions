@@ -1,6 +1,6 @@
 {
   "name": "coc-translator",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Translation extension for coc.nvim",
   "main": "lib/index.js",
   "publisher": "voldikss",
@@ -81,7 +81,6 @@
     "@types/node": "^13.1.2",
     "@types/uuid": "^3.4.4",
     "coc.nvim": "^0.0.74",
-    "jest": "^24.8.0",
     "request-light": "^0.2.4",
     "rimraf": "^3.0.1",
     "ts-jest": "^24.0.2",
