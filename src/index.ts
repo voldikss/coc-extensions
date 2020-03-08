@@ -180,7 +180,12 @@ class Helper {
     } else {
       range = await workspace.getSelectedRange('v', doc)
     }
-    const text = doc.textDocument.getText(range)
+    let text = ''
+    if (!range) {
+      text = (await workspace.nvim.eval('expand("<cword>")')).toString()
+    } else {
+      text = doc.textDocument.getText(range)
+    }
     return text
   }
 }
