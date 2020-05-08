@@ -1,5 +1,4 @@
-import { workspace, Neovim } from 'coc.nvim'
-import { FloatFactory } from './window'
+import { workspace, Neovim, FloatFactory } from 'coc.nvim'
 import { showMessage } from '../util'
 import { Translation, DisplayMode } from '../types'
 
@@ -85,6 +84,10 @@ export class Display {
         filetype: "coc-translator"
       }]
       await floatFactory.create(docs)
+      if (workspace.isNvim) {
+        let buf = floatFactory.buffer
+        buf.setOption('filetype', 'coc-translator', true)
+      }
     } else {
       this.nvim.pauseNotification()
       this.nvim.call('coc#util#preview_info', [content, 'coc-translator'], true)
