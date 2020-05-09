@@ -3,7 +3,7 @@
 Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim).
 Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 
-![](https://user-images.githubusercontent.com/20282795/72232547-b56be800-35fc-11ea-980a-3402fea13ec1.png)
+![](https://user-images.githubusercontent.com/20282795/81474850-a3acf100-923a-11ea-9110-5e0fca6118b2.png)
 
 ## Install
 
@@ -20,11 +20,41 @@ Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 
 ## Configuration
 
-- `translator.toLang`: Target language, default: `'zh'`
-- `translator.engines`: Translation engines, default: `['bing', 'iciba', 'google', 'youdao', 'haici']`
-- `translator.maxsize`: Max count of history items, default: 5000
-- `translator.window.maxWidth`: Max width of the translation floating window, default: `0.6*&columns`
-- `translator.window.maxHeight`: Max height of the translation floating window, default: `0.6*&lines`
+```jsonc
+"translator.toLang": {
+  "type": "string",
+  "default": "zh",
+  "description": "Target language"
+},
+"translator.engines": {
+  "type": "array",
+  "default": [
+    "bing",
+    "iciba",
+    "google",
+    "youdao",
+    "haici"
+  ]
+},
+"translator.enableHover": {
+  "type": "boolean",
+  "default": false,
+  "description": "Enable on hover translating"
+},
+"translator.maxsize": {
+  "type": "number",
+  "default": 5000,
+  "description": "Max history count"
+},
+"translator.window.maxWidth": {
+  "type": "number",
+  "default": 999
+},
+"translator.window.maxHeight": {
+  "type": "number",
+  "default": 999
+}
+```
 
 more information, see [package.json](https://github.com/voldikss/coc-translator/blob/master/package.json)
 
