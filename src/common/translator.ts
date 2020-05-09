@@ -15,11 +15,10 @@ class SingleResult implements SingleTranslation {
 class BingTranslator implements BaseTranslator {
   constructor(private name: string) { }
 
-  public async translate(text: string, toLang: string): Promise<SingleTranslation> {
+  public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
     result.engine = this.name
 
-    if (toLang === undefined) return result
     let url = 'http://cn.bing.com/dict/SerpHoverTrans'
     url += '?q=' + encodeURI(text)
 
@@ -30,7 +29,10 @@ class BingTranslator implements BaseTranslator {
     }
 
     const resp = await request('GET', url, 'text', null, headers)
-    if (!resp) return result
+    if (!resp) {
+      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
+      return result
+    }
     result.phonetic = this.getPhonetic(resp)
     result.explain = this.getExplain(resp)
     result.status = 1
@@ -60,32 +62,50 @@ class BingTranslator implements BaseTranslator {
   }
 }
 
-class CibaTranslator implements BaseTranslator {
+class ICibaTranslator implements BaseTranslator {
   constructor(private name: string) { }
 
-  public async translate(text: string, toLang: string): Promise<SingleTranslation> {
+  public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
     result.engine = this.name
 
-    if (toLang === undefined) return result
-    const url = `https://fy.iciba.com/ajax.php`
+    const url = 'http://www.iciba.com/index.php'
     const data = {}
-    data['a'] = 'fy'
-    data['w'] = text
-    data['f'] = 'auto'
-    data['t'] = toLang
+    data["a"] = "getWordMean"
+    data["c"] = "search"
+    data["word"] = text
     const res = await request('GET', url, 'json', data)
     let obj = JSON.parse(res)
-    if (!(obj && obj['content'])) {
-      showMessage("ParseError: Bad response", 'error')
+    if (!(obj && obj['baesInfo'] && obj['baesInfo']['symbols'])) {
+      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
       return result
     }
-    obj = obj['content']
-    if (obj['ph_en']) result.phonetic = `${obj['ph_en']}`
-    if (obj['out']) result.paraphrase = `${obj['out']}`
-    if (obj['word_mean']) result.explain = obj['word_mean']
+    obj = obj['baesInfo']['symbols'][0]
+    result.phonetic = this.getPhonetic(obj)
+    result.paraphrase = this.getParaphrase(obj)
+    result.explain = this.getExplain(obj)
     result.status = 1
     return result
+  }
+
+  public getPhonetic(obj): string {
+    if (obj['ph_en']) return obj['ph_en']
+    return ''
+  }
+
+  public getParaphrase(obj): string {
+    return obj['parts'][0]['means'][0]
+  }
+
+  public getExplain(obj): string[] {
+    const parts = obj['parts']
+    const explain = []
+    if (parts && parts.length > 0) {
+      for (const part of parts) {
+        explain.push(part['part'] + part['means'].join(', '))
+      }
+    }
+    return explain
   }
 }
 
@@ -125,7 +145,7 @@ class GoogleTranslator implements BaseTranslator {
     const res = await request('GET', url, 'json')
     const obj = JSON.parse(res)
     if (!obj) {
-      showMessage("ParseError: Bad response", 'error')
+      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
       return result
     }
     result.paraphrase = this.getParaphrase(obj)
@@ -150,7 +170,7 @@ class YoudaoTranslator implements BaseTranslator {
     const res = await request('GET', url, 'text')
     let obj = await parseStringPromise(res)
     if (!(obj && obj['yodaodict'])) {
-      showMessage("ParseError: Bad response", 'error')
+      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
       return result
     }
     obj = obj['yodaodict']
@@ -192,12 +212,22 @@ export class Translator {
 
     const ENGINES = {
       bing: BingTranslator,
-      ciba: CibaTranslator,
+      iciba: ICibaTranslator,
       google: GoogleTranslator,
       youdao: YoudaoTranslator
     }
 
-    const translatePromises = this.engines.map(e => {
+    // make sure every `e` is valid for `translatePromises`
+    const engines = []
+    for (const e of this.engines) {
+      if (e in ENGINES) {
+        engines.push(e)
+      }
+      else {
+        showMessage(`Bad engine: ${e}`, 'error')
+      }
+    }
+    const translatePromises = engines.map(e => {
       const cls = ENGINES[e]
       const translator: BaseTranslator = new cls(e)
       return translator.translate(text, this.toLang)
@@ -206,8 +236,10 @@ export class Translator {
     return Promise.all(translatePromises)
       .then((results: any) => { // Here any should be SingleTranslation[]
         results = results.filter((result: SingleTranslation) => {
-          return result.status === 1 &&
-            !(result.explain.length === 0 && result.paraphrase === '')
+          if (result) {
+            return result.status === 1 &&
+              !(result.explain.length === 0 && result.paraphrase === '')
+          }
         })
         statusItem.hide()
         return {
@@ -215,9 +247,9 @@ export class Translator {
           results
         } as Translation
       })
-      .catch(_e => {
+      .catch(e => {
         statusItem.hide()
-        showMessage('Translation failed', 'error')
+        showMessage(`Translation failed: ${e}`, 'error')
         return
       })
   }

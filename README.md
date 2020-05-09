@@ -21,7 +21,7 @@ Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 ## Configuration
 
 - `translator.toLang`: Target language, default: `'zh'`
-- `translator.engines`: Translation engines, default: `['bing', 'ciba', 'google', 'youdao']`
+- `translator.engines`: Translation engines, default: `['bing', 'iciba', 'google', 'youdao']`
 - `translator.maxsize`: Max count of history items, default: 5000
 - `translator.window.maxWidth`: Max width of the translation floating window, default: `0.6*&columns`
 - `translator.window.maxHeight`: Max height of the translation floating window, default: `0.6*&lines`
@@ -33,7 +33,7 @@ more information, see [package.json](https://github.com/voldikss/coc-translator/
 | engine | supported language types |
 | ------ | ------------------------ |
 | bing   | [ref][1]                 |
-| ciba   | [ref][2]                 |
+| iciba  | [ref][2]                 |
 | google | [ref][3]                 |
 | youdao | [ref][4]                 |
 
