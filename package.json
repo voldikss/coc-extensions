@@ -1,6 +1,6 @@
 {
   "name": "coc-translator",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Translation extension for coc.nvim",
   "main": "lib/index.js",
   "publisher": "voldikss",
@@ -17,8 +17,7 @@
     "clean": "rimraf lib",
     "watch": "webpack --watch",
     "build": "webpack",
-    "prepare": "npx npm-run-all clean build",
-    "test": "jest --forceExit"
+    "prepare": "npx npm-run-all clean build"
   },
   "activationEvents": [
     "*"
@@ -77,13 +76,11 @@
   "devDependencies": {
     "@voldikss/tsconfig": "^1.0.0",
     "@voldikss/tslint-config": "^1.0.6",
-    "@types/jest": "^25.1.1",
     "@types/node": "^13.1.2",
     "@types/uuid": "^3.4.4",
     "coc.nvim": "^0.0.74",
     "request-light": "^0.2.4",
     "rimraf": "^3.0.1",
-    "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
     "tslint": "^6.0.0",
     "typescript": "^3.5.2",
