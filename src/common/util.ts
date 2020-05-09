@@ -1,6 +1,5 @@
 import { Translation } from "../types"
 import { MsgType } from '../types'
-import crypto from 'crypto'
 import { workspace } from "coc.nvim"
 import { configure, xhr, XHROptions } from 'request-light'
 
@@ -20,9 +19,9 @@ export function buildLines(trans: Translation): string[] {
 export async function request(
   type: string,
   url: string,
-  data: object = null,
-  headers: object = null,
-  responseType = 'json'
+  responseType: string,
+  data = null,
+  headers = null
 ): Promise<any> {
   const httpConfig = workspace.getConfiguration('http')
   configure(
@@ -56,12 +55,8 @@ export async function request(
 
   try {
     let response = await xhr(options)
-    let { responseText } = response
-    if (responseType === 'json') {
-      return JSON.parse(responseText)
-    } else {
-      return responseText
-    }
+    // workspace.showMessage(JSON.stringify(response))
+    return response.responseText
   } catch (e) {
     showMessage(e['responseText'], 'error')
     return
@@ -72,10 +67,6 @@ function urlencode(data: object): string {
   return Object.keys(data).map(key =>
     [key, data[key]].map(encodeURIComponent).join("="))
     .join("&")
-}
-
-export function md5(str: string): string {
-  return crypto.createHash('md5').update(str).digest('hex')
 }
 
 // To prevent from being blocked by user settings

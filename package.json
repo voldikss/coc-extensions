@@ -35,7 +35,9 @@
           "type": "array",
           "default": [
             "bing",
-            "ciba"
+            "ciba",
+            "google",
+            "youdao"
           ]
         },
         "translator.enableHover": {
@@ -80,10 +82,11 @@
   "author": "dyzplus@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "@voldikss/tsconfig": "^1.0.0",
-    "@voldikss/tslint-config": "^1.0.6",
     "@types/node": "^13.1.2",
     "@types/uuid": "^3.4.4",
+    "@types/xml2js": "^0.4.5",
+    "@voldikss/tsconfig": "^1.0.0",
+    "@voldikss/tslint-config": "^1.0.6",
     "coc.nvim": "^0.0.77",
     "request-light": "^0.2.4",
     "rimraf": "^3.0.1",
@@ -92,7 +95,7 @@
     "typescript": "^3.5.2",
     "uuid": "^3.3.2",
     "webpack": "^4.35.0",
-    "webpack-cli": "^3.3.5"
-  },
-  "dependencies": {}
+    "webpack-cli": "^3.3.5",
+    "xml2js": "^0.4.23"
+  }
 }
