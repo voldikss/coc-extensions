@@ -138,6 +138,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   )
 
   subscriptions.push(
+    languages.registerHoverProvider(
+      ['*'],
+      new TranslatorHoverProvider(translator)
+    )
+  )
+
+  subscriptions.push(
     listManager.registerList(
       new TranslationList(nvim, db)
     )

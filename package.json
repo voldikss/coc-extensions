@@ -38,17 +38,23 @@
             "ciba"
           ]
         },
+        "translator.enableHover": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable on hover translating"
+        },
         "translator.maxsize": {
           "type": "number",
-          "default": 5000
+          "default": 5000,
+          "description": "Max history count"
         },
         "translator.window.maxWidth": {
           "type": "number",
-          "default": 0
+          "default": 999
         },
         "translator.window.maxHeight": {
           "type": "number",
-          "default": 0
+          "default": 999
         }
       }
     },
