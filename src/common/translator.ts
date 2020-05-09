@@ -1,4 +1,4 @@
-import { md5, request, showMessage } from '../util'
+import { md5, request, showMessage } from './util'
 import { SingleTranslation, Translation, BaseTranslator } from '../types'
 import { workspace } from 'coc.nvim'
 
@@ -223,7 +223,7 @@ export class Translator {
   }
 
   public async translate(text: string): Promise<Translation | void> {
-    let statusItem = workspace.createStatusBarItem(0, {progress: true})
+    let statusItem = workspace.createStatusBarItem(0, { progress: true })
     statusItem.text = 'translating'
     statusItem.show()
     if (!text || text.trim() === '') return

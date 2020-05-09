@@ -28,9 +28,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   const db = new DB(storagePath, maxSize)
   const translator = new Translator(engines, toLang)
-  const historyer = new History(nvim, db)
-  const displayer = new Display(nvim, maxWidth, maxHeight)
-  const helper = new Helper(translator, displayer, historyer)
+  const hist = new History(nvim, db)
+  const disp = new Display(nvim, maxWidth, maxHeight)
+  const helper = new Helper(translator, disp, hist)
 
   subscriptions.push(
     workspace.registerKeymap(
@@ -97,7 +97,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-h',
       async () => {
-        await historyer.export()
+        await hist.export()
       }, { sync: false }
     )
   )
@@ -132,7 +132,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.exportHistory',
       async () => {
-        await historyer.export()
+        await hist.export()
       }
     )
   )

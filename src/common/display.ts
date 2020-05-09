@@ -1,5 +1,5 @@
 import { workspace, Neovim, FloatFactory } from 'coc.nvim'
-import { showMessage } from '../util'
+import { showMessage } from './util'
 import { Translation, DisplayMode } from '../types'
 import { buildLines } from './util'
 
