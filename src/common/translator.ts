@@ -20,7 +20,7 @@ class BingTranslator implements BaseTranslator {
     result.engine = this.name
 
     let url = 'http://cn.bing.com/dict/SerpHoverTrans'
-    url += '?q=' + encodeURI(text)
+    url += '?q=' + encodeURIComponent(text)
 
     const headers = {
       Host: 'cn.bing.com',
@@ -28,13 +28,13 @@ class BingTranslator implements BaseTranslator {
       'Accept-Language': 'en-US,en;q=0.5'
     }
 
-    const resp = await request('GET', url, 'text', null, headers)
-    if (!resp) {
+    const res = await request('GET', url, 'text', null, headers)
+    if (!res) {
       showMessage(`${this.name} Translating Error: Bad Response`, 'error')
       return result
     }
-    result.phonetic = this.getPhonetic(resp)
-    result.explain = this.getExplain(resp)
+    result.phonetic = this.getPhonetic(res)
+    result.explain = this.getExplain(res)
     result.status = 1
     return result
   }
@@ -73,7 +73,7 @@ class ICibaTranslator implements BaseTranslator {
     const data = {}
     data["a"] = "getWordMean"
     data["c"] = "search"
-    data["word"] = text
+    data["word"] = encodeURIComponent(text)
     const res = await request('GET', url, 'json', data)
     let obj = JSON.parse(res)
     if (!(obj && obj['baesInfo'] && obj['baesInfo']['symbols'])) {
@@ -136,12 +136,12 @@ class GoogleTranslator implements BaseTranslator {
     const result = new SingleResult()
     result.engine = this.name
 
-    if (!toLang) return result
+    if (!toLang) toLang = 'zh'
     let host = 'translate.googleapis.com'
     if (/^zh/.test(toLang)) { host = 'translate.google.cn' }
 
     const url = `https://${host}/translate_a/single?client=gtx&sl=auto&tl=${toLang}` +
-      `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${encodeURI(text)}`
+      `&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&q=${encodeURIComponent(text)}`
     const res = await request('GET', url, 'json')
     const obj = JSON.parse(res)
     if (!obj) {
@@ -152,6 +152,50 @@ class GoogleTranslator implements BaseTranslator {
     result.explain = this.getExplain(obj)
     result.status = 1
     return result
+  }
+}
+
+class HaiciTranslator {
+  constructor(private name: string) { }
+
+  public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
+    const result = new SingleResult()
+    result.engine = this.name
+
+    const url = 'http://dict.cn/mini.php'
+    const data = {}
+    data['q'] = encodeURIComponent(text)
+    const resp = await request('GET', url, 'json', data)
+    if (!resp) {
+      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
+      return result
+    }
+
+    result.phonetic = this.getPhonetic(resp)
+    result.explain = this.getExplain(resp)
+    result.status = 1
+    return result
+  }
+
+  public getPhonetic(html): string {
+    const re = /<span class='p'> \[(.*?)\]<\/span>/g
+    const match = re.exec(html)
+    if (match) {
+      return match[1]
+    }
+    return ''
+  }
+
+  public getExplain(html): string[] {
+    const re = /<div id=['"]e['"]>(.*?)<\/div>/g
+    const explain = []
+    const match = re.exec(html)
+    if (match) {
+      for (const e of match[1].split('<br>')) {
+        explain.push(e)
+      }
+    }
+    return explain
   }
 }
 
@@ -214,6 +258,7 @@ export class Translator {
       bing: BingTranslator,
       iciba: ICibaTranslator,
       google: GoogleTranslator,
+      haici: HaiciTranslator,
       youdao: YoudaoTranslator
     }
 

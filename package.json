@@ -37,7 +37,8 @@
             "bing",
             "iciba",
             "google",
-            "youdao"
+            "youdao",
+            "haici"
           ]
         },
         "translator.enableHover": {
