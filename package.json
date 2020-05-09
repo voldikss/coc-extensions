@@ -78,7 +78,7 @@
     "@voldikss/tslint-config": "^1.0.6",
     "@types/node": "^13.1.2",
     "@types/uuid": "^3.4.4",
-    "coc.nvim": "^0.0.74",
+    "coc.nvim": "^0.0.77",
     "request-light": "^0.2.4",
     "rimraf": "^3.0.1",
     "ts-loader": "^6.0.4",

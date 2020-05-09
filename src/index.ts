@@ -2,13 +2,15 @@ import {
   ExtensionContext,
   commands,
   workspace,
-  listManager
+  listManager,
+  languages
 } from 'coc.nvim'
-import { History, Display, Translator } from './commands'
+import { History, Display, Translator } from './common'
 import { KeymapMode, DisplayMode } from './types'
 import { TranslationList } from './lists/translation'
 import { DB, statAsync, mkdirAsync } from './util'
 import { logger } from './util/logger'
+import { TranslatorHoverProvider } from './provider/hover'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
