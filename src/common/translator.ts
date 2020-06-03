@@ -62,6 +62,8 @@ class BingTranslator implements BaseTranslator {
   }
 }
 
+// this api was deprecated
+// Is there any other api for ciba?
 class ICibaTranslator implements BaseTranslator {
   constructor(private name: string) { }
 
@@ -256,7 +258,6 @@ export class Translator {
 
     const ENGINES = {
       bing: BingTranslator,
-      iciba: ICibaTranslator,
       google: GoogleTranslator,
       haici: HaiciTranslator,
       youdao: YoudaoTranslator

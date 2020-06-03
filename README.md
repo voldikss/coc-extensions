@@ -30,7 +30,6 @@ Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
   "type": "array",
   "default": [
     "bing",
-    "iciba",
     "google",
     "youdao",
     "haici"
@@ -60,13 +59,13 @@ more information, see [package.json](https://github.com/voldikss/coc-translator/
 
 ## Engines
 
-| engine | supported language types |
-| ------ | ------------------------ |
-| bing   | [ref][1]                 |
-| iciba  | [ref][2]                 |
-| google | [ref][3]                 |
-| youdao | [ref][4]                 |
-| haici  |                          |
+| engine            | supported language types |
+| ----------------- | ------------------------ |
+| bing              | [ref][1]                 |
+| iciba(deprecated) | [ref][2]                 |
+| google            | [ref][3]                 |
+| youdao            | [ref][4]                 |
+| haici             |                          |
 
 ## Keymaps
 
