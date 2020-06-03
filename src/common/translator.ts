@@ -13,7 +13,8 @@ class SingleResult implements SingleTranslation {
 }
 
 class BingTranslator implements BaseTranslator {
-  constructor(private name: string) { }
+  private name = 'bing'
+  constructor() { }
 
   public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -65,7 +66,8 @@ class BingTranslator implements BaseTranslator {
 // this api was deprecated
 // Is there any other api for ciba?
 class ICibaTranslator implements BaseTranslator {
-  constructor(private name: string) { }
+  private name = 'iciba'
+  constructor() { }
 
   public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -112,7 +114,8 @@ class ICibaTranslator implements BaseTranslator {
 }
 
 class GoogleTranslator implements BaseTranslator {
-  constructor(private name: string) { }
+  private name = 'google'
+  constructor() { }
 
   private getParaphrase(obj: object): string {
     let paraphrase = ""
@@ -158,7 +161,8 @@ class GoogleTranslator implements BaseTranslator {
 }
 
 class HaiciTranslator {
-  constructor(private name: string) { }
+  private name = 'haici'
+  constructor() { }
 
   public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -202,8 +206,8 @@ class HaiciTranslator {
 }
 
 class YoudaoTranslator implements BaseTranslator {
-  constructor(private name: string) {
-  }
+  private name = 'youdao'
+  constructor() { }
 
   public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -275,7 +279,7 @@ export class Translator {
     }
     const translatePromises = engines.map(e => {
       const cls = ENGINES[e]
-      const translator: BaseTranslator = new cls(e)
+      const translator: BaseTranslator = new cls()
       return translator.translate(text, this.toLang)
     })
 
