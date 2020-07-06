@@ -11,6 +11,8 @@ Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 :CocInstall coc-translator
 ```
 
+**NOTE:** No need to install vim-translator
+
 ## Features
 
 - Multiple translator engines
