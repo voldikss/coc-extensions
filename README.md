@@ -11,6 +11,8 @@ Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 :CocInstall coc-translator
 ```
 
+**NOTE:** No need to install vim-translator
+
 ## Features
 
 - Multiple translator engines
@@ -112,10 +114,6 @@ Q: Where are the translation data stored?
 
 A: Normally the data is saved in `~/.config/coc/extensions/coc-translation-data`, but if you set `g:coc_extension_root` to another location, it will change as well
 
-## Screenshots
-
-![](https://user-images.githubusercontent.com/20282795/68870604-1b8bda00-0736-11ea-862f-2b2989d0c1fe.png)
-![](https://user-images.githubusercontent.com/20282795/68870605-1b8bda00-0736-11ea-9442-3a910ab7a6cf.png)
 
 [1]: https://github.com/voldikss/vim-translate-me/wiki/bing-api
 [2]: https://github.com/voldikss/vim-translate-me/wiki/Ciba-api
