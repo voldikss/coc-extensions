@@ -24,6 +24,14 @@ export class Display {
         filetype: "markdown"
       }]
       await floatFactory.create(docs)
+      if (workspace.isNvim) {
+        const id = floatFactory.buffer.id
+        const winid = await this.nvim.call('bufwinid', id)
+        this.nvim.command(`noa call win_gotoid(${winid})`, true)
+        this.nvim.command(`call matchadd("Tag", "<.*>")`, true)
+        this.nvim.command(`call matchadd("Keyword", "<<.*>>")`, true)
+        this.nvim.command('noa wincmd p', true)
+      }
     } else {
       this.nvim.pauseNotification()
       this.nvim.call('coc#util#preview_info', [content, 'coc-translator'], true)
