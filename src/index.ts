@@ -158,6 +158,12 @@ class Helper {
     private historyer: History
   ) { }
 
+  public spliteWord(text: string): string {
+    const camelReg = /([a-z])([A-Z][a-z])/g
+    const underlineReg = /([a-zA-Z])_([a-zA-Z])/g
+    return text.replace(camelReg, '$1 $2').replace(underlineReg, '$1 $2').toLowerCase()
+  }
+
   public async keymapCallback(
     keymapMode: KeymapMode,
     displayMode: DisplayMode
@@ -198,6 +204,6 @@ class Helper {
       text = doc.textDocument.getText(range)
     }
     logger.log(`current text: ${text}`)
-    return text
+    return this.spliteWord(text)
   }
 }
