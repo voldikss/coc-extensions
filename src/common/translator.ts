@@ -2,6 +2,7 @@ import { request, showMessage } from './util'
 import { parseStringPromise } from 'xml2js'
 import { SingleTranslation, Translation, BaseTranslator } from '../types'
 import { workspace } from 'coc.nvim'
+import { logger } from '../util/logger'
 
 class SingleResult implements SingleTranslation {
   public engine: string
@@ -31,7 +32,7 @@ class BingTranslator implements BaseTranslator {
 
     const res = await request('GET', url, 'text', null, headers)
     if (!res) {
-      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
+      logger.log(`${this.name} Translating Error: Bad Response`)
       return result
     }
     result.phonetic = this.getPhonetic(res)
@@ -81,7 +82,7 @@ class ICibaTranslator implements BaseTranslator {
     const res = await request('GET', url, 'json', data)
     let obj = JSON.parse(res)
     if (!(obj && obj['baesInfo'] && obj['baesInfo']['symbols'])) {
-      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
+      logger.log(`${this.name} Translating Error: Bad Response`)
       return result
     }
     obj = obj['baesInfo']['symbols'][0]
@@ -150,7 +151,7 @@ class GoogleTranslator implements BaseTranslator {
     const res = await request('GET', url, 'json')
     const obj = JSON.parse(res)
     if (!obj) {
-      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
+      logger.log(`${this.name} Translating Error: Bad Response`)
       return result
     }
     result.paraphrase = this.getParaphrase(obj)
@@ -173,7 +174,7 @@ class HaiciTranslator {
     data['q'] = encodeURIComponent(text)
     const resp = await request('GET', url, 'json', data)
     if (!resp) {
-      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
+      logger.log(`${this.name} Translating Error: Bad Response`)
       return result
     }
 
@@ -220,7 +221,7 @@ class YoudaoTranslator implements BaseTranslator {
     const res = await request('GET', url, 'text')
     let obj = await parseStringPromise(res)
     if (!(obj && obj['yodaodict'])) {
-      showMessage(`${this.name} Translating Error: Bad Response`, 'error')
+      logger.log(`${this.name} Translating Error: Bad Response`)
       return result
     }
     obj = obj['yodaodict']
