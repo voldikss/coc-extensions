@@ -1,2 +1,2 @@
 export { DB } from './db'
-export { statAsync, writeFile, readFile, mkdirAsync } from './io'
+export { statAsync, writeFileAsync as writeFile, readFileAsync as readFile, mkdirAsync } from './io'
