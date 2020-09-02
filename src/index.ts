@@ -204,6 +204,6 @@ class Helper {
       text = doc.textDocument.getText(range)
     }
     logger.log(`current text: ${text}`)
-    return this.spliteWord(text)
+    return this.spliteWord(text.trim())
   }
 }
