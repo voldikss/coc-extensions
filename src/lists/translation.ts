@@ -22,7 +22,7 @@ export class TranslationList extends BasicList {
         range: Range.create(pos, pos),
         newText: content.join('\n')
       })
-      await doc.applyEdits(nvim, edits)
+      await doc.applyEdits(edits)
     })
 
     this.addAction('prepend', async (item: ListItem) => {
@@ -35,7 +35,7 @@ export class TranslationList extends BasicList {
         range: Range.create(pos, pos),
         newText: content.join('\n')
       })
-      await doc.applyEdits(nvim, edits)
+      await doc.applyEdits(edits)
     })
 
     this.addAction('open', async (item: ListItem) => {
@@ -99,8 +99,6 @@ export class TranslationList extends BasicList {
     nvim.command('syntax match CocTranslatorResult /\\v%21v.*$/', true)
     nvim.command('highlight default link CocTranslatorQuery Keyword', true)
     nvim.command('highlight default link CocTranslatorResult String', true)
-    nvim.resumeNotification().catch(_e => {
-      // noop
-    })
+    nvim.resumeNotification().catch(_e => { })
   }
 }

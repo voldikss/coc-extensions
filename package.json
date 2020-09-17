@@ -10,7 +10,7 @@
     "translator"
   ],
   "engines": {
-    "coc": "^0.0.70"
+    "coc": "^0.0.79"
   },
   "homepage": "https://github.com/voldikss/coc-translator",
   "scripts": {
@@ -87,7 +87,7 @@
     "@types/xml2js": "^0.4.5",
     "@voldikss/tsconfig": "^1.0.0",
     "@voldikss/tslint-config": "^1.0.6",
-    "coc.nvim": "^0.0.77",
+    "coc.nvim": "^0.0.79",
     "request-light": "^0.2.4",
     "rimraf": "^3.0.1",
     "ts-loader": "^6.0.4",

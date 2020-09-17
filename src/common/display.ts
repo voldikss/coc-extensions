@@ -4,42 +4,33 @@ import { Translation, DisplayMode } from '../types'
 import { buildLines } from './util'
 
 export class Display {
-  constructor(private nvim: Neovim, private maxWidth, private maxHeight) { }
+  private floatFactory: FloatFactory
+  constructor(private nvim: Neovim, private maxWidth, private maxHeight) {
+    this.floatFactory = new FloatFactory(
+      this.nvim,
+      workspace.env,
+      false,
+      this.maxHeight,
+      this.maxWidth,
+      true
+    )
+  }
 
   public async popup(trans: Translation): Promise<void> {
     const content = buildLines(trans)
     if (content.length == 0) return
-
-    if (workspace.env.floating || workspace.env.textprop) {
-      const floatFactory = new FloatFactory(
-        this.nvim,
-        workspace.env,
-        false,
-        this.maxHeight,
-        this.maxWidth,
-        true
-      )
-      const docs = [{
-        content: content.join('\n'),
-        filetype: "markdown"
-      }]
-      await floatFactory.create(docs)
-      if (workspace.isNvim) {
-        const id = floatFactory.buffer.id
-        const winid = await this.nvim.call('bufwinid', id)
-        this.nvim.command(`noa call win_gotoid(${winid})`, true)
-        this.nvim.command(`call matchadd("Tag", "<.*>")`, true)
-        this.nvim.command(`call matchadd("Keyword", "<<.*>>")`, true)
-        this.nvim.command('noa wincmd p', true)
-      }
-    } else {
-      this.nvim.pauseNotification()
-      this.nvim.call('coc#util#preview_info', [content, 'coc-translator'], true)
-      // preview window won't open without redraw
-      this.nvim.command('redraw', true)
-      // NOTE: this will make preview window crash immediately
-      // this.nvim.command('augroup TT | autocmd CursorMoved * pclose | autocmd! TT | augroup END', true)
-      await this.nvim.resumeNotification()
+    const docs = [{
+      content: content.join('\n'),
+      filetype: "markdown"
+    }]
+    await this.floatFactory.create(docs)
+    if (workspace.isNvim) {
+      const { id } = this.floatFactory.buffer
+      const winid = await this.nvim.call('bufwinid', id)
+      this.nvim.command(`noa call win_gotoid(${winid})`, true)
+      this.nvim.command(`call matchadd("Tag", "<.*>")`, true)
+      this.nvim.command(`call matchadd("Keyword", "<<.*>>")`, true)
+      this.nvim.command('noa wincmd p', true)
     }
   }
 
