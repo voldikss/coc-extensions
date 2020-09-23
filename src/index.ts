@@ -8,7 +8,7 @@ import {
 import { History, Display, Translator } from './common'
 import { KeymapMode, DisplayMode } from './types'
 import { TranslationList } from './lists/translation'
-import { DB, statAsync, mkdirAsync } from './util'
+import { DB, fsStat, fsMkdir } from './util'
 import { logger } from './util/logger'
 import { TranslatorHoverProvider } from './provider/hover'
 
@@ -16,8 +16,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
   subscriptions.push(logger)
   const { nvim } = workspace
-  const stat = await statAsync(storagePath)
-  if (!stat || !stat.isDirectory()) await mkdirAsync(storagePath)
+  const stat = await fsStat(storagePath)
+  if (!stat || !stat.isDirectory()) await fsMkdir(storagePath)
 
   const config = workspace.getConfiguration('translator')
   const maxWidth = config.get<number>('window.maxWidth')

@@ -1,4 +1,4 @@
-import { statAsync, writeFileAsync, readFileAsync } from './io'
+import { fsStat, fsWriteFile, fsReadFile } from './fs'
 import { HistoryItem, HistoryContent } from '../types'
 import path from 'path'
 import uuid = require('uuid/v1')
@@ -11,9 +11,9 @@ export class DB {
   }
 
   public async load(): Promise<HistoryItem[]> {
-    let stat = await statAsync(this.file)
+    let stat = await fsStat(this.file)
     if (!stat || !stat.isFile()) return []
-    let content = await readFileAsync(this.file)
+    let content = await fsReadFile(this.file)
     return JSON.parse(content) as HistoryItem[]
   }
 
@@ -28,7 +28,7 @@ export class DB {
     if (arr.indexOf(content[0].toLowerCase()) >= 0) return
 
     items.unshift({ id: uuid(), content, path } as HistoryItem)
-    await writeFileAsync(this.file, JSON.stringify(items, null, 2))
+    await fsWriteFile(this.file, JSON.stringify(items, null, 2))
   }
 
   public async delete(uid: string): Promise<void> {
@@ -36,7 +36,7 @@ export class DB {
     let idx = items.findIndex(o => o.id == uid)
     if (idx !== -1) {
       items.splice(idx, 1)
-      await writeFileAsync(this.file, JSON.stringify(items, null, 2))
+      await fsWriteFile(this.file, JSON.stringify(items, null, 2))
     }
   }
 }
