@@ -17,7 +17,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(logger)
   const { nvim } = workspace
   const stat = await fsStat(storagePath)
-  if (!stat || !stat.isDirectory()) await fsMkdir(storagePath)
+  if (!(stat.isDirectory())) await fsMkdir(storagePath)
 
   const config = workspace.getConfiguration('translator')
   const maxWidth = config.get<number>('window.maxWidth')
@@ -179,7 +179,7 @@ class Helper {
     text: string,
     displayMode: DisplayMode
   ): Promise<void> {
-    if (!text || text.trim() === '') {
+    if (!(text.trim().length > 0)) {
       text = await this.getText('n')
     }
     const trans = await this.translator.translate(text)

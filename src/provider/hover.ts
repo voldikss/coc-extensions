@@ -7,7 +7,7 @@ export class TranslatorHoverProvider implements HoverProvider {
   constructor(private translator: Translator) { }
 
   public async provideHover(document, position): Promise<Hover | null> {
-    if (!workspace.getConfiguration('translator').get('enableHover')) return
+    if (!workspace.getConfiguration('translator').get<boolean>('enableHover')) return
     const doc = workspace.getDocument(document.uri)
     if (!doc) return null
     const wordRange = doc.getWordRangeAtPosition(position)

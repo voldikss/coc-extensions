@@ -80,12 +80,11 @@ class ICibaTranslator implements BaseTranslator {
     data["c"] = "search"
     data["word"] = encodeURIComponent(text)
     const res = await request('GET', url, 'json', data)
-    let obj = JSON.parse(res)
-    if (!(obj && obj['baesInfo'] && obj['baesInfo']['symbols'])) {
+    let obj = JSON.parse(res)?.baseInfo?.symbols[0]
+    if (!obj) {
       logger.log(`${this.name} Translating Error: Bad Response`)
       return result
     }
-    obj = obj['baesInfo']['symbols'][0]
     result.phonetic = this.getPhonetic(obj)
     result.paraphrase = this.getParaphrase(obj)
     result.explain = this.getExplain(obj)
@@ -94,18 +93,17 @@ class ICibaTranslator implements BaseTranslator {
   }
 
   public getPhonetic(obj): string {
-    if (obj['ph_en']) return obj['ph_en']
-    return ''
+    return obj?.ph_en ?? ''
   }
 
   public getParaphrase(obj): string {
-    return obj['parts'][0]['means'][0]
+    return obj?.parts?.[0]?.means?.[0] ?? ''
   }
 
   public getExplain(obj): string[] {
-    const parts = obj['parts']
+    const parts:string = obj['parts']
     const explain = []
-    if (parts && parts.length > 0) {
+    if (parts?.length > 0) {
       for (const part of parts) {
         explain.push(part['part'] + part['means'].join(', '))
       }
@@ -219,12 +217,11 @@ class YoudaoTranslator implements BaseTranslator {
       ${encodeURIComponent(text)}
       &pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208`
     const res = await request('GET', url, 'text')
-    let obj = await parseStringPromise(res)
-    if (!(obj && obj['yodaodict'])) {
+    let obj = (await parseStringPromise(res))?.yodaodict /// fxxkit! Why it's not `youdaodict`???
+    if (!obj) {
       logger.log(`${this.name} Translating Error: Bad Response`)
       return result
     }
-    obj = obj['yodaodict']
     result.phonetic = this.getPhonetic(obj)
     result.explain = this.getExplain(obj)
     result.status = 1
@@ -233,13 +230,12 @@ class YoudaoTranslator implements BaseTranslator {
 
   private getPhonetic(obj): string {
     let phonetic = obj['phonetic-symbol']
-    if (phonetic) return phonetic
-    return ''
+    return phonetic ?? ''
   }
 
   private getExplain(obj): string[] {
-    let ct = obj['custom-translation']
-    if (ct && ct.length > 0) {
+    let ct: string = obj['custom-translation']
+    if (ct?.length > 0) {
       const translation = ct[0]['translation']
       let explain = []
       for (let t of translation) {
@@ -259,7 +255,7 @@ export class Translator {
     let statusItem = workspace.createStatusBarItem(0, { progress: true })
     statusItem.text = 'translating'
     statusItem.show()
-    if (!text || text.trim() === '') return
+    if (!(text?.trim().length > 0)) return
 
     const ENGINES = {
       bing: BingTranslator,
