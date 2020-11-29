@@ -57,8 +57,6 @@ Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 }
 ```
 
-more information, see [package.json](https://github.com/voldikss/coc-translator/blob/master/package.json)
-
 ## Engines
 
 | engine            | supported language types |
@@ -74,6 +72,7 @@ more information, see [package.json](https://github.com/voldikss/coc-translator/
 Example
 
 ```vim
+" NOTE: do NOT use `nore` mappings
 " popup
 nmap <Leader>t <Plug>(coc-translator-p)
 vmap <Leader>t <Plug>(coc-translator-pv)
@@ -92,7 +91,7 @@ vmap <Leader>r <Plug>(coc-translator-rv)
 - `:CocCommand translator.replace [text]` Replace the word under the cursor with the translation
 - `:CocCommand translator.exportHistory` Export translation history in the tabpage
 
-**Note:** `[text]` is optional, if no `text`, the extension will use the `<word>` under the cursor.
+**Note:** `[text]` is optional, if it's not given, use the `<word>` under the cursor.
 
 ## Work with translation lists
 
@@ -110,10 +109,7 @@ For more advance usage, checkout `:h coc-list`
 
 ## F.A.Q
 
-Q: Where are the translation data stored?
-
-A: Normally the data is saved in `~/.config/coc/extensions/coc-translation-data`, but if you set `g:coc_extension_root` to another location, it will change as well
-
+https://github.com/voldikss/coc-translator/issues?q=is%3Aissue+label%3AFAQ
 
 [1]: https://github.com/voldikss/vim-translate-me/wiki/bing-api
 [2]: https://github.com/voldikss/vim-translate-me/wiki/Ciba-api

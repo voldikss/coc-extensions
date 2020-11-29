@@ -179,7 +179,7 @@ class Helper {
     text: string,
     displayMode: DisplayMode
   ): Promise<void> {
-    if (!(text.trim().length > 0)) {
+    if (!(text?.trim().length > 0)) {
       text = await this.getText('n')
     }
     const trans = await this.translator.translate(text)
