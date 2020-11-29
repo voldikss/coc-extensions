@@ -1,9 +1,9 @@
 import { workspace, Neovim, FloatFactory } from 'coc.nvim'
 import { showMessage } from './util'
-import { Translation, DisplayMode } from '../types'
+import { Translation, ActionMode } from '../types'
 import { buildLines } from './util'
 
-export class Display {
+export default class Action {
   private floatFactory: FloatFactory
   constructor(private nvim: Neovim, private maxWidth, private maxHeight) {
     this.floatFactory = new FloatFactory(
@@ -69,7 +69,7 @@ export class Display {
     showMessage('No paraphrase for replacement')
   }
 
-  public async display(trans: Translation, mode: DisplayMode): Promise<void> {
+  public async show(trans: Translation, mode: ActionMode): Promise<void> {
     switch (mode) {
       case 'popup':
         await this.popup(trans)

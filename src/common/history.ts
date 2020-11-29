@@ -3,7 +3,7 @@ import { Translation, HistoryContent } from '../types'
 import { NeovimClient as Neovim } from '@chemzqm/neovim'
 import { DB } from '../util'
 
-export class History {
+export default class History {
   constructor(private nvim: Neovim, private db: DB) { }
 
   public async save(trans: Translation): Promise<void> {

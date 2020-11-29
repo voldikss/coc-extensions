@@ -1,6 +1,6 @@
 export declare type MsgType = 'info' | 'warning' | 'error'
 export declare type HistoryContent = [string, string]
-export declare type DisplayMode = 'popup' | 'echo' | 'replace'
+export declare type ActionMode = 'popup' | 'echo' | 'replace'
 export declare type KeymapMode = 'v' | 'n'
 
 /**

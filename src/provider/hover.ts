@@ -1,6 +1,6 @@
 import { workspace, HoverProvider } from 'coc.nvim'
 import { Hover, MarkupKind } from 'vscode-languageserver-protocol'
-import { Translator } from '../common/translator'
+import Translator from '../common/translator'
 import { buildLines } from '../common/util'
 
 export class TranslatorHoverProvider implements HoverProvider {

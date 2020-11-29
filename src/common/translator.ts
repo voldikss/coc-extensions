@@ -247,7 +247,7 @@ class YoudaoTranslator implements BaseTranslator {
   }
 }
 
-export class Translator {
+export default class Translator {
   constructor(private engines, private toLang) {
   }
 

@@ -62,7 +62,7 @@
     },
     "commands": [
       {
-        "title": "display translation",
+        "title": "show translation",
         "command": "translator.popup"
       },
       {

@@ -5,12 +5,14 @@ import {
   listManager,
   languages
 } from 'coc.nvim'
-import { History, Display, Translator } from './common'
-import { KeymapMode, DisplayMode } from './types'
+import { KeymapMode, ActionMode } from './types'
 import { TranslationList } from './lists/translation'
 import { DB, fsStat, fsMkdir } from './util'
 import { logger } from './util/logger'
 import { TranslatorHoverProvider } from './provider/hover'
+import Translator from './common/translator'
+import History from './common/history'
+import Action from './common/action'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
@@ -29,7 +31,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const db = new DB(storagePath, maxSize)
   const translator = new Translator(engines, toLang)
   const hist = new History(nvim, db)
-  const disp = new Display(nvim, maxWidth, maxHeight)
+  const disp = new Action(nvim, maxWidth, maxHeight)
   const helper = new Helper(translator, disp, hist)
 
   subscriptions.push(
@@ -154,7 +156,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 class Helper {
   constructor(
     private translator: Translator,
-    private displayer: Display,
+    private action: Action,
     private historyer: History
   ) { }
 
@@ -166,25 +168,25 @@ class Helper {
 
   public async keymapCallback(
     keymapMode: KeymapMode,
-    displayMode: DisplayMode
+    actionMode: ActionMode
   ): Promise<void> {
     const text = await this.getText(keymapMode)
     const trans = await this.translator.translate(text)
     if (!trans) return
-    await this.displayer.display(trans, displayMode)
+    await this.action.show(trans, actionMode)
     await this.historyer.save(trans)
   }
 
   public async commandCallback(
     text: string,
-    displayMode: DisplayMode
+    actionMode: ActionMode
   ): Promise<void> {
     if (!(text?.trim().length > 0)) {
       text = await this.getText('n')
     }
     const trans = await this.translator.translate(text)
     if (!trans) return
-    await this.displayer.display(trans, displayMode)
+    await this.action.show(trans, actionMode)
     await this.historyer.save(trans)
   }
 
