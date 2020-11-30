@@ -282,7 +282,7 @@ export default class Translator {
 
     return new Promise((resolve, reject) => {
       Promise.all(translatePromises)
-        .then((results: any) => { // Here any should be SingleTranslation[]
+        .then(results => { // Here any should be SingleTranslation[]
           results = results.filter((result: SingleTranslation) => {
             if (result) {
               return result.status === 1 &&
