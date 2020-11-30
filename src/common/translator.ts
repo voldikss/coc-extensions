@@ -101,7 +101,7 @@ class ICibaTranslator implements BaseTranslator {
   }
 
   public getExplain(obj): string[] {
-    const parts:string = obj['parts']
+    const parts: string = obj['parts']
     const explain = []
     if (parts?.length > 0) {
       for (const part of parts) {
@@ -280,24 +280,23 @@ export default class Translator {
       return translator.translate(text, this.toLang)
     })
 
-    return Promise.all(translatePromises)
-      .then((results: any) => { // Here any should be SingleTranslation[]
-        results = results.filter((result: SingleTranslation) => {
-          if (result) {
-            return result.status === 1 &&
-              !(result.explain.length === 0 && result.paraphrase === '')
-          }
+    return new Promise((resolve, reject) => {
+      Promise.all(translatePromises)
+        .then((results: any) => { // Here any should be SingleTranslation[]
+          results = results.filter((result: SingleTranslation) => {
+            if (result) {
+              return result.status === 1 &&
+                !(result.explain.length === 0 && result.paraphrase === '')
+            }
+          })
+          statusItem.hide()
+          resolve({ text, results } as Translation)
         })
-        statusItem.hide()
-        return {
-          text,
-          results
-        } as Translation
-      })
-      .catch(e => {
-        statusItem.hide()
-        showMessage(`Translation failed: ${e}`, 'error')
-        return
-      })
+        .catch(e => {
+          statusItem.hide()
+          showMessage(`Translation failed: ${e}`, 'error')
+          reject(e)
+        })
+    })
   }
 }
