@@ -19,7 +19,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(logger)
   const { nvim } = workspace
   const stat = await fsStat(storagePath)
-  if (!(stat.isDirectory())) await fsMkdir(storagePath)
+  if (!(stat?.isDirectory())) await fsMkdir(storagePath)
 
   const config = workspace.getConfiguration('translator')
   const maxWidth = config.get<number>('window.maxWidth')
@@ -158,7 +158,7 @@ class Helper {
     private translator: Translator,
     private action: Action,
     private historyer: History
-  ) { }
+  ) {}
 
   public spliteWord(text: string): string {
     const camelReg = /([a-z])([A-Z][a-z])/g
