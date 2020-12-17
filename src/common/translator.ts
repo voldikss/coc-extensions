@@ -10,12 +10,12 @@ class SingleResult implements SingleTranslation {
   public phonetic = ''
   public explain = []
   public status = 0
-  constructor() { }
+  constructor() {}
 }
 
 class BingTranslator implements BaseTranslator {
   private name = 'bing'
-  constructor() { }
+  constructor() {}
 
   public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -68,7 +68,7 @@ class BingTranslator implements BaseTranslator {
 // Is there any other api for ciba?
 class ICibaTranslator implements BaseTranslator {
   private name = 'iciba'
-  constructor() { }
+  constructor() {}
 
   public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -114,7 +114,7 @@ class ICibaTranslator implements BaseTranslator {
 
 class GoogleTranslator implements BaseTranslator {
   private name = 'google'
-  constructor() { }
+  constructor() {}
 
   private getParaphrase(obj: object): string {
     let paraphrase = ""
@@ -161,7 +161,7 @@ class GoogleTranslator implements BaseTranslator {
 
 class HaiciTranslator {
   private name = 'haici'
-  constructor() { }
+  constructor() {}
 
   public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -206,7 +206,7 @@ class HaiciTranslator {
 
 class YoudaoTranslator implements BaseTranslator {
   private name = 'youdao'
-  constructor() { }
+  constructor() {}
 
   public async translate(text: string, _toLang: string): Promise<SingleTranslation> {
     const result = new SingleResult()
@@ -248,14 +248,13 @@ class YoudaoTranslator implements BaseTranslator {
 }
 
 export default class Translator {
-  constructor(private engines, private toLang) {
-  }
+  constructor(private engines, private toLang) {}
 
   public async translate(text: string): Promise<Translation | void> {
+    if (!(text?.trim().length > 0)) return
     let statusItem = workspace.createStatusBarItem(0, { progress: true })
     statusItem.text = 'translating'
     statusItem.show()
-    if (!(text?.trim().length > 0)) return
 
     const ENGINES = {
       bing: BingTranslator,
@@ -282,7 +281,7 @@ export default class Translator {
 
     return new Promise((resolve, reject) => {
       Promise.all(translatePromises)
-        .then(results => { // Here any should be SingleTranslation[]
+        .then(results => {
           results = results.filter((result: SingleTranslation) => {
             if (result) {
               return result.status === 1 &&

@@ -16,8 +16,7 @@ Inspired by [vim-translator](https://github.com/voldikss/vim-translator)
 ## Features
 
 - Multiple translator engines
-- Export translation history
-- View and process translation history via CocList
+- Translation history(CocList)
 - Proxy support(see [coc.nvim doc](https://github.com/neoclide/coc.nvim/blob/master/doc/coc.txt#L113-L119))
 
 ## Configuration

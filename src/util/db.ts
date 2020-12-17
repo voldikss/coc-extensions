@@ -1,7 +1,7 @@
 import { fsStat, fsWriteFile, fsReadFile } from './fs'
 import { HistoryItem, HistoryContent } from '../types'
 import path from 'path'
-import uuid = require('uuid/v1')
+import { v4 as uuidv4 } from 'uuid'
 
 export class DB {
   private file: string
@@ -27,7 +27,7 @@ export class DB {
     let arr = items.map(item => item['content'][0].toLowerCase())
     if (arr.indexOf(content[0].toLowerCase()) >= 0) return
 
-    items.unshift({ id: uuid(), content, path } as HistoryItem)
+    items.unshift({ id: uuidv4(), content, path } as HistoryItem)
     await fsWriteFile(this.file, JSON.stringify(items, null, 2))
   }
 
