@@ -159,7 +159,7 @@ class Helper {
   ) { }
 
   public spliteWord(text: string): string {
-    const camelReg = /([a-z])([A-Z][a-z])/g
+    const camelReg = /([a-z])([A-Z])(?=[a-z])/g
     const underlineReg = /([a-zA-Z])_([a-zA-Z])/g
     return text.replace(camelReg, '$1 $2').replace(underlineReg, '$1 $2').toLowerCase()
   }
