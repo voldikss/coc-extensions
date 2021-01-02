@@ -1,32 +1,18 @@
-import { workspace } from 'coc.nvim'
-import { Translation, HistoryContent } from '../types'
-import { NeovimClient as Neovim } from '@chemzqm/neovim'
-import { DB } from '../util'
+import { Neovim, workspace } from 'coc.nvim'
+import { Translation } from './translator'
+import { DB } from '../util/db'
 
-export default class History {
-  constructor(private nvim: Neovim, private db: DB) { }
+export default class Recorder {
+  constructor(private nvim: Neovim, private db: DB) {}
 
   public async save(trans: Translation): Promise<void> {
     const bufnr = workspace.bufnr
     const doc = workspace.getDocument(bufnr)
     const [, lnum, col] = await this.nvim.call('getpos', ".")
     const path = `${doc.uri}\t${lnum}\t${col}`
-
-    const text: string = trans.text
-    for (const t of trans.results) {
-      const paraphrase = t.paraphrase
-      const explain = t.explain
-      let content = []
-
-      if (explain.length !== 0) {
-        content = [text, explain[0]]
-      } else if (paraphrase && text.toLowerCase() !== paraphrase.toLowerCase()) {
-        content = [text, paraphrase]
-      }
-
-      if (content.length) {
-        await this.db.add(content as HistoryContent, path)
-      }
+    const content = trans.entry()
+    if (content.length) {
+      await this.db.add(content, path)
     }
   }
 

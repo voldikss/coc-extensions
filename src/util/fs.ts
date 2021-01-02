@@ -1,9 +1,9 @@
 import fs from 'fs'
 
 export async function fsStat(filepath: string): Promise<fs.Stats | null> {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     fs.stat(filepath, (err, stats) => {
-      if (err) resolve(null)
+      if (err) reject(err)
       resolve(stats)
     })
   })
@@ -12,7 +12,7 @@ export async function fsStat(filepath: string): Promise<fs.Stats | null> {
 export async function fsWriteFile(fullpath: string, content: string): Promise<void> {
   return new Promise((resolve, reject) => {
     fs.writeFile(fullpath, content, 'utf8', err => {
-      if (err) reject()
+      if (err) reject(err)
       resolve()
     })
   })

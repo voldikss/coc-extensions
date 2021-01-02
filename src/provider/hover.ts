@@ -1,12 +1,16 @@
-import { workspace, HoverProvider } from 'coc.nvim'
-import { Hover, MarkupKind } from 'vscode-languageserver-protocol'
-import Translator from '../common/translator'
-import { buildLines } from '../common/util'
+import {
+  workspace,
+  HoverProvider,
+  TextDocument,
+  Position,
+  Hover
+} from 'coc.nvim'
+import { Translator } from '../commands/translator'
 
 export class TranslatorHoverProvider implements HoverProvider {
-  constructor(private translator: Translator) { }
+  constructor(private translator: Translator) {}
 
-  public async provideHover(document, position): Promise<Hover | null> {
+  public async provideHover(document: TextDocument, position: Position): Promise<Hover | null> {
     if (!workspace.getConfiguration('translator').get<boolean>('enableHover')) return
     const doc = workspace.getDocument(document.uri)
     if (!doc) return null
@@ -14,12 +18,12 @@ export class TranslatorHoverProvider implements HoverProvider {
     if (!wordRange) return null
     const text = document.getText(wordRange) || ''
     if (!text) return null
-    const trans = await this.translator.translate(text)
-    if (!trans) return null
+    const translation = await this.translator.translate(text)
+    if (!translation) return null
     return {
       contents: {
-        kind: MarkupKind.Markdown,
-        value: buildLines(trans).join('\n')
+        kind: 'markdown',
+        value: translation.markdown().join('\n')
       }
     }
   }

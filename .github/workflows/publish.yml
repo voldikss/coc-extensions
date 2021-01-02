@@ -1,8 +1,6 @@
-name: NPM Publish
+name: publish
 
-on:
-  release:
-    types: [published]
+on: push
 
 jobs:
   publish:
@@ -12,19 +10,28 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
       - name: Build Package
         run: |
-          npm install -g yarn
-          yarn install
-      - name: Register Token
-        run: |
-          echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > /home/runner/work/_temp/.npmrc
-          echo "_auth=$NPM_AUTH_TOKEN" >>  /home/runner/work/_temp/.npmrc
-          echo "email=<dyzplus@gmail.com>" >>  /home/runner/work/_temp/.npmrc
-          echo "always-auth=true" >>  /home/runner/work/_temp/.npmrc
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          npm install -g json
+          npm install
       - name: Publish
-        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          pkgname=$(json name < package.json)
+          localversion=$(json version < package.json)
+          remoteversion=$(npm view ${pkgname} version)
+
+          echo ${localversion}
+          echo ${remoteversion}
+
+          if [ ${localversion} \> ${remoteversion} ]
+          then
+            npm publish
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git tag -a ${localversion} -m v${localversion}
+            git push --tags
+          fi

@@ -3,43 +3,38 @@ import {
   commands,
   workspace,
   listManager,
-  languages
+  languages,
 } from 'coc.nvim'
 import { KeymapMode, ActionMode } from './types'
 import { TranslationList } from './lists/translation'
-import { DB, fsStat, fsMkdir } from './util'
+import { fsStat, fsMkdir } from './util/fs'
 import { logger } from './util/logger'
+import { DB } from './util/db'
 import { TranslatorHoverProvider } from './provider/hover'
-import Translator from './common/translator'
-import History from './common/history'
-import Action from './common/action'
+import Manager from './commands/manager'
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const { subscriptions, storagePath } = context
-  subscriptions.push(logger)
-  const { nvim } = workspace
   const stat = await fsStat(storagePath)
-  if (!(stat?.isDirectory())) await fsMkdir(storagePath)
+  if (!(stat?.isDirectory())) {
+    await fsMkdir(storagePath)
+  }
 
-  const config = workspace.getConfiguration('translator')
-  const maxWidth = config.get<number>('window.maxWidth')
-  const maxHeight = config.get<number>('window.maxHeight')
-  const engines = config.get<string[]>('engines')
-  const toLang = config.get<string>('toLang', 'zh')
-  const maxSize = config.get<number>('maxsize', 5000)
+  const { nvim } = workspace
+  const db = new DB(storagePath)
+  const manager = new Manager(nvim, db)
 
-  const db = new DB(storagePath, maxSize)
-  const translator = new Translator(engines, toLang)
-  const hist = new History(nvim, db)
-  const disp = new Action(nvim, maxWidth, maxHeight)
-  const helper = new Helper(translator, disp, hist)
+  subscriptions.push(logger)
 
   subscriptions.push(
     workspace.registerKeymap(
       ['n'],
       'translator-p',
       async () => {
-        await helper.keymapCallback('n', 'popup')
+        await manager
+          .registerKeymapMode('n')
+          .registerActionMode('popup')
+          .translate()
       }, { sync: false }
     )
   )
@@ -49,7 +44,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['v'],
       'translator-pv',
       async () => {
-        await helper.keymapCallback('v', 'popup')
+        await manager
+          .registerKeymapMode('v')
+          .registerActionMode('popup')
+          .translate()
       }, { sync: false }
     )
   )
@@ -59,7 +57,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-e',
       async () => {
-        await helper.keymapCallback('n', 'echo')
+        await manager
+          .registerKeymapMode('n')
+          .registerActionMode('echo')
+          .translate()
       }, { sync: false }
     )
   )
@@ -69,7 +70,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['v'],
       'translator-ev',
       async () => {
-        await helper.keymapCallback('v', 'echo')
+        await manager
+          .registerKeymapMode('v')
+          .registerActionMode('echo')
+          .translate()
       }, { sync: false }
     )
   )
@@ -79,7 +83,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['n'],
       'translator-r',
       async () => {
-        await helper.keymapCallback('n', 'replace')
+        await manager
+          .registerKeymapMode('n')
+          .registerActionMode('replace')
+          .translate()
       }, { sync: false }
     )
   )
@@ -89,17 +96,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
       ['v'],
       'translator-rv',
       async () => {
-        await helper.keymapCallback('v', 'replace')
-      }, { sync: false }
-    )
-  )
-
-  subscriptions.push(
-    workspace.registerKeymap(
-      ['n'],
-      'translator-h',
-      async () => {
-        await hist.export()
+        await manager
+          .registerKeymapMode('v')
+          .registerActionMode('replace')
+          .translate()
       }, { sync: false }
     )
   )
@@ -108,7 +108,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.popup',
       async (text: string) => {
-        await helper.commandCallback(text, 'popup')
+        await manager
+          .registerKeymapMode('n')
+          .registerActionMode('popup')
+          .translate(text)
       }
     )
   )
@@ -116,16 +119,22 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     commands.registerCommand(
       'translator.echo',
-      async text => {
-        await helper.commandCallback(text, 'echo')
+      async (text: string) => {
+        await manager
+          .registerKeymapMode('n')
+          .registerActionMode('echo')
+          .translate(text)
       }
     )
   )
   subscriptions.push(
     commands.registerCommand(
       'translator.replace',
-      async text => {
-        await helper.commandCallback(text, 'replace')
+      async (text: string) => {
+        await manager
+          .registerKeymapMode('n')
+          .registerActionMode('replace')
+          .translate(text)
       }
     )
   )
@@ -134,7 +143,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     commands.registerCommand(
       'translator.exportHistory',
       async () => {
-        await hist.export()
+        await manager.exportHistory()
       }
     )
   )
@@ -142,7 +151,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     languages.registerHoverProvider(
       ['*'],
-      new TranslatorHoverProvider(translator)
+      new TranslatorHoverProvider(
+        manager.translator
+      )
     )
   )
 
@@ -151,61 +162,4 @@ export async function activate(context: ExtensionContext): Promise<void> {
       new TranslationList(nvim, db)
     )
   )
-}
-
-class Helper {
-  constructor(
-    private translator: Translator,
-    private action: Action,
-    private historyer: History
-  ) {}
-
-  public spliteWord(text: string): string {
-    const camelReg = /([a-z])([A-Z])(?=[a-z])/g
-    const underlineReg = /([a-zA-Z])_([a-zA-Z])/g
-    return text.replace(camelReg, '$1 $2').replace(underlineReg, '$1 $2').toLowerCase()
-  }
-
-  public async keymapCallback(
-    keymapMode: KeymapMode,
-    actionMode: ActionMode
-  ): Promise<void> {
-    const text = await this.getText(keymapMode)
-    const trans = await this.translator.translate(text)
-    if (!trans) return
-    await this.action.show(trans, actionMode)
-    await this.historyer.save(trans)
-  }
-
-  public async commandCallback(
-    text: string,
-    actionMode: ActionMode
-  ): Promise<void> {
-    if (!(text?.trim().length > 0)) {
-      text = await this.getText('n')
-    }
-    const trans = await this.translator.translate(text)
-    if (!trans) return
-    await this.action.show(trans, actionMode)
-    await this.historyer.save(trans)
-  }
-
-  public async getText(mode: KeymapMode): Promise<string> {
-    const doc = await workspace.document
-    let range
-    if (mode === 'n') {
-      const pos = await workspace.getCursorPosition()
-      range = doc.getWordRangeAtPosition(pos)
-    } else {
-      range = await workspace.getSelectedRange('v', doc)
-    }
-    let text = ''
-    if (!range) {
-      text = (await workspace.nvim.eval('expand("<cword>")')).toString()
-    } else {
-      text = doc.textDocument.getText(range)
-    }
-    logger.log(`current text: ${text}`)
-    return this.spliteWord(text.trim())
-  }
 }
