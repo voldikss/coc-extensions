@@ -32,8 +32,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator-p',
       async () => {
         await manager
-          .registerKeymapMode('n')
-          .registerActionMode('popup')
+          .setKeymapMode('n')
+          .setActionMode('popup')
           .translate()
       }, { sync: false }
     )
@@ -45,8 +45,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator-pv',
       async () => {
         await manager
-          .registerKeymapMode('v')
-          .registerActionMode('popup')
+          .setKeymapMode('v')
+          .setActionMode('popup')
           .translate()
       }, { sync: false }
     )
@@ -58,8 +58,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator-e',
       async () => {
         await manager
-          .registerKeymapMode('n')
-          .registerActionMode('echo')
+          .setKeymapMode('n')
+          .setActionMode('echo')
           .translate()
       }, { sync: false }
     )
@@ -71,8 +71,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator-ev',
       async () => {
         await manager
-          .registerKeymapMode('v')
-          .registerActionMode('echo')
+          .setKeymapMode('v')
+          .setActionMode('echo')
           .translate()
       }, { sync: false }
     )
@@ -84,8 +84,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator-r',
       async () => {
         await manager
-          .registerKeymapMode('n')
-          .registerActionMode('replace')
+          .setKeymapMode('n')
+          .setActionMode('replace')
           .translate()
       }, { sync: false }
     )
@@ -97,8 +97,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator-rv',
       async () => {
         await manager
-          .registerKeymapMode('v')
-          .registerActionMode('replace')
+          .setKeymapMode('v')
+          .setActionMode('replace')
           .translate()
       }, { sync: false }
     )
@@ -109,8 +109,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator.popup',
       async (text: string) => {
         await manager
-          .registerKeymapMode('n')
-          .registerActionMode('popup')
+          .setKeymapMode('n')
+          .setActionMode('popup')
           .translate(text)
       }
     )
@@ -121,8 +121,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator.echo',
       async (text: string) => {
         await manager
-          .registerKeymapMode('n')
-          .registerActionMode('echo')
+          .setKeymapMode('n')
+          .setActionMode('echo')
           .translate(text)
       }
     )
@@ -132,8 +132,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'translator.replace',
       async (text: string) => {
         await manager
-          .registerKeymapMode('n')
-          .registerActionMode('replace')
+          .setKeymapMode('n')
+          .setActionMode('replace')
           .translate(text)
       }
     )
@@ -152,14 +152,17 @@ export async function activate(context: ExtensionContext): Promise<void> {
     languages.registerHoverProvider(
       ['*'],
       new TranslatorHoverProvider(
-        manager.translator
+        manager
       )
     )
   )
 
   subscriptions.push(
     listManager.registerList(
-      new TranslationList(nvim, db)
+      new TranslationList(
+        nvim,
+        db
+      )
     )
   )
 }

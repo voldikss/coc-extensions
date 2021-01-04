@@ -5,10 +5,10 @@ import {
   Position,
   Hover
 } from 'coc.nvim'
-import { Translator } from '../commands/translator'
+import Manager from '../commands/manager'
 
 export class TranslatorHoverProvider implements HoverProvider {
-  constructor(private translator: Translator) {}
+  constructor(private manager: Manager) {}
 
   public async provideHover(document: TextDocument, position: Position): Promise<Hover | null> {
     if (!workspace.getConfiguration('translator').get<boolean>('enableHover')) return
@@ -18,7 +18,7 @@ export class TranslatorHoverProvider implements HoverProvider {
     if (!wordRange) return null
     const text = document.getText(wordRange) || ''
     if (!text) return null
-    const translation = await this.translator.translate(text)
+    const translation = await this.manager.getTranslation(text)
     if (!translation) return null
     return {
       contents: {

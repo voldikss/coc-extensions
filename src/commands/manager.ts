@@ -17,19 +17,19 @@ export default class Manager {
   private actionMode: ActionMode
   private floatwin: FloatFactory
   private recorder: Recorder
-  public translator: Translator
+  private translator: Translator
   constructor(private nvim: Neovim, private db: DB) {
     this.floatwin = new FloatFactory(this.nvim)
     this.recorder = new Recorder(nvim, db)
     this.translator = new Translator(getcfg('engines'), '', getcfg('toLang'))
   }
 
-  public registerKeymapMode(mode: KeymapMode): Manager {
+  public setKeymapMode(mode: KeymapMode): Manager {
     this.keymapMode = mode
     return this
   }
 
-  public registerActionMode(mode: ActionMode): Manager {
+  public setActionMode(mode: ActionMode): Manager {
     this.actionMode = mode
     return this
   }
@@ -91,9 +91,13 @@ export default class Manager {
     await this.nvim.resumeNotification()
   }
 
+  public async getTranslation(text: string): Promise<Translation | null> {
+    return await this.translator.translate(text)
+  }
+
   public async translate(text?: string): Promise<void> {
     if (!(text?.trim().length > 0)) text = await this.getText()
-    const translation = await this.translator.translate(text)
+    const translation = await this.getTranslation(text)
     if (!translation) return
     switch (this.actionMode) {
       case 'popup':
