@@ -2,11 +2,18 @@ import { ITranslation } from "../../types"
 import { BaseTranslator } from "./baseTranslator"
 
 export default class GoogleTranslator extends BaseTranslator {
+  private langMap
   constructor() {
     super("google")
+    // https://cloud.google.com/translate/docs/languages
+    this.langMap = {
+      'zh_CN': 'zh-CN',
+      'zh_TW': 'zh-TW',
+    }
   }
 
   public async translate(text: string, sl: string, tl: string): Promise<ITranslation> {
+    tl = this.langMap[tl] ?? tl
     const url = this.getUrl(sl, tl, text)
     const resp = await this.request('GET', url, 'json')
     if (!resp) return null

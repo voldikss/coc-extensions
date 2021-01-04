@@ -1,6 +1,6 @@
 {
   "name": "coc-translator",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Translation extension for coc.nvim",
   "main": "lib/index.js",
   "repository": {
@@ -31,8 +31,25 @@
       "properties": {
         "translator.toLang": {
           "type": "string",
-          "default": "zh",
-          "description": "Target language type"
+          "default": "zh_CN",
+          "anyOf": [
+            {
+              "enum": [
+                "zh_CN",
+                "zh_TW",
+                "en",
+                "fr",
+                "de",
+                "ja",
+                "ko",
+                "ru"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Target language type, input it if it's not fould in the candidates"
         },
         "translator.engines": {
           "type": "array",
