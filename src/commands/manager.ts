@@ -65,10 +65,10 @@ export default class Manager {
   private get floatWinConfig(): FloatWinConfig {
     return {
       autoHide: true,
-      border: getcfg('enableBorder') ? [1, 1, 1, 1] : [0, 0, 0, 0],
+      border: getcfg('window.enableBorder') ? [1, 1, 1, 1] : [0, 0, 0, 0],
       close: false,
-      maxHeight: getcfg('maxHeight'),
-      maxWidth: getcfg('maxWidth')
+      maxHeight: getcfg('window.maxHeight'),
+      maxWidth: getcfg('window.maxWidth')
     }
   }
 

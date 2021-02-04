@@ -37,22 +37,22 @@ Translation extension for [coc.nvim](https://github.com/neoclide/coc.nvim).
     "haici"
   ]
 },
-"translator.enableBorder": {
-  "type": "boolean",
-  "default": true
-},
 "translator.enableHover": {
   "type": "boolean",
   "default": false,
   "description": "Translate when mouse hover"
 },
+"translator.window.enableBorder": {
+  "type": "boolean",
+  "default": true
+},
 "translator.window.maxWidth": {
   "type": "number",
-  "default": 999
+  "default": 80
 },
 "translator.window.maxHeight": {
   "type": "number",
-  "default": 999
+  "default": 20
 }
 ```
 
