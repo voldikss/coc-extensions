@@ -19,8 +19,11 @@
   "scripts": {
     "clean": "rimraf lib",
     "watch": "webpack --watch",
-    "build": "webpack",
-    "prepare": "npx npm-run-all clean build"
+    "build:types": "node scripts/gen_package_type.js",
+    "build:webpack": "webpack --mode production",
+    "build:doc": "ts-node ./scripts/gendoc.ts",
+    "build": "run-s build:types build:webpack build:doc",
+    "prepare": "run-s clean build"
   },
   "activationEvents": [
     "*"
@@ -28,6 +31,7 @@
   "contributes": {
     "configuration": {
       "type": "object",
+      "title": "Translator",
       "properties": {
         "translator.toLang": {
           "type": "string",
@@ -53,6 +57,9 @@
         },
         "translator.engines": {
           "type": "array",
+          "items": {
+            "type": "string"
+          },
           "default": [
             "bing",
             "google",
@@ -110,6 +117,8 @@
     "coc.nvim": "^0.0.80",
     "request-light": "^0.4.0",
     "eslint": "^7.16.0",
+    "json-schema-to-typescript": "^10.1.2",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "ts-loader": "^8.0.13",
     "typescript": "^4.1.3",

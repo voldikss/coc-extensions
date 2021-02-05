@@ -5,6 +5,7 @@
     "outDir": "lib",
     "target": "es2015",
     "module": "commonjs",
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     "lib": ["es2018"],
     "plugins": []
