@@ -3,7 +3,7 @@ import fs from 'fs'
 export async function fsStat(filepath: string): Promise<fs.Stats | null> {
   return new Promise((resolve) => {
     fs.stat(filepath, (err, stats) => {
-      if (err) resolve(undefined)
+      if (err) resolve(null)
       resolve(stats)
     })
   })
