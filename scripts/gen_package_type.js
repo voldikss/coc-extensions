@@ -1,8 +1,8 @@
-const Pkg = require('../package.json');
-const fs = require('fs');
-const { compile } = require('json-schema-to-typescript');
+const Pkg = require('../package.json')
+const fs = require('fs')
+const { compile } = require('json-schema-to-typescript')
 
-const fsp = fs.promises;
+const fsp = fs.promises
 
 async function main() {
   const s = await compile(Pkg.contributes.configuration, 'Extension', {
@@ -10,9 +10,8 @@ async function main() {
       semi: true,
       singleQuote: true,
     },
-  });
-  await fsp.writeFile('src/types/pkg-config.d.ts', s);
+  })
+  await fsp.writeFile('src/types/pkg-config.d.ts', s)
 }
 
-main().then(console.error);
-
+main().then(console.error)

@@ -7,11 +7,7 @@
     "url": "https://github.com/voldikss/coc-translator"
   },
   "publisher": "voldikss",
-  "keywords": [
-    "coc.nvim",
-    "translation",
-    "translator"
-  ],
+  "keywords": ["coc.nvim", "translation", "translator"],
   "engines": {
     "coc": "^0.0.79"
   },
@@ -23,11 +19,10 @@
     "build:webpack": "webpack --mode production",
     "build:doc": "ts-node ./scripts/gendoc.ts",
     "build": "run-s build:types build:webpack build:doc",
-    "prepare": "run-s clean build"
+    "test:unit": "jest --runInBand --forceExit --verbose=false",
+    "prettier": "prettier --write ./src"
   },
-  "activationEvents": [
-    "*"
-  ],
+  "activationEvents": ["*"],
   "contributes": {
     "configuration": {
       "type": "object",
@@ -38,16 +33,7 @@
           "default": "zh_CN",
           "anyOf": [
             {
-              "enum": [
-                "zh_CN",
-                "zh_TW",
-                "en",
-                "fr",
-                "de",
-                "ja",
-                "ko",
-                "ru"
-              ]
+              "enum": ["zh_CN", "zh_TW", "en", "fr", "de", "ja", "ko", "ru"]
             },
             {
               "type": "string"
@@ -60,12 +46,7 @@
           "items": {
             "type": "string"
           },
-          "default": [
-            "bing",
-            "google",
-            "youdao",
-            "haici"
-          ]
+          "default": ["bing", "google", "youdao", "haici"]
         },
         "translator.enableHover": {
           "type": "boolean",
@@ -85,41 +66,30 @@
           "default": 20
         }
       }
-    },
-    "commands": [
-      {
-        "title": "show translation",
-        "command": "translator.popup"
-      },
-      {
-        "title": "Echo translation",
-        "command": "translator.echo"
-      },
-      {
-        "title": "replace word with translation",
-        "command": "translator.replace"
-      },
-      {
-        "title": "open history file",
-        "command": "translator.exportHistory"
-      }
-    ]
+    }
   },
   "author": "dyzplus@gmail.com",
   "license": "MIT",
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/jest": "^27.0.3",
     "@types/node": "^14.14.19",
     "@types/uuid": "^8.3.0",
     "@types/xml2js": "^0.4.7",
-    "@voldikss/tsconfig": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
+    "@voldikss/tsconfig": "^1.0.0",
+    "axios": "^0.24.0",
     "coc.nvim": "^0.0.80",
-    "request-light": "^0.4.0",
     "eslint": "^7.16.0",
+    "jest": "^27.4.5",
     "json-schema-to-typescript": "^10.1.2",
+    "lodash": "^4.17.21",
     "npm-run-all": "^4.1.5",
+    "proxy-agent": "^5.0.0",
+    "request-light": "^0.4.0",
     "rimraf": "^3.0.2",
+    "ts-jest": "^27.1.2",
     "ts-loader": "^8.0.13",
     "typescript": "^4.1.3",
     "uuid": "^8.3.2",

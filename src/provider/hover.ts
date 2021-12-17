@@ -1,11 +1,5 @@
-import {
-  workspace,
-  HoverProvider,
-  TextDocument,
-  Position,
-  Hover
-} from 'coc.nvim'
-import Manager from '../commands/manager'
+import { workspace, HoverProvider, TextDocument, Position, Hover } from 'coc.nvim'
+import Manager from '../manager'
 
 export class TranslatorHoverProvider implements HoverProvider {
   constructor(private manager: Manager) {}
@@ -23,8 +17,8 @@ export class TranslatorHoverProvider implements HoverProvider {
     return {
       contents: {
         kind: 'markdown',
-        value: translation.markdown().join('\n')
-      }
+        value: translation.toMarkdown().join('\n'),
+      },
     }
   }
 }

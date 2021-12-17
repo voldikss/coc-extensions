@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = {
   entry: './src/index.ts',
@@ -6,10 +6,10 @@ module.exports = {
   mode: 'none',
   resolve: {
     mainFields: ['module', 'main'],
-    extensions: ['.js', '.ts']
+    extensions: ['.js', '.ts'],
   },
   externals: {
-    'coc.nvim': 'commonjs coc.nvim'
+    'coc.nvim': 'commonjs coc.nvim',
   },
   module: {
     rules: [
@@ -21,22 +21,22 @@ module.exports = {
             loader: 'ts-loader',
             options: {
               compilerOptions: {
-                sourceMap: true
-              }
-            }
-          }
-        ]
-      }
-    ]
+                sourceMap: true,
+              },
+            },
+          },
+        ],
+      },
+    ],
   },
   output: {
     path: path.join(__dirname, 'lib'),
     filename: 'index.js',
-    libraryTarget: 'commonjs'
+    libraryTarget: 'commonjs',
   },
   plugins: [],
   node: {
     __dirname: false,
-    __filename: false
-  }
-};
+    __filename: false,
+  },
+}

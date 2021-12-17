@@ -14,8 +14,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Build Package
         run: |
-          npm install -g json ts-node
-          npm install
+          npm install -g json ts-node yarn
+          yarn && yarn build
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

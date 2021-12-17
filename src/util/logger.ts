@@ -7,8 +7,14 @@ class Logger implements Disposable {
     this.outputChannel = window.createOutputChannel('translator')
   }
 
-  public log(message: string): void {
-    this.outputChannel.appendLine(message)
+  public log(message: unknown): void {
+    let text: string | undefined
+    if (typeof message === 'string') {
+      text = message
+    } else if (Object.prototype.toString.call(message) === '[object Object]') {
+      text = JSON.stringify(message)
+    }
+    this.outputChannel.appendLine(text)
   }
 
   public dispose(): void {
