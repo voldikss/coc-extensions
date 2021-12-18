@@ -200,19 +200,19 @@ class ConfigurationDocGenerator extends DocGenerator {
   }
 }
 
-class CommandDocGenerator extends DocGenerator {
-  async generate() {
-    const cmds = Pkg.contributes.commands as Cmd[]
-    const rows: Row[] = []
-    cmds.forEach((cmd) => {
-      rows.push({
-        name: cmd.command,
-        description: cmd.title,
-      })
-    })
-    return [{ rows }]
-  }
-}
+// class CommandDocGenerator extends DocGenerator {
+//   async generate() {
+//     const cmds = Pkg.contributes.commands as Cmd[]
+//     const rows: Row[] = []
+//     cmds.forEach((cmd) => {
+//       rows.push({
+//         name: cmd.command,
+//         description: cmd.title,
+//       })
+//     })
+//     return [{ rows }]
+//   }
+// }
 
 async function main() {
   const cmd = 'yarn run bulid:doc'

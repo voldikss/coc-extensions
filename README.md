@@ -75,12 +75,7 @@ vmap <Leader>r <Plug>(coc-translator-rv)
 
 ## Commands
 
-- `:CocCommand translator.popup [text]` Display translation result via floating/popup window
-- `:CocCommand translator.echo [text]` Echo the translation result in the cmdline
-- `:CocCommand translator.replace [text]` Replace the word under the cursor with the translation
-- `:CocCommand translator.exportHistory` Export translation history
-
-**Note:** `[text]` is optional, if it's not given, use the `<cword>` (the word under the cursor).
+! Commands were not supported yet
 
 ## Work with translation lists
 

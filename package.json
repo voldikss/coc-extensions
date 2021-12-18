@@ -48,6 +48,10 @@
           },
           "default": ["bing", "google", "youdao", "haici"]
         },
+        "translator.proxy": {
+          "type": "string",
+          "description": "Address of proxy, i.e., `socks://127.0.0.1:1081`"
+        },
         "translator.enableHover": {
           "type": "boolean",
           "default": false,
