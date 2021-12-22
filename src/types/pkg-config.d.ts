@@ -9,15 +9,18 @@ export interface Translator {
   /**
    * Target language type, input it if it's not fould in the candidates
    */
-  'translator.toLang'?: (('zh_CN' | 'zh_TW' | 'en' | 'fr' | 'de' | 'ja' | 'ko' | 'ru') | string) &
-    string
-  'translator.engines'?: string[]
+  'translator.toLang'?: (('zh_CN' | 'zh_TW' | 'en' | 'fr' | 'de' | 'ja' | 'ko' | 'ru') | string) & string;
+  'translator.engines'?: string[];
+  /**
+   * Address of proxy, i.e., `socks://127.0.0.1:1081`
+   */
+  'translator.proxy'?: string;
   /**
    * Translate when mouse hover
    */
-  'translator.enableHover'?: boolean
-  'translator.window.enableBorder'?: boolean
-  'translator.window.maxWidth'?: number
-  'translator.window.maxHeight'?: number
-  [k: string]: unknown
+  'translator.enableHover'?: boolean;
+  'translator.window.enableBorder'?: boolean;
+  'translator.window.maxWidth'?: number;
+  'translator.window.maxHeight'?: number;
+  [k: string]: unknown;
 }

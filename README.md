@@ -38,6 +38,10 @@ Type: <pre><code>string[]</code></pre>Default: <pre><code>[
 ]</code></pre>
 </details>
 <details>
+<summary><code>translator.proxy</code>: Address of proxy, i.e., `socks://127.0.0.1:1081`.</summary>
+Type: <pre><code>string</code></pre>
+</details>
+<details>
 <summary><code>translator.enableHover</code>: Translate when mouse hover.</summary>
 Type: <pre><code>boolean</code></pre>Default: <pre><code>false</code></pre>
 </details>
