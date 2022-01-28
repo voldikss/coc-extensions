@@ -11,7 +11,7 @@ export default class Recorder {
     const [, lnum, col] = await this.nvim.call('getpos', '.')
     const path = `${doc.uri}\t${lnum}\t${col}`
     const content = trans.toHistoryItem()
-    if (content.length) {
+    if (content && content.length) {
       await this.db.add(content, path)
     }
   }
