@@ -1,6 +1,7 @@
 {
   "extends": "./node_modules/@voldikss/tsconfig/tsconfig.json",
   "compilerOptions": {
+    "experimentalDecorators": true,
     "declaration": false,
     "outDir": "lib",
     "target": "es2015",

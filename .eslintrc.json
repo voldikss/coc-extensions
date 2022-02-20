@@ -1,10 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/eslintrc",
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "env": {
+    "node": true
+  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2021,
-    "sourceType": "module"
+    "sourceType": "module",
+    "requireConfigFile": false
   },
   "plugins": ["@typescript-eslint"],
   "rules": {

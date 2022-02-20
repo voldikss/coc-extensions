@@ -52,7 +52,7 @@ export class Translation {
   }
 
   // for replacement
-  public forReplacement() {
+  public toReplacement() {
     for (const t of this.results) {
       if (t.paraphrase) {
         return t.paraphrase

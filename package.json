@@ -1,15 +1,19 @@
 {
   "name": "coc-translator",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "description": "Translation extension for coc.nvim",
   "main": "lib/index.js",
   "repository": {
     "url": "https://github.com/voldikss/coc-translator"
   },
   "publisher": "voldikss",
-  "keywords": ["coc.nvim", "translation", "translator"],
+  "keywords": [
+    "coc.nvim",
+    "translation",
+    "translator"
+  ],
   "engines": {
-    "coc": "^0.0.79"
+    "coc": "^0.0.80"
   },
   "homepage": "https://github.com/voldikss/coc-translator",
   "scripts": {
@@ -20,9 +24,12 @@
     "build:doc": "ts-node ./scripts/gendoc.ts",
     "build": "run-s build:types build:webpack build:doc",
     "test:unit": "jest --runInBand --forceExit --verbose=false",
-    "prettier": "prettier --write ./src"
+    "prettier": "prettier --write ./src",
+    "prepare": "husky install"
   },
-  "activationEvents": ["*"],
+  "activationEvents": [
+    "*"
+  ],
   "contributes": {
     "configuration": {
       "type": "object",
@@ -33,7 +40,16 @@
           "default": "zh_CN",
           "anyOf": [
             {
-              "enum": ["zh_CN", "zh_TW", "en", "fr", "de", "ja", "ko", "ru"]
+              "enum": [
+                "zh_CN",
+                "zh_TW",
+                "en",
+                "fr",
+                "de",
+                "ja",
+                "ko",
+                "ru"
+              ]
             },
             {
               "type": "string"
@@ -46,7 +62,12 @@
           "items": {
             "type": "string"
           },
-          "default": ["bing", "google", "youdao", "haici"]
+          "default": [
+            "bing",
+            "google",
+            "youdao",
+            "haici"
+          ]
         },
         "translator.proxy": {
           "type": "string",
@@ -84,10 +105,12 @@
     "@typescript-eslint/parser": "^4.11.1",
     "@voldikss/tsconfig": "^1.0.0",
     "axios": "^0.24.0",
-    "coc.nvim": "^0.0.80",
+    "coc.nvim": "^0.0.81-next.16",
     "eslint": "^7.16.0",
+    "husky": "^7.0.4",
     "jest": "^27.4.5",
     "json-schema-to-typescript": "^10.1.2",
+    "lint-staged": "^12.3.4",
     "lodash": "^4.17.21",
     "npm-run-all": "^4.1.5",
     "proxy-agent": "^5.0.0",
@@ -100,5 +123,20 @@
     "webpack": "^5.11.1",
     "webpack-cli": "^4.3.1",
     "xml2js": "^0.4.23"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --parser=typescript --write",
+      "eslint --quiet",
+      "git add"
+    ],
+    "*.js": [
+      "prettier --parser=babel --write",
+      "eslint --parser=@babel/eslint-parser --quiet",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "@babel/eslint-parser": "^7.17.0"
   }
 }

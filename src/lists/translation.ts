@@ -93,6 +93,6 @@ export class TranslationList extends BasicList {
     nvim.command('syntax match CocTranslatorResult /\\v%21v.*$/', true)
     nvim.command('highlight default link CocTranslatorQuery Keyword', true)
     nvim.command('highlight default link CocTranslatorResult String', true)
-    nvim.resumeNotification().catch((_e) => {})
+    nvim.resumeNotification(false).catch((_e) => {})
   }
 }

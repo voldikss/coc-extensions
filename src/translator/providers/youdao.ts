@@ -2,7 +2,9 @@ import { TranslateParams, TranslationProvider } from '../defines'
 import { get } from 'lodash'
 import { parseStringPromise } from 'xml2js'
 import { HttpClient } from '../http'
+import { Translator } from '../manager'
 
+@Translator()
 export class YoudaoTranslator implements TranslationProvider {
   readonly name = 'youdao'
 
@@ -23,8 +25,7 @@ export class YoudaoTranslator implements TranslationProvider {
   }
 
   private getPhonetic(obj): string {
-    const phonetic = get(obj, 'phonetic-symbol.0', undefined)
-    return phonetic
+    return get(obj, 'phonetic-symbol.0', undefined)
   }
 
   private getExplains(obj): string[] {

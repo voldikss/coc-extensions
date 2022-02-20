@@ -1,7 +1,9 @@
 import { TranslateParams, TranslationProvider } from '../defines'
 import { HttpClient } from '../http'
+import { Translator } from '../manager'
 import { decodeHtmlCharCodes } from '../util'
 
+@Translator()
 export class HaiciTranslator implements TranslationProvider {
   readonly name = 'haici'
 

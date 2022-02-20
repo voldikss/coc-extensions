@@ -15,10 +15,21 @@ export interface TranslateParams {
 }
 
 export interface ITranslation {
+  /**
+   * 翻译引擎
+   */
   engine: string
-
+  /**
+   * 发音
+   */
   phonetic?: string
+  /**
+   * 简释
+   */
   paraphrase?: string
+  /**
+   * 详细释义
+   */
   explains?: string[]
 }
 

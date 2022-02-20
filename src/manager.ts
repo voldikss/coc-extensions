@@ -8,7 +8,7 @@ import {
   StatusBarItem,
 } from 'coc.nvim'
 import { config } from './config'
-import Recorder from './recorder'
+import Storage from './storage'
 import { Translation } from './translation'
 import { getTextUnderCursor } from './helper'
 import { translator } from './translator/manager'
@@ -16,12 +16,12 @@ import { DB } from './util/db'
 
 export default class Manager {
   private floatwin: FloatFactory
-  private recorder: Recorder
+  private storage: Storage
   private statusBar: StatusBarItem
 
   constructor(private nvim: Neovim, private db: DB) {
     this.floatwin = new FloatFactory(this.nvim)
-    this.recorder = new Recorder(nvim, this.db)
+    this.storage = new Storage(nvim, this.db)
     this.statusBar = window.createStatusBarItem(0, { progress: true })
     this.statusBar.text = 'translating'
   }
@@ -55,7 +55,7 @@ export default class Manager {
   }
 
   private async replace(translation: Translation): Promise<void> {
-    const repl = translation.forReplacement()
+    const repl = translation.toReplacement()
     if (repl.length == 0) {
       window.showMessage('No paraphrase for replacement', 'error')
     }
@@ -64,7 +64,7 @@ export default class Manager {
     this.nvim.command(`let @a='${repl}'`, true)
     this.nvim.command('normal! viw"ap', true)
     this.nvim.command('let @a=reg_tmp', true)
-    await this.nvim.resumeNotification()
+    await this.nvim.resumeNotification(false)
   }
 
   async getTranslation(text: string) {
@@ -102,6 +102,6 @@ export default class Manager {
       default:
         break
     }
-    this.recorder.save(translation)
+    this.storage.save(translation)
   }
 }

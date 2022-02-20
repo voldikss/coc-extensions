@@ -1,7 +1,9 @@
 import { TranslateParams, TranslationProvider } from '../defines'
 import { decodeHtmlCharCodes } from '../util'
 import { HttpClient } from '../http'
+import { Translator } from '../manager'
 
+@Translator()
 export class BingTranslator implements TranslationProvider {
   readonly name = 'bing'
 
@@ -21,8 +23,6 @@ export class BingTranslator implements TranslationProvider {
     const match = re.exec(html)
     if (match) {
       return decodeHtmlCharCodes(match[1])
-    } else {
-      return ''
     }
   }
 

@@ -2,7 +2,7 @@ import { Neovim, workspace } from 'coc.nvim'
 import { Translation } from './translation'
 import { DB } from './util/db'
 
-export default class Recorder {
+export default class Storage {
   constructor(private nvim: Neovim, private db: DB) {}
 
   public async save(trans: Translation): Promise<void> {
@@ -30,6 +30,6 @@ export default class Recorder {
     nvim.command('syntax match CocTranslatorResult /\\v%21v.*$/', true)
     nvim.command('highlight default link CocTranslatorQuery Keyword', true)
     nvim.command('highlight default link CocTranslatorResult String', true)
-    await nvim.resumeNotification()
+    await nvim.resumeNotification(false)
   }
 }

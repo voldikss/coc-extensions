@@ -7,7 +7,7 @@ export async function getTextUnderCursor(mode: MapMode): Promise<string> {
     const pos = await window.getCursorPosition()
     range = doc.getWordRangeAtPosition(pos)
   } else {
-    range = await workspace.getSelectedRange('v', doc)
+    range = await window.getSelectedRange('v')
   }
   let text = ''
   if (!range) {
