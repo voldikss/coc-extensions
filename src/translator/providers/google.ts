@@ -2,6 +2,7 @@ import { TranslateParams, TranslationProvider } from '../defines'
 import { get } from 'lodash'
 import { HttpClient } from '../http'
 import { Translator } from '../manager'
+import { window } from 'coc.nvim'
 
 interface GoogleTranslationResponse {
   sentences: Array<{
@@ -14,7 +15,7 @@ interface GoogleTranslationResponse {
      */
     orig: string
   }>
-  dict: Array<{
+  dict?: Array<{
     /**
      * 词性
      */
@@ -54,6 +55,7 @@ export class GoogleTranslator implements TranslationProvider {
   }
 
   private getExplains(obj: GoogleTranslationResponse) {
+    if (!obj.dict) return []
     return obj.dict.map((x) => `${x.pos}. ${x.terms.join(', ')}`)
   }
 
