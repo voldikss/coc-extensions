@@ -2,7 +2,7 @@ import Axios, { AxiosRequestConfig } from 'axios'
 import { config } from '../config'
 
 // https://github.com/axios/axios/issues/2968#issuecomment-820975852
-import adapter from 'axios/lib/adapters/http'
+import * as adapter from 'axios/lib/adapters/http'
 
 const params: AxiosRequestConfig = {
   adapter,

@@ -1,7 +1,7 @@
 import { fsStat, fsWriteFile, fsReadFile } from './fs'
 import { Record, RecordBody } from '../types'
 import { v4 as uuidv4 } from 'uuid'
-import path from 'path'
+import * as path from 'path'
 
 export class DB {
   private file: string

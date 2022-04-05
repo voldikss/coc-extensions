@@ -1,14 +1,14 @@
-import fs from 'fs'
-import util from 'util'
+import * as fs from 'fs'
 import { promisify } from 'util'
 
 export async function fsStat(filepath: string) {
-  let stat = null
   try {
-    stat = await util.promisify(fs.stat)(filepath)
-  } finally {
-    // eslint-disable-next-line no-unsafe-finally
-    return stat
+    return await fs.promises.stat(filepath)
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return
+    }
+    throw err
   }
 }
 export const fsWriteFile = promisify(fs.writeFile)
