@@ -7,9 +7,11 @@
     "url": "https://github.com/voldikss/coc-autoxjs"
   },
   "publisher": "voldikss",
-  "keywords": ["coc.nvim"],
+  "keywords": [
+    "coc.nvim"
+  ],
   "engines": {
-    "coc": "^0.0.80"
+    "coc": "^0.0.81"
   },
   "activationEvents": [
     "onCommand:autoxjs.startServer",

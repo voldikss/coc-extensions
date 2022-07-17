@@ -14,7 +14,7 @@
     "gist"
   ],
   "engines": {
-    "coc": "^0.0.77"
+    "coc": "^0.0.81"
   },
   "activationEvents": [
     "*"

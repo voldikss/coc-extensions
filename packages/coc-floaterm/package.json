@@ -7,11 +7,16 @@
     "url": "https://github.com/voldikss/coc-floaterm"
   },
   "publisher": "voldikss",
-  "keywords": ["coc.nvim", "floaterm"],
+  "keywords": [
+    "coc.nvim",
+    "floaterm"
+  ],
   "engines": {
-    "coc": "^0.0.74"
+    "coc": "^0.0.81"
   },
-  "activationEvents": ["*"],
+  "activationEvents": [
+    "*"
+  ],
   "contributes": {
     "configuration": {
       "type": "object",

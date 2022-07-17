@@ -4,10 +4,15 @@
   "description": "Press `.` to trigger buffer source completion in (neo)vim.",
   "main": "lib/index.js",
   "engines": {
-    "coc": "^0.0.80"
+    "coc": "^0.0.81"
   },
-  "keywords": ["coc.nvim", "completion"],
-  "activationEvents": ["*"],
+  "keywords": [
+    "coc.nvim",
+    "completion"
+  ],
+  "activationEvents": [
+    "*"
+  ],
   "repository": "https://github.com/voldikss/coc-dot-complete",
   "homepage": "https://github.com/voldikss/coc-dot-complete/#readme",
   "contributes": {

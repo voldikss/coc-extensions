@@ -4,7 +4,7 @@
   "description": "Press `-` to trigger buffer source completion in (neo)vim.",
   "main": "lib/index.js",
   "engines": {
-    "coc": "^0.0.80"
+    "coc": "^0.0.81"
   },
   "keywords": [
     "coc.nvim",

@@ -15,6 +15,7 @@
     "type-coverage": "type-coverage",
     "bump": "node scripts/bump.js",
     "publish": "node ./scripts/publish.js",
+    "update-engine": "node ./scripts/update-engine.js",
     "postinstall": "echo postinstall.js",
     "prepare": "husky install"
   },

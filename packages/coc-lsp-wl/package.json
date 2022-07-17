@@ -9,7 +9,7 @@
     "mathematica"
   ],
   "engines": {
-    "coc": "^0.0.73"
+    "coc": "^0.0.81"
   },
   "main": "lib/index.js",
   "activationEvents": [

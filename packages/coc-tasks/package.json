@@ -4,11 +4,16 @@
   "description": "Tasks list and macros completion/hover support for asynctasks.vim",
   "main": "lib/index.js",
   "publisher": "voldikss",
-  "keywords": ["coc.nvim", "tasks"],
+  "keywords": [
+    "coc.nvim",
+    "tasks"
+  ],
   "engines": {
     "coc": "^0.0.81"
   },
-  "activationEvents": ["*"],
+  "activationEvents": [
+    "*"
+  ],
   "contributes": {
     "configuration": {
       "title": "Tasks",
@@ -23,7 +28,10 @@
           "items": {
             "type": "string"
           },
-          "default": ["tasks", "dosini"],
+          "default": [
+            "tasks",
+            "dosini"
+          ],
           "description": "Tasks macros completion on the specific filetypes"
         },
         "tasks.triggerCharacters": {
@@ -31,7 +39,10 @@
           "items": {
             "type": "string"
           },
-          "default": ["(", "$"]
+          "default": [
+            "(",
+            "$"
+          ]
         },
         "tasks.priority": {
           "type": "number",

@@ -4,10 +4,17 @@
   "description": "browser words completion for coc.nvim",
   "main": "lib/index.js",
   "engines": {
-    "coc": "^0.0.74"
+    "coc": "^0.0.81"
   },
-  "keywords": ["coc.nvim", "completion", "neovim", "vim"],
-  "activationEvents": ["*"],
+  "keywords": [
+    "coc.nvim",
+    "completion",
+    "neovim",
+    "vim"
+  ],
+  "activationEvents": [
+    "*"
+  ],
   "repository": "https://github.com/voldikss/coc-browser",
   "homepage": "https://github.com/voldikss/coc-browser/#readme",
   "contributes": {

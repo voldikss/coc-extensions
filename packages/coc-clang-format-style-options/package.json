@@ -7,11 +7,15 @@
     "url": "https://github.com/voldikss/coc-clang-format-style-options"
   },
   "publisher": "voldikss",
-  "keywords": ["coc.nvim"],
+  "keywords": [
+    "coc.nvim"
+  ],
   "engines": {
-    "coc": "^0.0.74"
+    "coc": "^0.0.81"
   },
-  "activationEvents": ["*"],
+  "activationEvents": [
+    "*"
+  ],
   "contributes": {
     "configuration": {
       "type": "object",
