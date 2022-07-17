@@ -93,6 +93,8 @@
     "@types/uuid": "^8.3.4",
     "@types/xml2js": "^0.4.9",
     "axios": "^0.26.1",
+    "http-proxy-agent": "^5.0.0",
+    "https-proxy-agent": "^5.0.1",
     "lodash-es": "^4.17.21",
     "socks-proxy-agent": "^7.0.0",
     "uuid": "^8.3.2",

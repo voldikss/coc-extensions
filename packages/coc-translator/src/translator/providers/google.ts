@@ -2,7 +2,6 @@ import { get } from 'lodash-es'
 
 import { TranslateParams, TranslationProvider } from '../defines'
 import { HttpClient } from '../http'
-import { Translator } from '../manager'
 
 interface GoogleTranslationResponse {
   sentences: Array<{
@@ -27,7 +26,6 @@ interface GoogleTranslationResponse {
   }>
 }
 
-@Translator()
 export class GoogleTranslator implements TranslationProvider {
   readonly name = 'google'
 

@@ -17,5 +17,5 @@
       "@coc-extensions/common": ["packages/common/src"]
     }
   },
-  "include": ["packages/*/src/**/*.ts"]
+  "include": ["packages/*/src/**/*.ts", "packages/**/*.d.ts"]
 }

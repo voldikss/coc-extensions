@@ -3,9 +3,7 @@ import { parseStringPromise } from 'xml2js'
 
 import { TranslateParams, TranslationProvider, TranslationResult } from '../defines'
 import { HttpClient } from '../http'
-import { Translator } from '../manager'
 
-@Translator()
 export class YoudaoTranslator implements TranslationProvider {
   readonly name = 'youdao'
 

@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { v4 as uuidv4 } from 'uuid'
+import uuid from 'uuid'
 
 import { Record, RecordBody } from '../types'
 
@@ -30,7 +30,7 @@ export class DB {
     const arr = items.map((item) => item['content'][0].toLowerCase())
     if (arr.indexOf(content[0].toLowerCase()) >= 0) return
 
-    items.unshift({ id: uuidv4(), content, path } as Record)
+    items.unshift({ id: uuid.v4(), content, path } as Record)
     await fsWriteFile(this.file, JSON.stringify(items, null, 2))
   }
 

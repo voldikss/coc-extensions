@@ -1,15 +1,14 @@
 import { compact } from 'lodash-es'
 
-import { Constructor, TranslateParams, TranslationProvider } from './defines'
+import { TranslateParams, TranslationProvider } from './defines'
+import {
+  BingTranslator,
+  GoogleTranslator,
+  HaiciTranslator,
+  ICibaTranslator,
+  YoudaoTranslator,
+} from './providers'
 import { preProcess } from './util'
-import('./providers')
-
-export function Translator(): ClassDecorator {
-  return (target) => {
-    const provider = target as unknown as Constructor<TranslationProvider>
-    TranslatorManager.register(new provider())
-  }
-}
 
 class TranslatorManager {
   static registry = new Map<string, TranslationProvider>()
@@ -51,4 +50,9 @@ class TranslatorManager {
   }
 }
 
+TranslatorManager.register(new BingTranslator())
+TranslatorManager.register(new GoogleTranslator())
+TranslatorManager.register(new HaiciTranslator())
+TranslatorManager.register(new ICibaTranslator())
+TranslatorManager.register(new YoudaoTranslator())
 export const translator = new TranslatorManager()
