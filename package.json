@@ -1,5 +1,5 @@
 {
-  "name": "coc-extensions",
+  "name": "@voldikss/coc-extensions",
   "version": "1.0.0",
   "description": "coc extensions monorepo maintained by voidikss",
   "private": true,
@@ -65,7 +65,7 @@
   "typeCoverage": {
     "updateIfHigher": true,
     "showRelativePath": true,
-    "atLeast": 96.29,
+    "atLeast": 97.12,
     "detail": true,
     "ignoreFiles": [
       "*-spec.ts$"
