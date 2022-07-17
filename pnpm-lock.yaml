@@ -166,25 +166,23 @@ importers:
   packages/coc-translator:
     specifiers:
       '@types/lodash-es': ^4.17.6
-      '@types/uuid': ^8.3.4
       '@types/xml2js': ^0.4.9
       axios: ^0.26.1
       http-proxy-agent: ^5.0.0
       https-proxy-agent: ^5.0.1
       lodash-es: ^4.17.21
+      nanoid: ^4.0.0
       socks-proxy-agent: ^7.0.0
-      uuid: ^8.3.2
       xml2js: ^0.4.23
     devDependencies:
       '@types/lodash-es': 4.17.6
-      '@types/uuid': 8.3.4
       '@types/xml2js': 0.4.11
       axios: 0.26.1
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
       lodash-es: 4.17.21
+      nanoid: 4.0.0
       socks-proxy-agent: 7.0.0
-      uuid: 8.3.2
       xml2js: 0.4.23
 
   packages/common:
@@ -1270,10 +1268,6 @@ packages:
 
   /@types/tmp/0.2.3:
     resolution: {integrity: sha512-dDZH/tXzwjutnuk4UacGgFRwV+JSLaXL1ikvidfJprkb7L9Nx1njcRHHmi3Dsvt7pgqqTEeucQuOrWHPFgzVHA==}
-    dev: true
-
-  /@types/uuid/8.3.4:
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
     dev: true
 
   /@types/walk/2.3.1:
@@ -3947,6 +3941,12 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
+  /nanoid/4.0.0:
+    resolution: {integrity: sha512-IgBP8piMxe/gf73RTQx7hmnhwz0aaEXYakvqZyE302IXW3HyVNhdNGC+O2MwMAVhLEnvXlvKtGbtJf6wvHihCg==}
+    engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
+    dev: true
+
   /natural-compare/1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
@@ -4982,11 +4982,6 @@ packages:
   /utils-merge/1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
-    dev: true
-
-  /uuid/8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    hasBin: true
     dev: true
 
   /v8-compile-cache/2.3.0:

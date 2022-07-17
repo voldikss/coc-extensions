@@ -14,8 +14,14 @@ const createConfig = require('../rollup.config')
 const watcher = rollup.watch(createConfig(target))
 
 watcher.on('event', (event) => {
+  if (event.code === 'START') {
+    console.log(chalk.magenta('starting...'))
+  }
   if (event.code === 'BUNDLE_END') {
     console.log(chalk.green(`updated: ${event.output}`))
+  }
+  if (event.code === 'ERROR') {
+    console.log(chalk.red(`error: ${event.error}`))
   }
   // event.code can be one of:
   //   START        — the watcher is (re)starting
