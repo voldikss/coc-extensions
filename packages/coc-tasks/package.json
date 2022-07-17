@@ -1,0 +1,46 @@
+{
+  "name": "coc-tasks",
+  "version": "0.3.0",
+  "description": "Tasks list and macros completion/hover support for asynctasks.vim",
+  "main": "lib/index.js",
+  "publisher": "voldikss",
+  "keywords": ["coc.nvim", "tasks"],
+  "engines": {
+    "coc": "^0.0.81"
+  },
+  "activationEvents": ["*"],
+  "contributes": {
+    "configuration": {
+      "title": "Tasks",
+      "type": "object",
+      "properties": {
+        "tasks.shortcut": {
+          "type": "string",
+          "default": "TASKS"
+        },
+        "tasks.filetypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["tasks", "dosini"],
+          "description": "Tasks macros completion on the specific filetypes"
+        },
+        "tasks.triggerCharacters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["(", "$"]
+        },
+        "tasks.priority": {
+          "type": "number",
+          "default": 99,
+          "description": "Priority of macros completion"
+        }
+      }
+    }
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT"
+}

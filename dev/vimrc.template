@@ -1,0 +1,12 @@
+set rtp+=~/.cache/nvim/plugged/coc.nvim
+
+""" coc-translator
+" popup
+nmap <Space>t <Plug>(coc-translator-p)
+vmap <Space>t <Plug>(coc-translator-pv)
+" echo
+nmap <Space>e <Plug>(coc-translator-e)
+vmap <Space>e <Plug>(coc-translator-ev)
+" replace
+nmap <Space>r <Plug>(coc-translator-r)
+vmap <Space>r <Plug>(coc-translator-rv)

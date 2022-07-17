@@ -1,0 +1,4 @@
+/packages/coc-browser/extension
+/packages/coc-clang-format-style-options/scripts/parse.ts
+node_modules/
+lib/

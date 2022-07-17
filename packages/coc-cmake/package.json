@@ -1,0 +1,71 @@
+{
+  "name": "coc-cmake",
+  "version": "0.2.1",
+  "description": "coc.nvim extension for cmake language",
+  "main": "lib/index.js",
+  "publisher": "voldikss",
+  "keywords": ["coc.nvim", "cmake"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voldikss/coc-cmake"
+  },
+  "homepage": "https://github.com/voldikss/coc-cmake#readme",
+  "engines": {
+    "coc": "^0.0.80"
+  },
+  "activationEvents": ["onLanguage:cmake"],
+  "contributes": {
+    "configuration": {
+      "title": "CMake",
+      "type": "object",
+      "properties": {
+        "cmake.cmakePath": {
+          "type": "string",
+          "default": "cmake",
+          "description": "Path to CMake generator executable"
+        },
+        "cmake.formatter": {
+          "type": "string",
+          "default": "cmake-format",
+          "description": "Path to [cmake-format](https://github.com/cheshirekow/cmake_format)"
+        },
+        "cmake.formatter_args": {
+          "type": "array",
+          "default": [],
+          "description": "Additional arguments to be passed down to the formatter",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cmake.lsp.enable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable language server(https://github.com/regen100/cmake-language-server), Notice that the functionality(completion, formatting, etc.) of lsp and extension builtin can not coexist"
+        },
+        "cmake.lsp.serverPath": {
+          "type": "string",
+          "default": "cmake-language-server",
+          "description": "Path to [cmake-language-server](https://github.com/regen100/cmake-language-server)"
+        },
+        "cmake.lsp.buildDirectory": {
+          "type": "string",
+          "default": "build",
+          "description": "See https://github.com/regen100/cmake-language-server#configuration"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "cmake.onlineHelp",
+        "title": "CMake: Online Help"
+      }
+    ]
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "command-exists": "^1.2.9",
+    "opener": "^1.5.2",
+    "tmp": "^0.2.1"
+  }
+}

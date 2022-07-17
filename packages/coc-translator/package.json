@@ -1,0 +1,101 @@
+{
+  "name": "coc-translator",
+  "version": "1.9.2",
+  "description": "Translation extension for coc.nvim",
+  "main": "lib/index.js",
+  "repository": {
+    "url": "https://github.com/voldikss/coc-translator"
+  },
+  "publisher": "voldikss",
+  "keywords": [
+    "coc.nvim",
+    "translation",
+    "translator",
+    "neovim"
+  ],
+  "engines": {
+    "coc": "^0.0.81"
+  },
+  "homepage": "https://github.com/voldikss/coc-translator",
+  "scripts": {
+    "test:unit": "jest --runInBand --forceExit --verbose=false"
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Translator",
+      "properties": {
+        "translator.toLang": {
+          "type": "string",
+          "default": "zh_CN",
+          "anyOf": [
+            {
+              "enum": [
+                "zh_CN",
+                "zh_TW",
+                "en",
+                "fr",
+                "de",
+                "ja",
+                "ko",
+                "ru"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Target language type, input it if it's not fould in the candidates"
+        },
+        "translator.engines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "bing",
+            "google",
+            "youdao",
+            "haici"
+          ]
+        },
+        "translator.proxy": {
+          "type": "string",
+          "description": "Address of proxy, i.e., `socks://127.0.0.1:1081`"
+        },
+        "translator.enableHover": {
+          "type": "boolean",
+          "default": false,
+          "description": "Translate when mouse hover"
+        },
+        "translator.window.enableBorder": {
+          "type": "boolean",
+          "default": true
+        },
+        "translator.window.maxWidth": {
+          "type": "number",
+          "default": 80
+        },
+        "translator.window.maxHeight": {
+          "type": "number",
+          "default": 20
+        }
+      }
+    }
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
+    "@types/uuid": "^8.3.4",
+    "@types/xml2js": "^0.4.9",
+    "axios": "^0.26.1",
+    "lodash-es": "^4.17.21",
+    "socks-proxy-agent": "^7.0.0",
+    "uuid": "^8.3.2",
+    "xml2js": "^0.4.23"
+  }
+}

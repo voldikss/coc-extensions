@@ -1,0 +1,51 @@
+{
+  "name": "coc-browser",
+  "version": "1.5.0",
+  "description": "browser words completion for coc.nvim",
+  "main": "lib/index.js",
+  "engines": {
+    "coc": "^0.0.74"
+  },
+  "keywords": ["coc.nvim", "completion", "neovim", "vim"],
+  "activationEvents": ["*"],
+  "repository": "https://github.com/voldikss/coc-browser",
+  "homepage": "https://github.com/voldikss/coc-browser/#readme",
+  "contributes": {
+    "configuration": {
+      "title": "Browser",
+      "type": "object",
+      "properties": {
+        "browser.shortcut": {
+          "type": "string",
+          "default": "WEB"
+        },
+        "browser.priority": {
+          "type": "number",
+          "default": 5
+        },
+        "browser.patterns": {
+          "type": "object",
+          "default": {
+            "*": []
+          }
+        },
+        "browser.port": {
+          "type": "number",
+          "default": 8888,
+          "description": "Port used to transfer words from browser extension to local server"
+        }
+      }
+    },
+    "commands": [
+      {
+        "title": "Clear browser completion source cache",
+        "command": "clearCache"
+      }
+    ]
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "0.0.126"
+  }
+}

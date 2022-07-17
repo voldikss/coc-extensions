@@ -1,0 +1,48 @@
+{
+  "name": "coc-gist",
+  "version": "0.2.1",
+  "description": "gist extension for coc.nvim",
+  "main": "lib/index.js",
+  "repository": {
+    "url": "https://github.com/voldikss/coc-gist"
+  },
+  "publisher": "voldikss",
+  "keywords": [
+    "coc.nvim",
+    "vim",
+    "neovim",
+    "gist"
+  ],
+  "engines": {
+    "coc": "^0.0.77"
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {}
+    },
+    "commands": [
+      {
+        "title": "create a new gist from current file",
+        "command": "gist.create"
+      },
+      {
+        "title": "update gist",
+        "command": "gist.update"
+      }
+    ]
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@octokit/rest": "^18.0.12",
+    "@types/tmp": "^0.2.0",
+    "axios": "^0.26.1",
+    "chalk": "^5.0.1",
+    "express": "^4.17.1",
+    "tmp": "^0.2.1"
+  }
+}

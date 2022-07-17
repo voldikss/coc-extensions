@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "allowJs": false,
+    "declaration": false,
+    "sourceMap": false,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "paths": {
+      "@coc-extensions/common": ["packages/common/src"]
+    }
+  },
+  "include": ["packages/*/src/**/*.ts"]
+}

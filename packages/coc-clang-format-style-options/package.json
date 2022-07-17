@@ -1,0 +1,35 @@
+{
+  "name": "coc-clang-format-style-options",
+  "version": "0.0.5",
+  "description": "coc.nvim extension, helps you write `.clang-format` more easily.",
+  "main": "lib/index.js",
+  "repository": {
+    "url": "https://github.com/voldikss/coc-clang-format-style-options"
+  },
+  "publisher": "voldikss",
+  "keywords": ["coc.nvim"],
+  "engines": {
+    "coc": "^0.0.74"
+  },
+  "activationEvents": ["*"],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "clang-format-style-options.shortcut": {
+          "type": "string",
+          "default": "voldikss"
+        },
+        "clang-format-style-options.priority": {
+          "type": "number",
+          "default": 99
+        }
+      }
+    }
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "chalk": "^5.0.1"
+  }
+}

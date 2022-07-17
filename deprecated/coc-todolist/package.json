@@ -1,0 +1,74 @@
+{
+  "name": "coc-todolist",
+  "version": "1.5.1",
+  "description": "todolist/task manager extension for coc.nvim",
+  "main": "lib/index.js",
+  "repository": {
+    "url": "https://github.com/voldikss/coc-todolist"
+  },
+  "publisher": "voldikss",
+  "keywords": ["coc.nvim", "todo", "todolist"],
+  "engines": {
+    "coc": "^0.0.80"
+  },
+  "activationEvents": ["*"],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "todolist.dateFormat": {
+          "type": "string",
+          "default": "YYYY-MM-DD HH:mm",
+          "description": "dates format"
+        },
+        "todolist.monitor": {
+          "type": "boolean",
+          "default": false,
+          "description": "monitor the todolist and remind you at the time"
+        }
+      }
+    },
+    "commands": [
+      {
+        "title": "create a new todolist",
+        "command": "todolist.create"
+      },
+      {
+        "title": "upload todolist to gist",
+        "command": "todolist.upload"
+      },
+      {
+        "title": "download todolist from gist",
+        "command": "todo.download"
+      },
+      {
+        "title": "export todolist as a json or yaml file",
+        "command": "todolist.export"
+      },
+      {
+        "title": "clear all todos",
+        "command": "todolist.clear"
+      },
+      {
+        "title": "generate gist token",
+        "command": "todolist.gist.genToken"
+      },
+      {
+        "title": "clear open todolist gist",
+        "command": "todolist.gist.openBrowser"
+      }
+    ]
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/js-yaml": "^3.12.5",
+    "@types/node-fetch": "^2.3.3",
+    "@types/uuid": "^8.3.0",
+    "express": "^4.16.4",
+    "js-yaml": "^3.14.1",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.32",
+    "uuid": "^8.3.2"
+  }
+}

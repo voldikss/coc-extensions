@@ -1,0 +1,48 @@
+{
+  "name": "coc-github",
+  "version": "1.0.1",
+  "description": "github issue source for coc.nvim",
+  "keywords": [
+    "coc.nvim",
+    "github"
+  ],
+  "main": "lib/index.js",
+  "engines": {
+    "coc": "^0.0.67"
+  },
+  "files": [
+    "src",
+    "lib"
+  ],
+  "author": "voldikss",
+  "repository": "https://github.com/voldikss/coc-github",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/voldikss/coc-github/issues"
+  },
+  "homepage": "https://github.com/voldikss/coc-github/#readme",
+  "dependencies": {
+    "request": "^2.88.0"
+  },
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "coc.github.enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "coc.github.priority": {
+          "type": "number",
+          "default": 99
+        },
+        "coc.github.filetypes": {
+          "type": "array",
+          "default": [
+            "gitcommit"
+          ]
+        }
+      }
+    }
+  }
+}

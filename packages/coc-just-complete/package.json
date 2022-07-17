@@ -1,0 +1,36 @@
+{
+  "name": "coc-just-complete",
+  "version": "0.0.3",
+  "description": "One kind of buffer words completion",
+  "main": "lib/index.js",
+  "engines": {
+    "coc": "^0.0.79"
+  },
+  "keywords": [
+    "coc.nvim",
+    "completion"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "repository": "https://github.com/voldikss/coc-just-complete",
+  "homepage": "https://github.com/voldikss/coc-just-complete/#readme",
+  "contributes": {
+    "configuration": {
+      "title": "JustComplete",
+      "type": "object",
+      "properties": {
+        "just-complete.shortcut": {
+          "type": "string",
+          "default": "just-complete"
+        },
+        "just-complete.priority": {
+          "type": "number",
+          "default": 3
+        }
+      }
+    }
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT"
+}

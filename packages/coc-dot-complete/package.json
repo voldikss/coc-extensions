@@ -1,0 +1,31 @@
+{
+  "name": "coc-dot-complete",
+  "version": "0.0.2",
+  "description": "Press `.` to trigger buffer source completion in (neo)vim.",
+  "main": "lib/index.js",
+  "engines": {
+    "coc": "^0.0.80"
+  },
+  "keywords": ["coc.nvim", "completion"],
+  "activationEvents": ["*"],
+  "repository": "https://github.com/voldikss/coc-dot-complete",
+  "homepage": "https://github.com/voldikss/coc-dot-complete/#readme",
+  "contributes": {
+    "configuration": {
+      "title": "DotComplete",
+      "type": "object",
+      "properties": {
+        "dot-complete.shortcut": {
+          "type": "string",
+          "default": "dot-complete"
+        },
+        "dot-complete.priority": {
+          "type": "number",
+          "default": 3
+        }
+      }
+    }
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "coc-floaterm",
+  "version": "0.2.2",
+  "description": "CocList support for the floaterm",
+  "main": "lib/index.js",
+  "repository": {
+    "url": "https://github.com/voldikss/coc-floaterm"
+  },
+  "publisher": "voldikss",
+  "keywords": ["coc.nvim", "floaterm"],
+  "engines": {
+    "coc": "^0.0.74"
+  },
+  "activationEvents": ["*"],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "floaterm.completion.enable": {
+          "type": "boolean",
+          "default": true
+        },
+        "floaterm.completion.shortcut": {
+          "type": "string",
+          "default": "floaterm"
+        },
+        "floaterm.completion.priority": {
+          "type": "number",
+          "default": 5
+        }
+      }
+    }
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "chalk": "^5.0.1"
+  }
+}

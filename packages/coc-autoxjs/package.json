@@ -1,0 +1,115 @@
+{
+  "name": "coc-autoxjs",
+  "version": "0.1.0",
+  "description": "coc.nvim extension for AutoX.js",
+  "main": "lib/index.js",
+  "repository": {
+    "url": "https://github.com/voldikss/coc-autoxjs"
+  },
+  "publisher": "voldikss",
+  "keywords": ["coc.nvim"],
+  "engines": {
+    "coc": "^0.0.80"
+  },
+  "activationEvents": [
+    "onCommand:autoxjs.startServer",
+    "onCommand:autoxjs.stopServer",
+    "onCommand:autoxjs.run",
+    "onCommand:autoxjs.runOnDevice",
+    "onCommand:autoxjs.stop",
+    "onCommand:autoxjs.stopAll",
+    "onCommand:autoxjs.save",
+    "onCommand:autoxjs.saveToDevice",
+    "onCommand:autoxjs.runProject",
+    "onCommand:autoxjs.saveProject"
+  ],
+  "contributes": {
+    "snippets": [
+      {
+        "language": "javascript",
+        "path": "./snippets/autoxjs.json"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "autoxjs.trace": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "extension.startServer",
+        "title": "开启服务(Start Server)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.stopServer",
+        "title": "停止服务(Stop Server)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.run",
+        "title": "运行脚本(Run)",
+        "icon": "play.png",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.runOnDevice",
+        "title": "在指定设备运行脚本(Run On Device)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.stop",
+        "title": "停止当前脚本(Stop)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.stopAll",
+        "title": "停止所有脚本(Stop All)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.rerun",
+        "title": "重新运行(Rerun)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.save",
+        "title": "保存到所有设备(Save)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.saveToDevice",
+        "title": "保存到指定设备(Save On Device)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.saveProject",
+        "title": "保存项目到设备(Save Project)",
+        "category": "Auto.js"
+      },
+      {
+        "command": "extension.runProject",
+        "title": "运行项目(Run Project)",
+        "category": "Auto.js"
+      }
+    ]
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/archiver": "^5.1.0",
+    "@types/jszip": "^3.1.4",
+    "@types/stream-buffers": "^3.0.3",
+    "@types/walk": "^2.3.0",
+    "@types/websocket": "^1.0.2",
+    "archiver": "^5.3.0",
+    "jszip": "^3.6.0",
+    "stream-buffers": "^3.0.2",
+    "walk": "^2.3.14",
+    "websocket": "1.0.33"
+  }
+}

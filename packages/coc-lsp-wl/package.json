@@ -1,0 +1,68 @@
+{
+  "name": "coc-lsp-wl",
+  "version": "1.0.0",
+  "description": "coc.nvim client for Wolfram Language Server",
+  "publisher": "voldikss",
+  "keywords": [
+    "coc.nvim",
+    "wolfram",
+    "mathematica"
+  ],
+  "engines": {
+    "coc": "^0.0.73"
+  },
+  "main": "lib/index.js",
+  "activationEvents": [
+    "onLanguage:mma",
+    "onLanguage:wl"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "wolfram language server configuration",
+      "type": "object",
+      "properties": {
+        "lsp-wl.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "whether enable wolfram language lsp"
+        },
+        "lsp-wl.maxNumberOfProblems": {
+          "scope": "resource",
+          "type": "number",
+          "default": 100,
+          "description": "Controls the maximum number of problems produced by the server."
+        },
+        "lsp-wl.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the wolfram language server."
+        },
+        "lsp-wl.port": {
+          "scope": "user",
+          "type": "number",
+          "default": 6536,
+          "description": "Port to communicate with language server."
+        },
+        "lsp-wl.wolframExecutablePath": {
+          "type": "string",
+          "default": "wolfram",
+          "description": "Path to wolfram executable."
+        },
+        "lsp-wl.wolframLanguageServerPath": {
+          "scope": "user",
+          "type": "string",
+          "default": "/path/to/lsp-wl",
+          "description": "Path to wolfram language server directory."
+        }
+      }
+    }
+  },
+  "author": "dyzplus@gmail.com",
+  "license": "MIT"
+}
