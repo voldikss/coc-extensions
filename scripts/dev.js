@@ -1,8 +1,7 @@
 const chalk = require('chalk')
 const { build } = require('esbuild')
 const { resolve } = require('path')
-const { existsSync } = require('fs-extra')
-const { writeFileSync, readFileSync } = require('fs')
+const { writeFileSync, existsSync, readFileSync, copyFileSync } = require('fs')
 
 const target = process.argv.at(2)
 
@@ -20,6 +19,12 @@ function updateVimrc() {
   const vimrc = resolve(__dirname, '../dev/vimrc')
   writeFileSync(vimrc, template, { encoding: 'utf8' })
   console.log(chalk.cyan(`updated ${vimrc}`))
+}
+
+function updateCocSettings() {
+  const templateCocSettingsFile = resolve(__dirname, '../dev/coc-settings.json.template')
+  const targetCocSettingsFile = resolve(__dirname, '../dev/coc-settings.json')
+  copyFileSync(templateCocSettingsFile, targetCocSettingsFile)
 }
 
 build({
@@ -44,6 +49,7 @@ build({
   .then(() => {
     console.log(chalk.green(`watching ${outfile}`))
     updateVimrc()
+    updateCocSettings()
   })
   .catch((err) => {
     console.error(chalk.red(err))

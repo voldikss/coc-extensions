@@ -3,6 +3,8 @@
 lib
 package-lock.json
 /dev/vimrc
+/dev/coc-settings.json
+/dev/coc-data
 
 # General
 # ----------------------------------------------------------------------------

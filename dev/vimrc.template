@@ -1,12 +1,114 @@
+""" Basic
+" Appearance
+set number norelativenumber background=dark display=lastline,uhex nowrap wrapmargin=0
+set showmode shortmess+=I cmdheight=1 cmdwinheight=10 showbreak= breakindent breakindentopt=
+set showmatch matchtime=0 matchpairs+=<:>,《:》,（:）,【:】,“:”,‘:’
+set noshowcmd noruler rulerformat= laststatus=3
+set title ruler titlelen=100 titleold= titlestring=%f noicon norightleft showtabline=2
+set nocursorline nocursorcolumn colorcolumn=9999 concealcursor=nvc conceallevel=0
+set nolist synmaxcol=3000 ambiwidth=single
+set nosplitbelow nosplitright nostartofline linespace=0 whichwrap=b,s scrolloff=5 sidescroll=0
+set equalalways nowinfixwidth nowinfixheight winminwidth=1 winheight=3 winminheight=1
+set termguicolors cpoptions+=I guioptions-=e nowarn noconfirm
+set guicursor=n-v-c-sm:block,i-ci-ve:block,r-cr-o:hor20
+" Editing
+set iminsert=0 imsearch=0 nopaste pastetoggle= nogdefault comments& commentstring=#\ %s
+set smartindent autoindent shiftround shiftwidth=4 expandtab tabstop=4 smarttab softtabstop=4
+set foldclose= foldcolumn=0 nofoldenable foldlevel=0 foldmarker& foldmethod=indent
+set textwidth=0 backspace=2 nrformats=hex formatoptions=cmMj nojoinspaces selectmode=mouse
+set hidden autoread autowrite noautowriteall nolinebreak mouse=a modeline whichwrap=b,s,[,]
+set noautochdir write nowriteany writedelay=0 verbose=0 verbosefile= notildeop noinsertmode
+set tags=./tags,../tags,../../tags,../../../tags
+" Clipboard
+set clipboard=unnamed
+" Search
+set wrapscan ignorecase smartcase incsearch hlsearch magic shortmess-=S
+set path=.,/usr/local/include,/usr/include,**3 isfname-== isfname-=,
+" Insert completion
+set complete& completeopt=menuone,noinsert infercase pumheight=10 noshowfulltag shortmess+=c
+" Mappings
+let g:mapleader = ';'
+noremap  H  ^
+noremap  L  $
+nmap     M  %
+omap     M  %
+xmap     M  %
+noremap  U  <C-R>
+vnoremap <  <gv
+vnoremap >  >gv
+nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
+nnoremap Y y$
+nnoremap <silent> <Leader>y "+yy
+vnoremap <silent> <Leader>y "+y
+nnoremap <silent> <Leader>Y "+y$
+nnoremap <silent> <Leader>p "+p
+nnoremap <silent> <Leader>P "+P
+vnoremap <silent> <Leader>p pgvy
+inoremap <silent> <C-k> <Up>
+inoremap <silent> <C-j> <Down>
+inoremap <silent> <C-h> <Left>
+inoremap <silent> <C-l> <Right>
+inoremap <silent> <C-a> <Home>
+inoremap <silent> <C-e> <End>
+inoremap <silent> <C-o> <End><CR>
+inoremap <silent> <M-o> <Esc>O
+inoremap <silent> <C-d> <Esc>ddi
+inoremap <silent> <C-v> <C-o>"+]p
+nnoremap <silent><expr> q len(getbufinfo({'buflisted':1})) < 2 ? ":q!\<CR>" : ":bd!\<CR>"
+nnoremap <silent>       Q         :qa!<CR>
+nnoremap <silent> <Leader>m :messages<CR>
+nnoremap <silent> <Leader>t :Message messages<CR>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+cnoremap <C-h> <Left>
+cnoremap <C-l> <Right>
+if has('nvim')
+  tnoremap <Esc>  <C-\><C-n>
+endif
+if has('nvim')
+  nnoremap <M-h> <C-w>h
+  nnoremap <M-j> <C-w>j
+  nnoremap <M-k> <C-w>k
+  nnoremap <M-l> <C-w>l
+  inoremap <M-h> <Esc><C-w>h
+  inoremap <M-j> <Esc><C-w>j
+  inoremap <M-k> <Esc><C-w>k
+  inoremap <M-l> <Esc><C-w>l
+  tnoremap <M-h> <C-\><C-n><C-w>h
+  tnoremap <M-j> <C-\><C-n><C-w>j
+  tnoremap <M-k> <C-\><C-n><C-w>k
+  tnoremap <M-l> <C-\><C-n><C-w>l
+  cnoremap <expr> <C-n>  pumvisible() ? '<Right>' : '<Down>'
+  cnoremap <expr> <C-p>  pumvisible() ? '<Left>' : '<Up>'
+  cnoremap <expr> <Up>   pumvisible() ? '<C-p>' : '<up>'
+  cnoremap <expr> <Down> pumvisible() ? '<C-n>' : '<down>'
+endif
+if has('nvim')
+  nnoremap <M-up>    <C-w>+
+  nnoremap <M-down>  <C-w>-
+  nnoremap <M-left>  <C-w>5<
+  nnoremap <M-right> <C-w>5>
+  inoremap <M-up>    <Esc><C-w>+
+  inoremap <M-down>  <Esc><C-w>-
+  inoremap <M-left>  <Esc><C-w>5<
+  inoremap <M-right> <Esc><C-w>5>
+endif
+
+""" coc-extensions specific
 set rtp+=~/.cache/nvim/plugged/coc.nvim
+let g:coc_config_home = expand('<sfile>:h')
+let g:coc_data_home = expand('<sfile>:h') . '/coc-data'
 
 """ coc-translator
 " popup
-nmap <Space>t <Plug>(coc-translator-p)
-vmap <Space>t <Plug>(coc-translator-pv)
+nmap <Leader>t <Plug>(coc-translator-p)
+vmap <Leader>t <Plug>(coc-translator-pv)
 " echo
-nmap <Space>e <Plug>(coc-translator-e)
-vmap <Space>e <Plug>(coc-translator-ev)
+nmap <Leader>e <Plug>(coc-translator-e)
+vmap <Leader>e <Plug>(coc-translator-ev)
 " replace
-nmap <Space>r <Plug>(coc-translator-r)
-vmap <Space>r <Plug>(coc-translator-rv)
+nmap <Leader>r <Plug>(coc-translator-r)
+vmap <Leader>r <Plug>(coc-translator-rv)
