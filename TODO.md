@@ -1,2 +1,3 @@
 - [x] update package.json['engine'] according to root package.json['devDependencies']
 - [ ] use https://github.com/typicode/lowdb
+- [ ] coc-dash|dot|just-complete => coc-lite-complete(trigger char: ._-) and fix bugs
