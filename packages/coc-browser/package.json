@@ -12,6 +12,7 @@
     "neovim",
     "vim"
   ],
+  "files": ["lib/index.js"],
   "activationEvents": [
     "*"
   ],

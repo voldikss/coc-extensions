@@ -10,6 +10,7 @@
   "keywords": [
     "coc.nvim"
   ],
+  "files": ["lib/index.js"],
   "engines": {
     "coc": "^0.0.81"
   },

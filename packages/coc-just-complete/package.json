@@ -10,6 +10,7 @@
     "coc.nvim",
     "completion"
   ],
+  "files": ["lib/index.js"],
   "activationEvents": [
     "*"
   ],
