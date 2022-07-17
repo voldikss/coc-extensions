@@ -37,7 +37,7 @@ async function build(targets) {
     [
       '-c',
       '--environment',
-      [`NODE_ENV:${process.env.NODE_ENV ?? 'production'}`, `TARGET:${targets}`].join(','),
+      [`NODE_ENV:${process.env.NODE_ENV ?? 'development'}`, `TARGET:${targets}`].join(','),
     ],
     { stdio: 'inherit' },
   )

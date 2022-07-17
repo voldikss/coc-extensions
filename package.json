@@ -21,6 +21,7 @@
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-inject": "^4.0.4",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-strip": "^2.1.0",
@@ -35,7 +36,6 @@
     "chalk": "4.1.0",
     "coc.nvim": "^0.0.81",
     "enquirer": "^2.3.6",
-    "esbuild": "^0.14.45",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
