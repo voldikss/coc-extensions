@@ -17,7 +17,7 @@ function createConfig(target) {
   const banner = `\
 /*!
  * ${packageJson.name} v${packageJson.version}
- * https://github.com/voldikss/coc-translator
+ * https://github.com/voldikss/${target}
  * Released under the MIT License.
  */
 `
