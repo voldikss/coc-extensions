@@ -39,10 +39,11 @@
   "license": "MIT",
   "devDependencies": {
     "@octokit/rest": "^18.0.12",
+    "@types/express": "^4.17.13",
     "@types/tmp": "^0.2.0",
     "axios": "^0.26.1",
     "chalk": "^5.0.1",
-    "express": "^4.17.1",
+    "express": "^4.17.13",
     "tmp": "^0.2.1"
   }
 }

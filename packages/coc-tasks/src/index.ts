@@ -22,8 +22,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     languages.registerCompletionItemProvider(
       'coc-tasks',
-      config.get<string>('shortcut'),
-      config.get<string[]>('filetypes'),
+      config.get<string>('shortcut')!,
+      config.get<string[]>('filetypes')!,
       new TasksMacroCompletionProvider(),
       config.get<string[]>('triggerCharacters'),
       config.get<number>('priority'),
@@ -32,6 +32,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   )
 
   subscriptions.push(
-    languages.registerHoverProvider(config.get('filetypes'), new TasksMacroHoverProvider()),
+    languages.registerHoverProvider(config.get('filetypes')!, new TasksMacroHoverProvider()),
   )
 }

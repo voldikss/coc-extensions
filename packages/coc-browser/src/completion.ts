@@ -44,7 +44,7 @@ export class BrowserCompletionProvider implements CompletionItemProvider {
     return []
   }
 
-  private async gatherCandidates(word): Promise<CompletionItem[]> {
+  private async gatherCandidates(word: string): Promise<CompletionItem[]> {
     const files = await fsReadDir(this.sourceDir)
     return new Promise((resolve, reject) => {
       Promise.all(

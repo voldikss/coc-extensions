@@ -38,8 +38,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     commands.registerCommand('gist.update', async () => {
       const buf = await nvim.buffer
-      const id = (await buf.getVar('coc_gist_id')).toString()
-      const filename = (await buf.getVar('coc_gist_filename')).toString()
+      const id = (await buf.getVar('coc_gist_id'))?.toString()
+      const filename = (await buf.getVar('coc_gist_filename'))?.toString()
       if (!id || !filename) {
         window.showMessage('Not a updatable gist file')
         return

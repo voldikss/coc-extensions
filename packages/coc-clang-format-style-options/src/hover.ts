@@ -12,7 +12,7 @@ export default class CFSOHoverProvider implements HoverProvider {
     if (!text) return null
     if (!(text in options)) return null
 
-    const option = options[text]
+    const option = options[text as keyof typeof options]
     if (!('description' in option)) return null
     let info = option['description']
     if ('enum' in option) {

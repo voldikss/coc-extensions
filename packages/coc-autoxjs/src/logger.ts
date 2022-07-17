@@ -2,7 +2,7 @@ import { Disposable, OutputChannel, window, workspace } from 'coc.nvim'
 
 class Logger implements Disposable {
   private outputChannel: OutputChannel
-  private trace: boolean
+  private trace?: boolean
 
   constructor() {
     this.outputChannel = window.createOutputChannel('autoxjs')

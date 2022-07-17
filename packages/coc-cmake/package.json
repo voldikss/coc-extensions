@@ -4,7 +4,10 @@
   "description": "coc.nvim extension for cmake language",
   "main": "lib/index.js",
   "publisher": "voldikss",
-  "keywords": ["coc.nvim", "cmake"],
+  "keywords": [
+    "coc.nvim",
+    "cmake"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/voldikss/coc-cmake"
@@ -13,7 +16,9 @@
   "engines": {
     "coc": "^0.0.80"
   },
-  "activationEvents": ["onLanguage:cmake"],
+  "activationEvents": [
+    "onLanguage:cmake"
+  ],
   "contributes": {
     "configuration": {
       "title": "CMake",
@@ -65,7 +70,8 @@
   "license": "MIT",
   "devDependencies": {
     "command-exists": "^1.2.9",
-    "opener": "^1.5.2",
-    "tmp": "^0.2.1"
+    "tmp": "^0.2.1",
+    "@types/command-exists": "^1.2.0",
+    "@types/tmp": "^0.2.0"
   }
 }

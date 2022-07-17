@@ -17,7 +17,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     languages.registerCompletionItemProvider(
       'coc-dot-complete',
-      config.get<string>('shortcut'),
+      config.get<string>('shortcut')!,
       null,
       new DotCompleteProvider(),
       ['.'],
@@ -56,7 +56,9 @@ export class DotCompleteProvider implements CompletionItemProvider {
   private gatherWords(): string[] {
     const words: string[] = []
     workspace.documents.forEach((document) => {
+      // @ts-ignore
       if (document['isIgnored']) return
+      // @ts-ignore
       for (const word of document['words'] as string[]) {
         words.push(word)
         for (const word_no_underscore of word.split('_')) {

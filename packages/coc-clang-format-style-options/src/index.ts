@@ -13,7 +13,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     languages.registerCompletionItemProvider(
       'coc-clang-format-style-options',
-      config.get<string>('shortcut'),
+      config.get<string>('shortcut')!,
       null,
       new CFSOCompletionProvider(nvim),
       [],

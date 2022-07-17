@@ -13,10 +13,10 @@ export class CFSOCompletionProvider implements CompletionItemProvider {
 
   public async provideCompletionItems(document: TextDocument): Promise<CompletionItem[]> {
     if (document.languageId != 'clang-format' && document.uri.indexOf('clang-format') < 0) {
-      return
+      return []
     }
     return [...new Set(Object.keys(options))].map<CompletionItem>((name) => {
-      const option = options[name]
+      const option = options[name as keyof typeof options]
       let description = ''
       if ('description' in option) {
         description = option['description']

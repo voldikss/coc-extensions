@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import {
   BasicList,
   ListAction,
@@ -10,7 +11,6 @@ import {
   window,
   workspace,
 } from 'coc.nvim'
-import colors from 'colors/safe'
 
 import { Gist } from '../gist'
 import { fsCreateTmpfile, fsReadFile, fsStat, fsWriteFile } from '../util/fs'
@@ -107,15 +107,15 @@ export default class GistsList extends BasicList {
       for (const file of Object.values(item['files'])) {
         const gist: GistsListFile = {
           id: item['id'],
-          url: file['raw_url'],
+          url: file['raw_url']!,
           html_url: item['html_url'],
           public: item['public'],
-          filename: file['filename'],
-          description: item['description'],
+          filename: file['filename']!,
+          description: item['description']!,
         }
-        const label = `${gist.public ? '+' : '-'} [${colors.yellow(
+        const label = `${gist.public ? '+' : '-'} [${chalk.yellow(
           gist.filename,
-        )}] ${colors.underline(gist.description)}`
+        )}] ${chalk.underline(gist.description)}`
         items.push({
           label,
           filterText: label,
@@ -127,9 +127,9 @@ export default class GistsList extends BasicList {
     return items
   }
 
-  public async checkCache(filename, url): Promise<string> {
+  public async checkCache(filename: string, url: string) {
     let filepath = this.cache[url]
-    if (!filepath || !(await fsStat(filepath)).isFile()) {
+    if (!filepath || !(await fsStat(filepath))?.isFile()) {
       filepath = await fsCreateTmpfile(filename)
       const content = await this.gist.get(url)
       if (content == '') return null

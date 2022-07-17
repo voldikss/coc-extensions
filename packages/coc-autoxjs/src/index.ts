@@ -156,7 +156,7 @@ class Extension {
     window.showInformationMessage('Auto.js server stopped')
   }
 
-  run(url?) {
+  run(url?: string) {
     this.runOrRerun('run', url)
   }
 
@@ -170,11 +170,11 @@ class Extension {
     server.sendCommand('stopAll')
   }
 
-  rerun(url?) {
+  rerun(url?: string) {
     this.runOrRerun('rerun', url)
   }
 
-  async runOrRerun(cmd, url?) {
+  async runOrRerun(cmd: string, url?: string) {
     console.log('url-->', url)
     let text = ''
     let fileName = null
@@ -237,7 +237,7 @@ class Extension {
     await this.selectDevice(async (device) => await this.saveTo(device))
   }
 
-  async saveTo(target: AutoJsDebugServer | Device, url?) {
+  async saveTo(target: AutoJsDebugServer | Device, url?: string) {
     console.log('url-->', url)
     let text = ''
     const fileName = ''
@@ -282,16 +282,16 @@ class Extension {
     this.sendProjectCommand('run_project')
   }
 
-  sendProjectCommand(command: string, url?) {
+  sendProjectCommand(command: string, url?: string) {
     console.log('url-->', url)
-    let folder = null
+    let folder: Uri | null = null
     if (url == null) {
       const folders = workspace.workspaceFolders
       if (!folders || folders.length == 0) {
         window.showInformationMessage('请打开一个项目的文件夹')
         return null
       }
-      folder = folders[0].uri
+      folder = Uri.parse(folders[0].uri)
     } else {
       folder = Uri.parse(url)
     }
@@ -307,7 +307,7 @@ class Extension {
     server.sendProjectCommand(folder.fsPath, command)
   }
 
-  saveProject(url?) {
+  saveProject(url?: string) {
     this.sendProjectCommand('save_project', url)
   }
 }
@@ -334,7 +334,7 @@ export async function activate(context: ExtensionContext) {
   console.log('extension "auto-js-vscodeext-fixed" is now active.')
   extCmds.forEach((command) => {
     // eslint-disable-next-line @typescript-eslint/ban-types
-    const action: Function = extension[command]
+    const action: Function = extension[command as keyof Extension]
     context.subscriptions.push(
       commands.registerCommand('autoxjs.' + command, action.bind(extension)),
     )

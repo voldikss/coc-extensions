@@ -83,7 +83,7 @@ export class Project {
   folder: Uri
   fileFilter = (_relativePath: string, absPath: string, _stats: fs.Stats) => {
     return (
-      this.config.ignore.filter((p) => {
+      this.config.ignore?.filter((p) => {
         const fullPath = path.join(this.folder.fsPath, p)
         return absPath.startsWith(fullPath)
       }).length == 0
@@ -183,18 +183,18 @@ export class ProjectObserser {
 }
 
 export class LaunchConfig {
-  hideLogs: boolean
+  hideLogs?: boolean
 }
 
 export class ProjectConfig {
-  name: string
-  icon: string
-  packageName: string
-  main: string
-  versionCode: number
-  versionName: string
-  ignore: string[]
-  launchConfig: LaunchConfig
+  name?: string
+  icon?: string
+  packageName?: string
+  main?: string
+  versionCode?: number
+  versionName?: string
+  ignore?: string[]
+  launchConfig?: LaunchConfig
 
   save(path: string) {
     return new Promise((res, rej) => {

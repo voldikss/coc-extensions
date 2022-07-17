@@ -1,6 +1,6 @@
-import fs from 'fs'
-import child_process = require('child_process')
+import child_process, { spawn } from 'child_process'
 import commandExists from 'command-exists'
+import fs from 'fs'
 import tmp from 'tmp'
 
 export function strContains(word: string, pattern: string): boolean {
@@ -16,8 +16,8 @@ export function parseCmdArgs(text: string): string[] {
   const re = /^"[^"]*"$/ // Check if argument is surrounded with double-quotes
   const re2 = /^([^"]|[^"].*?[^"])$/ // Check if argument is NOT surrounded with double-quotes
 
-  const arr = []
-  let argPart = null
+  const arr: string[] = []
+  let argPart: string | undefined
 
   // tslint:disable-next-line: no-unused-expression
   text &&
@@ -29,7 +29,6 @@ export function parseCmdArgs(text: string): string[] {
         // If part is complete (ends with a double quote), we can add it to the array
         if (/"$/.test(argPart)) {
           arr.push(argPart)
-          argPart = null
         }
       }
     })
@@ -69,4 +68,18 @@ export async function checkCommand(command: string): Promise<boolean> {
       resolve(exists)
     })
   })
+}
+
+export async function openBrowser(url: string) {
+  const opener = (() => {
+    switch (process.platform) {
+      case 'win32':
+        return 'rundll32 url.dll,FileProtocolHandler'
+      case 'darwin':
+        return 'open'
+      default:
+        return 'xdg-open'
+    }
+  })()
+  spawn(opener, [url], { detached: true })
 }

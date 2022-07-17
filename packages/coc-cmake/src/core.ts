@@ -1,8 +1,8 @@
+import child_process from 'child_process'
 import { CompletionItem, CompletionItemKind, InsertTextFormat, Thenable } from 'coc.nvim'
 
 import getConfig from './config'
 import { parseCmdArgs, strContains, strEquals } from './util'
-import child_process = require('child_process')
 
 function cmakeType2complKind(kind: string): CompletionItemKind {
   switch (kind) {
@@ -57,20 +57,17 @@ function cmake_help_command_list(): Promise<string> {
 
 function cmake_help_command(name: string): Thenable<string> {
   return cmake_help_command_list()
-    .then(
-      (result: string) => {
-        const contains = result.indexOf(name) > -1
-        return new Promise((resolve, reject) => {
-          if (contains) {
-            resolve(name)
-          } else {
-            reject('not found')
-          }
-        })
-      },
-      () => {},
-    )
-    .then((n: string) => {
+    .then((result: string) => {
+      const contains = result.indexOf(name) > -1
+      return new Promise<string>((resolve, reject) => {
+        if (contains) {
+          resolve(name)
+        } else {
+          reject('not found')
+        }
+      })
+    })
+    .then((n) => {
       return cmake(['--help-command', n])
     }, null)
 }
@@ -81,20 +78,17 @@ function cmake_help_variable_list(): Promise<string> {
 
 function cmake_help_variable(name: string): Promise<string> {
   return cmake_help_variable_list()
-    .then(
-      (result: string) => {
-        const contains = result.indexOf(name) > -1
-        return new Promise((resolve, reject) => {
-          if (contains) {
-            resolve(name)
-          } else {
-            reject('not found')
-          }
-        })
-      },
-      () => {},
-    )
-    .then((name: string) => cmake(['--help-variable', name]), null)
+    .then((result: string) => {
+      const contains = result.indexOf(name) > -1
+      return new Promise<string>((resolve, reject) => {
+        if (contains) {
+          resolve(name)
+        } else {
+          reject('not found')
+        }
+      })
+    })
+    .then((name) => cmake(['--help-variable', name]), null)
 }
 
 function cmake_help_property_list(): Promise<string> {
@@ -103,20 +97,17 @@ function cmake_help_property_list(): Promise<string> {
 
 function cmake_help_property(name: string): Promise<string> {
   return cmake_help_property_list()
-    .then(
-      (result: string) => {
-        const contains = result.indexOf(name) > -1
-        return new Promise((resolve, reject) => {
-          if (contains) {
-            resolve(name)
-          } else {
-            reject('not found')
-          }
-        })
-      },
-      () => {},
-    )
-    .then((name: string) => cmake(['--help-property', name]), null)
+    .then((result: string) => {
+      const contains = result.indexOf(name) > -1
+      return new Promise<string>((resolve, reject) => {
+        if (contains) {
+          resolve(name)
+        } else {
+          reject('not found')
+        }
+      })
+    })
+    .then((name) => cmake(['--help-property', name]), null)
 }
 
 function cmake_help_module_list(): Promise<string> {
@@ -125,20 +116,17 @@ function cmake_help_module_list(): Promise<string> {
 
 function cmake_help_module(name: string): Promise<string> {
   return cmake_help_module_list()
-    .then(
-      (result: string) => {
-        const contains = result.indexOf(name) > -1
-        return new Promise((resolve, reject) => {
-          if (contains) {
-            resolve(name)
-          } else {
-            reject('not found')
-          }
-        })
-      },
-      () => {},
-    )
-    .then((name: string) => cmake(['--help-module', name]), null)
+    .then((result: string) => {
+      const contains = result.indexOf(name) > -1
+      return new Promise<string>((resolve, reject) => {
+        if (contains) {
+          resolve(name)
+        } else {
+          reject('not found')
+        }
+      })
+    })
+    .then((name) => cmake(['--help-module', name]), null)
 }
 
 export function cmake_help_all(): any {
@@ -163,8 +151,8 @@ function suggestionsHelper(
   cmake_cmd: Promise<string>,
   currentWord: string,
   type: string,
-  insertText,
-  matchPredicate,
+  insertText: ((a: string) => string) | null,
+  matchPredicate: (a: string, b: string) => boolean,
 ): Thenable<CompletionItem[]> {
   return new Promise((resolve, reject) => {
     cmake_cmd
@@ -174,7 +162,7 @@ function suggestionsHelper(
           const suggestions = commands.map((command_name) => {
             const item: CompletionItem = { label: command_name }
             item.kind = cmakeType2complKind(type)
-            if (insertText == null || insertText == '') {
+            if (!insertText) {
               item.insertText = command_name
             } else {
               item.insertTextFormat = InsertTextFormat.Snippet

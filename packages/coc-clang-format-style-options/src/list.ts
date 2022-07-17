@@ -82,7 +82,7 @@ export default class CFSTList extends BasicList {
 
   public async loadItems(): Promise<ListItem[]> {
     return Object.keys(options).map<ListItem>((name) => {
-      const option = options[name]
+      const option = options[name as keyof typeof options]
       let description = ''
       if ('description' in option) {
         description = option['description'].split('\n', 1)[0]
@@ -90,7 +90,7 @@ export default class CFSTList extends BasicList {
       return {
         label: chalk.blue(name) + chalk.yellow(description),
         data: name,
-        filterText: name + options[name]['description'],
+        filterText: name + options[name as keyof typeof options]['description'],
       }
     })
   }

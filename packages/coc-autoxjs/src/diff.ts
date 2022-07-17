@@ -5,18 +5,18 @@ export type FileFilter = (relativePath: string, path: string, stats: fs.Stats) =
 
 export class FileObserver {
   private dir: string
-  private files = new Map<string, number>()
-  private filter: FileFilter
+  // private files = new Map<string, number>()
+  private filter: FileFilter | null
 
-  constructor(dirPath: string, filter: FileFilter = null) {
+  constructor(dirPath: string, filter: FileFilter | null = null) {
     this.dir = dirPath
     this.filter = filter
   }
 
   walk() {
     return new Promise<string[]>((res, rej) => {
-      const changedFiles = []
-      this.getFiels(this.dir, changedFiles, rej)
+      const changedFiles: string[] = []
+      this.getFiles(this.dir, changedFiles, rej)
       res(changedFiles)
       // const walker = walk.walk(this.dir);
       // walker.on("file", (root, stat, next) => {
@@ -44,20 +44,21 @@ export class FileObserver {
       // })
     })
   }
-  getFiels(rootPath: string, fileList: string[], rej) {
+  getFiles(rootPath: string, fileList: string[], rej: (e: any) => void) {
     const files = fs.readdirSync(rootPath, { withFileTypes: true })
     files
       .filter((f: any) => {
         const filePath = path.join(rootPath, f.name)
         // console.log(filePath + ":" + this.filter(null, filePath, null))
-        return this.filter(null, filePath, null)
+        // @ts-ignore
+        return this.filter?.(null, filePath, null)
       })
       .forEach((f: any) => {
         const filePath = path.join(rootPath, f.name)
         const relativePath = path.relative(this.dir, filePath)
         if (f.isDirectory()) {
           // console.log("目录：" + f.name)
-          this.getFiels(filePath, fileList, rej)
+          this.getFiles(filePath, fileList, rej)
         } else if (f.isFile()) {
           // console.log("文件：" + f.name)
           fileList.push(relativePath)

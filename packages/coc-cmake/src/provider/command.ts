@@ -1,5 +1,4 @@
 import { window, workspace } from 'coc.nvim'
-import opener from 'opener'
 
 import {
   cmake,
@@ -9,12 +8,14 @@ import {
   cmVariablesSuggestionsExact,
   complKind2cmakeType,
 } from '../core'
+import { openBrowser } from '../util'
 
 // Show Tooltip on over
-export default async function onLineHelp(): Promise<void> {
+export default async function onLineHelp() {
   const document = await workspace.document
   const position = await window.getCursorPosition()
   const range = document.getWordRangeAtPosition(position)
+  if (!range) return
   let currentWord = document.textDocument.getText(range)
 
   if (range && range.start.character < position.character) {
@@ -47,9 +48,9 @@ export async function cmake_online_help(search: string): Promise<void> {
     if (suggestions.length == 0) {
       search = search.replace(/[<>]/g, '')
       if (v2x || search.length == 0) {
-        opener(url)
+        openBrowser(url)
       } else {
-        opener(`${url}search.html?q=${search}&check_keywords=yes&area=default`)
+        openBrowser(`${url}search.html?q=${search}&check_keywords=yes&area=default`)
       }
     } else {
       const suggestion = suggestions[0]
@@ -118,6 +119,7 @@ async function cmake_version(): Promise<string> {
   const re = /cmake\s+version\s+(\d+.\d+.\d+)/
   if (re.test(cmd_output)) {
     const result = re.exec(cmd_output)
+    if (!result) return ''
     return result[1]
   }
   return ''

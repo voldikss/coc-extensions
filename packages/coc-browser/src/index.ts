@@ -13,13 +13,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   const config = workspace.getConfiguration('browser')
 
-  const server = new Server(config.get<number>('port'), storagePath)
+  const server = new Server(config.get<number>('port')!, storagePath)
   await server.start()
   subscriptions.push(server)
 
   const browserCompletionProvider = new BrowserCompletionProvider(
     server,
-    config.get<Record<string, string[]>>('patterns'),
+    config.get<Record<string, string[]>>('patterns')!,
   )
 
   subscriptions.push(
@@ -31,7 +31,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     languages.registerCompletionItemProvider(
       'coc-browser',
-      config.get<string>('shortcut'),
+      config.get<string>('shortcut')!,
       null,
       browserCompletionProvider,
       [],

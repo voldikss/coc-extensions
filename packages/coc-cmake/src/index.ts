@@ -10,7 +10,10 @@ import { checkCommand } from './util'
 
 export async function activate(): Promise<void> {
   if (!(await checkCommand(getConfig<string>('cmakePath')))) {
-    window.showMessage('Install cmake or specify its path using `cmake.cmakePath`.', 'error')
+    window.showInformationMessage(
+      'Install cmake or specify its path using `cmake.cmakePath`.',
+      'error',
+    )
     return
   }
 
@@ -28,7 +31,7 @@ export async function activate(): Promise<void> {
   languages.registerCompletionItemProvider(
     'coc-cmake',
     'CMAKE',
-    'cmake',
+    ['cmake'],
     new CMakeCompletionProvider(),
   )
 }

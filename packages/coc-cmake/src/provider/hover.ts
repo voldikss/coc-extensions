@@ -33,7 +33,7 @@ export default class CMakeExtraInfoProvider implements HoverProvider {
       }
       const suggestion: CompletionItem = suggestions[0]
 
-      return promises[complKind2cmakeType(suggestion.kind)](suggestion.label).then(
+      return promises[complKind2cmakeType(suggestion.kind!)](suggestion.label).then(
         (result: string) => {
           let lines = result.split('\n')
           lines = lines.slice(2, lines.length)

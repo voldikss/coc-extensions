@@ -15,8 +15,8 @@ export function activate(context: ExtensionContext): void {
   const isEnable = config.get<boolean>('enable', true)
   if (!isEnable) return
 
-  const wlKernel: string = config.get<string>('wolframExecutablePath')
-  let wlServerDir: string = config.get<string>('wolframLanguageServerPath')
+  const wlKernel: string = config.get<string>('wolframExecutablePath')!
+  let wlServerDir: string = config.get<string>('wolframLanguageServerPath')!
   if (wlServerDir[-1] !== '\\' && wlServerDir[-1] !== '/') {
     wlServerDir += '/'
   }

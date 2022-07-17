@@ -1,5 +1,5 @@
+import axios from 'axios'
 import { StatusBarItem, window } from 'coc.nvim'
-import fetch from 'node-fetch'
 
 import { logger } from './util/logger'
 
@@ -108,18 +108,17 @@ export class Gist {
   }
 
   // get content
-  public async get(url: string): Promise<string> {
+  public async get(url: string) {
     this.statusItem.text = `Loading gist content...`
     this.statusItem.show()
-    let text = ''
     try {
-      const resp = await fetch(url)
-      text = await resp.text()
+      const { data } = await axios.get(url)
+      return data
     } catch (error) {
-      logger.log(error)
+      logger.log((error as Error).message)
       // window.showMessage('Failed to get gist content', 'error')
+    } finally {
+      this.statusItem.hide()
     }
-    this.statusItem.hide()
-    return text
   }
 }

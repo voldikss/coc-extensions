@@ -12,7 +12,7 @@ export default class TasksMacroHoverProvider implements HoverProvider {
     if (!text) return null
     const macros = await genMacros()
     if (!(text in macros)) return null
-    const { description, example } = macros[text]
+    const { description, example } = macros[text as keyof typeof macros]
     const hover: Hover = {
       contents: {
         kind: 'markdown',

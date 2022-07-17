@@ -1,5 +1,5 @@
+import chalk from 'chalk'
 import { BasicList, ListAction, ListItem, Neovim } from 'coc.nvim'
-import colors from 'colors/safe'
 
 export default class Floaterm extends BasicList {
   public readonly name = 'floaterm'
@@ -39,9 +39,9 @@ export default class Floaterm extends BasicList {
       const bufname = bufinfo[0]['name']
       const term_title: string = await this.nvim.call('getbufvar', [bufnr, 'term_title'])
       list.push({
-        label: `${colors.cyan(bufnr.toString())}  ${colors.yellow(
-          bufname.toString(),
-        )}  ${colors.gray(term_title)}`,
+        label: `${chalk.cyan(bufnr.toString())}  ${chalk.yellow(bufname.toString())}  ${chalk.gray(
+          term_title,
+        )}`,
         data: bufnr,
       })
     }

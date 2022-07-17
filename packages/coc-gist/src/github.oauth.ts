@@ -1,14 +1,14 @@
+import axios from 'axios'
 import { window, workspace } from 'coc.nvim'
 import express from 'express'
 import { Server } from 'http'
-import fetch from 'node-fetch'
 import { URLSearchParams } from 'url'
 
 import DB from './util/db'
 
 export class GitHubOAuthService {
   private app: express.Express
-  private server: Server
+  private server?: Server
   private clientId = 'b32302cd17c89e5d8fcd'
   private clientSecret = 'f40b66f0851e9ce94b4ba643b64583fadbc103db'
   constructor(private db: DB) {
@@ -23,7 +23,7 @@ export class GitHubOAuthService {
 
     this.server = this.app.listen(3000)
     this.app.get('/oauth-callback', async (req, res) => {
-      const params = new URLSearchParams(await (await this.getToken(req.query.code)).text())
+      const params = new URLSearchParams(await this.getToken(req.query.code as string))
       res.send(`
             <html lang="en">
               <body>
@@ -43,23 +43,23 @@ export class GitHubOAuthService {
               </body>
             </html>
           `)
-      this.server.close()
-      const token = params.get('access_token')
+      this.server?.close()
+      const token = params.get('access_token')!
       this.saveToken(token)
     })
     workspace.openResource('http://127.0.0.1:3000/')
   }
 
-  private getToken(code: string) {
+  private async getToken(code: string) {
     const params = new URLSearchParams()
     params.append('client_id', this.clientId)
     params.append('client_secret', this.clientSecret)
     params.append('code', code)
-    const promise = fetch(`https://github.com/login/oauth/access_token`, {
-      method: 'POST',
-      body: params,
-    })
-    return promise
+    const { data: token } = await axios.post<string>(
+      `https://github.com/login/oauth/access_token`,
+      params,
+    )
+    return token
   }
 
   public async saveToken(token: string): Promise<void> {

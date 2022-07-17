@@ -36,14 +36,14 @@ module.exports = defineConfig({
   },
   external: ['coc.nvim'],
   plugins: [
-    strip({
-      include: ['**/*.ts', '**/*.js'],
-      functions: ['console.*'],
-    }),
     ts({
       check: false,
       tsconfig: path.resolve(__dirname, 'tsconfig.json'),
       exclude: ['**/__tests__'],
+    }),
+    strip({
+      include: ['**/*.ts', '**/*.js'],
+      functions: ['console.*'],
     }),
     json(),
     commonjs({

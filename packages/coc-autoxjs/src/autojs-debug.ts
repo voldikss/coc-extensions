@@ -17,10 +17,10 @@ function logDebug(message?: any, ...optionalParams: any[]) {
 const HANDSHAKE_TIMEOUT = 10 * 1000
 
 export class Device extends EventEmitter {
-  public name: string
-  private connection: ws.connection
+  public name?: string
+  private connection: ws.connection | null
   private attached = false
-  public projectObserser: ProjectObserser
+  public projectObserser?: ProjectObserser
 
   constructor(connection: ws.connection) {
     super()
@@ -38,14 +38,14 @@ export class Device extends EventEmitter {
     setTimeout(() => {
       if (!this.attached) {
         console.log('handshake timeout')
-        this.connection.close()
+        this.connection?.close()
         this.connection = null
       }
     }, HANDSHAKE_TIMEOUT)
   }
 
   send(type: string, data: any): void {
-    this.connection.sendUTF(
+    this.connection?.sendUTF(
       JSON.stringify({
         type: type,
         data: data,
@@ -54,13 +54,13 @@ export class Device extends EventEmitter {
   }
 
   sendBytes(bytes: Buffer): void {
-    this.connection.sendBytes(bytes)
+    this.connection?.sendBytes(bytes)
   }
 
   sendBytesCommand(command: string, md5: string, data: any = {}): void {
     data = Object(data)
     data['command'] = command
-    this.connection.sendUTF(
+    this.connection?.sendUTF(
       JSON.stringify({
         type: 'bytes_command',
         md5: md5,
@@ -111,7 +111,7 @@ export class AutoJsDebugServer extends EventEmitter {
   private httpServer: http.Server
   private port: number
   public devices: Array<Device> = []
-  public project: Project = null
+  public project: Project | null = null
   private logChannels: Map<string, OutputChannel>
   private fileFilter = (relativePath: string, absPath: string, stats: fs.Stats) => {
     if (!this.project) {
@@ -126,8 +126,10 @@ export class AutoJsDebugServer extends EventEmitter {
     this.port = port
     this.httpServer = http.createServer((request, response) => {
       console.log(new Date() + ' Received request for ' + request.url)
+      if (!request.url) return
       const urlObj = url.parse(request.url)
       const query = urlObj.query
+      if (!query) return
       const queryObj = querystring.parse(query)
       if (urlObj.pathname == '/exec') {
         response.writeHead(200)
@@ -228,7 +230,7 @@ export class AutoJsDebugServer extends EventEmitter {
   }
 
   /** 获取本地IP */
-  getIPAddress(): string {
+  getIPAddress() {
     const interfaces = os.networkInterfaces()
     for (const devName in interfaces) {
       const iface = interfaces[devName]
@@ -279,6 +281,6 @@ export class AutoJsDebugServer extends EventEmitter {
   private getLogChannel(device: Device): OutputChannel {
     const channelName = `${device}`
     // console.log("获取日志通道：" + channelName);
-    return this.logChannels.get(channelName)
+    return this.logChannels.get(channelName)!
   }
 }

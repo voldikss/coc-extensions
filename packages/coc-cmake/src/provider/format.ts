@@ -30,7 +30,7 @@ export default class CMakeFormattingEditProvider
   async _providerEdits(document: TextDocument, range?: Range): Promise<TextEdit[]> {
     workspace.nvim.command('update')
     const replacementText = await format(document, range)
-    if (replacementText?.length == 0) return []
+    if (!replacementText || replacementText?.length == 0) return []
 
     if (!range) range = wholeRange(document)
 
@@ -38,7 +38,7 @@ export default class CMakeFormattingEditProvider
   }
 }
 
-async function format(document: TextDocument, range?: Range): Promise<string> {
+async function format(document: TextDocument, range?: Range) {
   const formatter = getConfig<string>('formatter')
   const args = Array.from(getConfig<Array<string>>('formatter_args'))
   if (!range) {

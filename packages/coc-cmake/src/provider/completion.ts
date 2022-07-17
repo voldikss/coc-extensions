@@ -49,7 +49,7 @@ export default class CMakeCompletionProvider implements CompletionItemProvider {
 
   public resolveCompletionItem(item: CompletionItem): Thenable<CompletionItem> {
     const promises = cmake_help_all()
-    const type = complKind2cmakeType(item.kind)
+    const type = complKind2cmakeType(item.kind!)
     return promises[type](item.label).then((result: string) => {
       item.documentation = result.split('\n')[3]
       return item
