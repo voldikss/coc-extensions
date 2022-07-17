@@ -65,5 +65,5 @@ jobs:
           NODE_ENV: production
         run: |
           if [[ $(git log -n1 --format=%s) =~ "chore(release): bump" ]]; then
-            pnpm publish
+            pnpm run publish
           fi
