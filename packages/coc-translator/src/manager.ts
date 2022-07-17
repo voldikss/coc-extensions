@@ -55,10 +55,11 @@ export default class Manager {
     workspace.nvim.call('coc#util#echo_messages', ['MoreMsg', message.split('\n')], true)
   }
 
-  private async replace(translation: Translation): Promise<void> {
+  private async replace(translation: Translation) {
     const repl = translation.toReplacement()
     if (repl.length == 0) {
-      window.showMessage('No paraphrase for replacement', 'error')
+      window.showErrorMessage('No paraphrase for replacement')
+      return
     }
     this.nvim.pauseNotification()
     this.nvim.command('let reg_tmp=@a', true)
