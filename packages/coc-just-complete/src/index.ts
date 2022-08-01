@@ -7,6 +7,7 @@ import {
   Position,
   ProviderResult,
   TextDocument,
+  window,
   workspace,
 } from 'coc.nvim'
 
@@ -19,15 +20,15 @@ export async function activate(context: ExtensionContext): Promise<void> {
       'coc-just-complete',
       config.get<string>('shortcut')!,
       null,
-      new JustCompleteProvider(),
-      ['_'],
+      new CompletionProvider(),
+      config.get<string[]>('triggerChars')!,
       config.get<number>('priority'),
       [],
     ),
   )
 }
 
-export class JustCompleteProvider implements CompletionItemProvider {
+export class CompletionProvider implements CompletionItemProvider {
   constructor() {}
 
   provideCompletionItems(
@@ -38,31 +39,36 @@ export class JustCompleteProvider implements CompletionItemProvider {
     if (!doc) return []
 
     const wordRange = doc.getWordRangeAtPosition(
-      Position.create(position.line, position.character - 1),
+      Position.create(position.line, position.character - 2),
     )
     if (!wordRange) return []
 
     const preWord = document.getText(wordRange)
-    if (preWord.indexOf('_') < 0) return []
-
-    const prePreWord = preWord.slice(0, preWord.lastIndexOf('_'))
 
     return this.gatherWords()
-      .filter((word) => word.indexOf(prePreWord) < 0 && prePreWord.indexOf(word) < 0)
+      .filter((word) => word.indexOf(preWord) < 0 && preWord.indexOf(word) < 0)
       .map<CompletionItem>((word) => ({
-        label: `${prePreWord}_${word}`,
+        label: `${word}`,
         kind: CompletionItemKind.Text,
-        insertText: `${prePreWord}_${word}`,
+        insertText: `${word}`,
       }))
   }
 
   private gatherWords(): string[] {
     const words: string[] = []
     workspace.documents.forEach((document) => {
+      window.showInformationMessage(String(document['matchWords']))
+      // Object.keys(document).forEach(key => {
+      //   // window.showInformationMessage(key, String(document[key]))
+      //   window.showInformationMessage(key)
+      //   window.showInformationMessage(String(document[key]))
+      // })
+      return
       // @ts-ignore
       if (document['isIgnored']) return
       // @ts-ignore
       for (const word of document['words'] as string[]) {
+        words.push(word)
         for (const word_no_underscore of word.split('_')) {
           if (!words.includes(word_no_underscore) && word_no_underscore.length >= 3) {
             words.push(word_no_underscore)

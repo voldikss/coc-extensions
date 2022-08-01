@@ -25,6 +25,11 @@
           "type": "string",
           "default": "just-complete"
         },
+        "just-complete.triggerChars": {
+          "anyOf": ["-", ".", "_"],
+          "type": "array",
+          "default": "just-complete"
+        },
         "just-complete.priority": {
           "type": "number",
           "default": 3
