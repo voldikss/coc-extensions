@@ -62,7 +62,7 @@ export class GoogleTranslator implements TranslationProvider {
 
   private getUrl(_sl: string, targetLang: string, query: string): string {
     let host = 'translate.googleapis.com'
-    if (/^zh/.test(targetLang)) host = 'translate.google.cn'
+    if (/^zh/.test(targetLang)) host = 'translate.google.com.hk'
     const url =
       `https://${host}/translate_a/single?client=gtx&dj=1&sl=auto&tl=${targetLang}` +
       `&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd&q=${encodeURIComponent(query)}`
