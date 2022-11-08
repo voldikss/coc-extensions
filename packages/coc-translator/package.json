@@ -1,6 +1,6 @@
 {
   "name": "coc-translator",
-  "version": "1.9.4",
+  "version": "1.9.5",
   "description": "Translation extension for coc.nvim",
   "main": "lib/index.js",
   "repository": {
