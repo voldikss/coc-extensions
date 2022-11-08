@@ -52,7 +52,7 @@ export default class Manager {
   private async echo(translation: Translation): Promise<void> {
     const message = translation.toLine()
     // To prevent from being blocked by user settings
-    workspace.nvim.call('coc#util#echo_messages', ['MoreMsg', message.split('\n')], true)
+    workspace.nvim.call('coc#ui#echo_messages', ['MoreMsg', message.split('\n')], true)
   }
 
   private async replace(translation: Translation) {
