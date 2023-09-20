@@ -1,6 +1,6 @@
 {
   "name": "coc-tasks",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Tasks list and macros completion/hover support for asynctasks.vim",
   "main": "lib/index.js",
   "publisher": "voldikss",
@@ -8,7 +8,9 @@
     "coc.nvim",
     "tasks"
   ],
-  "files": ["lib/index.js"],
+  "files": [
+    "lib/index.js"
+  ],
   "engines": {
     "coc": "^0.0.81"
   },
