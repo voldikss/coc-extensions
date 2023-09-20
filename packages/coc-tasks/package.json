@@ -31,7 +31,8 @@
           },
           "default": [
             "tasks",
-            "dosini"
+            "dosini",
+            "taskini"
           ],
           "description": "Tasks macros completion on the specific filetypes"
         },
