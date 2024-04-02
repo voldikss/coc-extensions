@@ -7,6 +7,7 @@ const serverPath = getConfig<string>('lsp.serverPath')
 
 const serverOptions: ServerOptions = {
   command: serverPath,
+  args: /\bneocmakelsp\b/.test(serverPath) ? ['stdio'] : undefined,
 }
 
 const clientOptions: LanguageClientOptions = {

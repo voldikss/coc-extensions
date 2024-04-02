@@ -50,8 +50,8 @@
         },
         "cmake.lsp.serverPath": {
           "type": "string",
-          "default": "cmake-language-server",
-          "description": "Path to [cmake-language-server](https://github.com/regen100/cmake-language-server)"
+          "default": "neocmakelsp",
+          "description": "Path to [cmake-language-server](https://github.com/regen100/cmake-language-server) or [neocmakelsp](https://github.com/Decodetalkers/neocmakelsp)"
         },
         "cmake.lsp.buildDirectory": {
           "type": "string",
