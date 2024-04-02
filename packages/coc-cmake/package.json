@@ -1,6 +1,6 @@
 {
   "name": "coc-cmake",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "coc.nvim extension for cmake language",
   "main": "lib/index.js",
   "publisher": "voldikss",
@@ -12,7 +12,9 @@
     "type": "git",
     "url": "https://github.com/voldikss/coc-cmake"
   },
-  "files": ["lib/index.js"],
+  "files": [
+    "lib/index.js"
+  ],
   "homepage": "https://github.com/voldikss/coc-cmake#readme",
   "engines": {
     "coc": "^0.0.81"
