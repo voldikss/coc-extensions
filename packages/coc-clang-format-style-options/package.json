@@ -4,7 +4,7 @@
   "description": "coc.nvim extension, helps you write `.clang-format` more easily.",
   "main": "lib/index.js",
   "repository": {
-    "url": "https://github.com/voldikss/coc-clang-format-style-options"
+    "url": "https://github.com/voldikss/coc-extensions"
   },
   "publisher": "voldikss",
   "keywords": [
