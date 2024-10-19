@@ -4,7 +4,7 @@
   "description": "Translation extension for coc.nvim",
   "main": "lib/index.js",
   "repository": {
-    "url": "https://github.com/voldikss/coc-translator"
+    "url": "https://github.com/voldikss/coc-extensions"
   },
   "publisher": "voldikss",
   "keywords": [
@@ -19,7 +19,7 @@
   "engines": {
     "coc": "^0.0.81"
   },
-  "homepage": "https://github.com/voldikss/coc-translator",
+  "homepage": "https://github.com/voldikss/coc-extensions/tree/main/packages/coc-translator#readme",
   "scripts": {
     "test:unit": "jest --runInBand --forceExit --verbose=false"
   },
