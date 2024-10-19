@@ -4,7 +4,7 @@
   "description": "gist extension for coc.nvim",
   "main": "lib/index.js",
   "repository": {
-    "url": "https://github.com/voldikss/coc-gist"
+    "url": "https://github.com/voldikss/coc-extensions"
   },
   "publisher": "voldikss",
   "keywords": [
