@@ -4,7 +4,7 @@
   "description": "CocList support for the floaterm",
   "main": "lib/index.js",
   "repository": {
-    "url": "https://github.com/voldikss/coc-floaterm"
+    "url": "https://github.com/voldikss/coc-extensions"
   },
   "publisher": "voldikss",
   "keywords": [
