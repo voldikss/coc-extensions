@@ -4,7 +4,7 @@
   "description": "coc.nvim extension for AutoX.js",
   "main": "lib/index.js",
   "repository": {
-    "url": "https://github.com/voldikss/coc-autoxjs"
+    "url": "https://github.com/voldikss/coc-extensions"
   },
   "publisher": "voldikss",
   "keywords": [
