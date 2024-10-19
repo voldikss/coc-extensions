@@ -14,8 +14,8 @@
   "activationEvents": [
     "*"
   ],
-  "repository": "https://github.com/voldikss/coc-just-complete",
-  "homepage": "https://github.com/voldikss/coc-just-complete/#readme",
+  "repository": "https://github.com/voldikss/coc-extensions",
+  "homepage": "https://github.com/voldikss/coc-extensions/tree/main/packages/coc-dot-complete#readme",
   "contributes": {
     "configuration": {
       "title": "JustComplete",
