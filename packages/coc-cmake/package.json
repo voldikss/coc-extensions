@@ -10,12 +10,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/voldikss/coc-cmake"
+    "url": "https://github.com/voldikss/coc-extensions"
   },
   "files": [
     "lib/index.js"
   ],
-  "homepage": "https://github.com/voldikss/coc-cmake#readme",
+  "homepage": "https://github.com/voldikss/coc-extensions/tree/main/packages/coc-cmake#readme",
   "engines": {
     "coc": "^0.0.81"
   },
