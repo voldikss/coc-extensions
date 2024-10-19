@@ -16,8 +16,8 @@
   "activationEvents": [
     "*"
   ],
-  "repository": "https://github.com/voldikss/coc-browser",
-  "homepage": "https://github.com/voldikss/coc-browser/#readme",
+  "repository": "https://github.com/voldikss/coc-extensions",
+  "homepage": "https://github.com/voldikss/coc-extensions/tree/main/packages/coc-browser#readme",
   "contributes": {
     "configuration": {
       "title": "Browser",
